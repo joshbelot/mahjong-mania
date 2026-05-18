@@ -16,8 +16,11 @@ export interface CardCollection {
   readonly isReadOnly: boolean;
 }
 
+export type GameMode = 'AMERICAN' | 'CHINESE';
+
 export interface AppSettings {
   readonly activeCollectionId: string | null;
   readonly lastViewMode: 'ASSIST' | 'FOCUS' | 'SCOUT';
   readonly appSchemaVersion: string;
+  readonly gameMode: GameMode;
 }

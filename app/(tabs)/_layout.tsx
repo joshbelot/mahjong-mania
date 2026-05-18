@@ -45,6 +45,14 @@ export default function TabsLayout() {
           tabBarIcon: ({ focused }) => <TabIcon symbol="↕" focused={focused} />,
         }}
       />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: 'Settings',
+          tabBarLabel: 'Settings',
+          tabBarIcon: ({ focused }) => <TabIcon symbol="⚙️" focused={focused} />,
+        }}
+      />
     </Tabs>
   );
 }

@@ -2,8 +2,8 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCollections } from '../../../src/hooks/useCollections';
-import { HandEditor } from '../../../src/components/collections/HandEditor';
-import type { TileSlot } from '../../../src/types/hands';
+import { NotationHandEditor } from '../../../src/components/collections/NotationHandEditor';
+import type { NotationSaveData } from '../../../src/components/collections/NotationHandEditor';
 import type { CustomHand } from '../../../src/types/hands';
 
 export default function EditHandScreen() {
@@ -26,13 +26,7 @@ export default function EditHandScreen() {
 
   if (!hand || !collection) return null;
 
-  async function handleSave(data: {
-    name: string;
-    displayLabel: string;
-    slots: TileSlot[];
-    isConcealed: boolean;
-    pointValue?: number;
-  }) {
+  async function handleSave(data: NotationSaveData) {
     const now = Date.now();
     const updatedHand: CustomHand = {
       ...hand!,
@@ -41,6 +35,7 @@ export default function EditHandScreen() {
       slots: data.slots,
       isConcealed: data.isConcealed,
       pointValue: data.pointValue,
+      tags: data.tags.length > 0 ? data.tags : hand!.tags,
       updatedAt: now,
     };
     const updatedCollection = {
@@ -54,12 +49,8 @@ export default function EditHandScreen() {
 
   return (
     <View style={s.root}>
-      <HandEditor
-        initialName={hand.name}
-        initialLabel={hand.displayLabel}
-        initialSlots={hand.slots}
-        initialConcealed={hand.isConcealed}
-        initialPoints={hand.pointValue}
+      <NotationHandEditor
+        existingHand={hand}
         onSave={handleSave}
         onCancel={() => router.back()}
       />

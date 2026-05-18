@@ -1,6 +1,8 @@
-import type { CardCollection } from '../types/collections';
+import type { CardCollection, GameMode } from '../types/collections';
 import type { ConcreteTile } from '../types/tiles';
 import type { ViewMode } from '../types/scoring';
+
+export type { GameMode };
 
 // ── State shape ───────────────────────────────────────────────────────────────
 
@@ -14,6 +16,8 @@ export interface AppState {
   viewMode: ViewMode;
   /** True while collections are being loaded from SQLite. */
   isLoading: boolean;
+  /** Whether to use American (NMJL-style) or Chinese rules. */
+  gameMode: GameMode;
 }
 
 export const INITIAL_STATE: AppState = {
@@ -22,6 +26,7 @@ export const INITIAL_STATE: AppState = {
   activeTiles: [],
   viewMode: 'ASSIST',
   isLoading: true,
+  gameMode: 'AMERICAN',
 };
 
 // ── Action union ──────────────────────────────────────────────────────────────
@@ -36,7 +41,8 @@ export type AppAction =
   | { type: 'SET_LOADING'; payload: boolean }
   | { type: 'ADD_COLLECTION'; payload: CardCollection }
   | { type: 'UPDATE_COLLECTION'; payload: CardCollection }
-  | { type: 'DELETE_COLLECTION'; payload: string }; // id
+  | { type: 'DELETE_COLLECTION'; payload: string } // id
+  | { type: 'SET_GAME_MODE'; payload: GameMode };
 
 // ── Reducer ───────────────────────────────────────────────────────────────────
 
@@ -88,6 +94,9 @@ export function appReducer(state: AppState, action: AppAction): AppState {
           : state.activeCollectionId;
       return { ...state, collections: remaining, activeCollectionId: nextActiveId };
     }
+
+    case 'SET_GAME_MODE':
+      return { ...state, gameMode: action.payload };
 
     default:
       return state;

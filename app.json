@@ -11,8 +11,10 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "scheme": "mahjongmania",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.joshbelot.mahjongmania"
     },
     "android": {
       "adaptiveIcon": {

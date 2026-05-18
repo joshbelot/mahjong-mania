@@ -1,9 +1,9 @@
 import React from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCollections } from '../../src/hooks/useCollections';
-import { HandEditor } from '../../src/components/collections/HandEditor';
-import type { TileSlot } from '../../src/types/hands';
+import { NotationHandEditor } from '../../src/components/collections/NotationHandEditor';
+import type { NotationSaveData } from '../../src/components/collections/NotationHandEditor';
 
 export default function NewHandScreen() {
   const router = useRouter();
@@ -15,13 +15,7 @@ export default function NewHandScreen() {
     return null;
   }
 
-  async function handleSave(data: {
-    name: string;
-    displayLabel: string;
-    slots: TileSlot[];
-    isConcealed: boolean;
-    pointValue?: number;
-  }) {
+  async function handleSave(data: NotationSaveData) {
     const now = Date.now();
     const newHand = {
       id: `hand_${now}_${Math.random().toString(36).slice(2, 8)}`,
@@ -31,7 +25,7 @@ export default function NewHandScreen() {
       slots: data.slots,
       isConcealed: data.isConcealed,
       pointValue: data.pointValue,
-      tags: [],
+      tags: data.tags,
       createdAt: now,
       updatedAt: now,
     };
@@ -46,7 +40,7 @@ export default function NewHandScreen() {
 
   return (
     <View style={s.root}>
-      <HandEditor
+      <NotationHandEditor
         onSave={handleSave}
         onCancel={() => router.back()}
       />
