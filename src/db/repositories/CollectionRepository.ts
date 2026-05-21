@@ -1,6 +1,7 @@
 import { useSQLiteContext, type SQLiteDatabase } from 'expo-sqlite';
 import type { CardCollection, CollectionSource } from '../../types/collections';
 import { HandRepository } from './HandRepository';
+import { GroupRepository } from './GroupRepository';
 
 interface CollectionRow {
   id: string;
@@ -13,7 +14,7 @@ interface CollectionRow {
   updated_at: number;
 }
 
-function rowToCollection(row: CollectionRow, hands: CardCollection['hands']): CardCollection {
+function rowToCollection(row: CollectionRow, hands: CardCollection['hands'], groups: CardCollection['groups']): CardCollection {
   return {
     id: row.id,
     name: row.name,
@@ -22,6 +23,7 @@ function rowToCollection(row: CollectionRow, hands: CardCollection['hands']): Ca
     schemaVersion: row.schema_version,
     isReadOnly: row.is_read_only === 1,
     hands,
+    groups,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
@@ -36,30 +38,39 @@ export class CollectionRepository {
 
   async findAll(): Promise<CardCollection[]> {
     const handRepo = HandRepository.create(this.db);
+    const groupRepo = GroupRepository.create(this.db);
     const rows = await this.db.getAllAsync<CollectionRow>(
       'SELECT * FROM collections ORDER BY updated_at DESC;',
     );
     return Promise.all(
       rows.map(async (row) => {
-        const hands = await handRepo.findByCollectionId(row.id);
-        return rowToCollection(row, hands);
+        const [hands, groups] = await Promise.all([
+          handRepo.findByCollectionId(row.id),
+          groupRepo.findByCollectionId(row.id),
+        ]);
+        return rowToCollection(row, hands, groups);
       }),
     );
   }
 
   async findById(id: string): Promise<CardCollection | null> {
     const handRepo = HandRepository.create(this.db);
+    const groupRepo = GroupRepository.create(this.db);
     const row = await this.db.getFirstAsync<CollectionRow>(
       'SELECT * FROM collections WHERE id = ?;',
       [id],
     );
     if (!row) return null;
-    const hands = await handRepo.findByCollectionId(row.id);
-    return rowToCollection(row, hands);
+    const [hands, groups] = await Promise.all([
+      handRepo.findByCollectionId(row.id),
+      groupRepo.findByCollectionId(row.id),
+    ]);
+    return rowToCollection(row, hands, groups);
   }
 
   async save(collection: CardCollection): Promise<void> {
     const handRepo = HandRepository.create(this.db);
+    const groupRepo = GroupRepository.create(this.db);
     await this.db.withTransactionAsync(async () => {
       await this.db.runAsync(
         `INSERT OR REPLACE INTO collections
@@ -76,6 +87,11 @@ export class CollectionRepository {
           collection.updatedAt,
         ],
       );
+      // Persist groups (delete-replace strategy)
+      await groupRepo.deleteByCollectionId(collection.id);
+      for (const group of collection.groups) {
+        await groupRepo.save(group);
+      }
       for (const hand of collection.hands) {
         await handRepo.save(hand);
       }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import type { CardCollection } from '../../types/collections';
 
 interface CollectionCardProps {
@@ -44,7 +44,20 @@ export function CollectionCard({
             </Pressable>
           )}
           {onDelete && (
-            <Pressable onPress={() => onDelete(collection.id)} style={[s.actionBtn, s.deleteBtn]} accessibilityLabel="Delete collection">
+            <Pressable
+              onPress={() =>
+                Alert.alert(
+                  'Delete Collection',
+                  `Are you sure you want to delete "${collection.name}"? This cannot be undone.`,
+                  [
+                    { text: 'Cancel', style: 'cancel' },
+                    { text: 'Delete', style: 'destructive', onPress: () => onDelete(collection.id) },
+                  ],
+                )
+              }
+              style={[s.actionBtn, s.deleteBtn]}
+              accessibilityLabel="Delete collection"
+            >
               <Text style={s.deleteText}>Delete</Text>
             </Pressable>
           )}

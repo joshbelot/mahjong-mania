@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import type { TileSlot } from '../../types/hands';
 import type { CustomHand } from '../../types/hands';
+import type { HandGroup } from '../../types/collections';
 import {
   parseFullNotation,
   detectIsConsecutive,
@@ -19,6 +20,7 @@ import {
   type ColorLabel,
 } from '../../utils/notationParser';
 import { GroupChip } from './GroupChip';
+import { GroupPicker } from './GroupPicker';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -26,16 +28,26 @@ export interface NotationSaveData {
   name: string;
   displayLabel: string;
   slots: TileSlot[];
+  groupDefs: GroupDef[];
+  alternateSlots?: TileSlot[];
+  alternateGroupDefs?: GroupDef[];
+  constraintDescription?: string;
   isConcealed: boolean;
   pointValue?: number;
   tags: string[];
+  groupId?: string;
+  newGroupName?: string;
 }
 
 interface NotationHandEditorProps {
   onSave: (data: NotationSaveData) => void;
   onCancel: () => void;
-  /** When provided, shows the existing hand's displayLabel as a reference and pre-fills fields. */
+  /** Pre-populate from existing hand in edit mode. */
   existingHand?: CustomHand;
+  /** Groups already defined in this collection, for the group picker. */
+  existingGroups?: HandGroup[];
+  /** Pre-select this group id (edit mode). */
+  initialGroupId?: string;
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -44,63 +56,109 @@ export function NotationHandEditor({
   onSave,
   onCancel,
   existingHand,
+  existingGroups = [],
+  initialGroupId,
 }: NotationHandEditorProps) {
-  const [notationText, setNotationText] = useState('');
-  const [groups, setGroups] = useState<GroupDef[]>([]);
-  const [name, setName]           = useState(existingHand?.name ?? '');
-  const [category, setCategory]   = useState(existingHand?.tags[0] ?? '');
-  const [description, setDescription] = useState('');
+  // Primary notation — preload from existing hand in edit mode
+  const [notationText, setNotationText] = useState(
+    () => existingHand?.groupDefs?.map((g) => g.token).join(' ') ?? '',
+  );
+  const [groups, setGroups] = useState<GroupDef[]>(
+    () => existingHand?.groupDefs ?? [],
+  );
+
+  // Alternate (-or-) notation — preload if the hand has alternates
+  const [showAlt, setShowAlt] = useState(
+    () => (existingHand?.alternateGroupDefs?.length ?? 0) > 0,
+  );
+  const [altNotationText, setAltNotationText] = useState(
+    () => existingHand?.alternateGroupDefs?.map((g) => g.token).join(' ') ?? '',
+  );
+  const [altGroups, setAltGroups] = useState<GroupDef[]>(
+    () => existingHand?.alternateGroupDefs ?? [],
+  );
+
+  // Group membership
+  const [selectedGroupId, setSelectedGroupId] = useState<string | undefined>(
+    initialGroupId ?? existingHand?.groupId,
+  );
+  const [newGroupName, setNewGroupName] = useState<string | undefined>();
+
+  // Other fields
+  const [constraintDescription, setConstraintDescription] = useState(
+    existingHand?.constraintDescription ?? '',
+  );
+  const [name, setName] = useState(existingHand?.name ?? '');
+  const [showAdvanced, setShowAdvanced] = useState(false);
   const [pointText, setPointText] = useState(
     existingHand?.pointValue != null ? String(existingHand.pointValue) : '',
   );
   const [isConcealed, setIsConcealed] = useState(existingHand?.isConcealed ?? false);
 
-  // ── Notation input handler ──────────────────────────────────────────────
+  // ── Notation input handlers ─────────────────────────────────────────────
+
+  function buildGroups(text: string, prev: GroupDef[]): GroupDef[] {
+    const tokens = text.trim().split(/\s+/).filter(Boolean);
+    return tokens.map((token, i) => {
+      if (prev[i]?.token === token) return prev[i];
+      const reuse = prev.find((g) => g.token === token);
+      if (reuse) return reuse;
+      return {
+        token,
+        colorLabel: 'RED' as ColorLabel,
+        isConsecRun: detectIsConsecutive(token),
+        dragonType: 'RED' as const,
+      };
+    });
+  }
 
   function handleNotationChange(text: string) {
     setNotationText(text);
-    const tokens = text.trim().split(/\s+/).filter(Boolean);
-    setGroups((prev) => {
-      return tokens.map((token, i) => {
-        // Keep existing group config if the token at this position hasn't changed
-        if (prev[i]?.token === token) return prev[i];
-        // Reuse config from another position with same token
-        const reuse = prev.find((g) => g.token === token);
-        if (reuse) return reuse;
-        // Brand-new group
-        return {
-          token,
-          colorLabel: 'RED' as ColorLabel,
-          isConsecRun: detectIsConsecutive(token),
-          dragonType: 'RED' as const,
-        };
-      });
-    });
+    setGroups((prev) => buildGroups(text, prev));
+  }
+
+  function handleAltNotationChange(text: string) {
+    setAltNotationText(text);
+    setAltGroups((prev) => buildGroups(text, prev));
   }
 
   function handleGroupChange(index: number, updated: GroupDef) {
     setGroups((prev) => prev.map((g, i) => (i === index ? updated : g)));
   }
 
+  function handleAltGroupChange(index: number, updated: GroupDef) {
+    setAltGroups((prev) => prev.map((g, i) => (i === index ? updated : g)));
+  }
+
   // ── Save ────────────────────────────────────────────────────────────────
 
   function handleSave() {
-    if (!name.trim()) return;
     const slots = parseFullNotation(groups);
-    // Build a compact auto-label from the tokens (used as displayLabel fallback)
     const autoLabel = groups.map((g) => g.token.toUpperCase()).join(' ');
     const pointValue = pointText.trim() ? parseInt(pointText.trim(), 10) : undefined;
+
+    const alternateSlots =
+      showAlt && altGroups.length > 0 ? parseFullNotation(altGroups) : undefined;
+    const alternateGroupDefs =
+      showAlt && altGroups.length > 0 ? altGroups : undefined;
+
     onSave({
       name: name.trim(),
-      displayLabel: description.trim() || autoLabel,
+      displayLabel: autoLabel,
       slots,
+      groupDefs: groups,
+      alternateSlots,
+      alternateGroupDefs,
+      constraintDescription: constraintDescription.trim() || undefined,
       isConcealed,
       pointValue: pointValue && !isNaN(pointValue) ? pointValue : undefined,
-      tags: category.trim() ? [category.trim()] : [],
+      tags: [],
+      groupId: newGroupName ? undefined : selectedGroupId,
+      newGroupName: newGroupName,
     });
   }
 
-  const canSave = name.trim().length > 0;
+  const canSave = groups.length > 0;
 
   // ── Render ──────────────────────────────────────────────────────────────
 
@@ -123,7 +181,24 @@ export function NotationHandEditor({
           </View>
         ) : null}
 
-        {/* ── Notation input ───────────────────────────────────────── */}
+        {/* ── 1. Group picker ──────────────────────────────────────── */}
+        <Text style={s.sectionLabel}>Group</Text>
+        <GroupPicker
+          groups={existingGroups}
+          selectedGroupId={newGroupName ? null : (selectedGroupId ?? null)}
+          onSelect={(id) => {
+            setSelectedGroupId(id ?? undefined);
+            setNewGroupName(undefined);
+          }}
+          onCreateNew={(groupName) => {
+            setNewGroupName(groupName);
+            setSelectedGroupId(undefined);
+          }}
+        />
+
+        <View style={s.divider} />
+
+        {/* ── 2. Primary notation ──────────────────────────────────── */}
         <Text style={s.sectionLabel}>Notation</Text>
         <Text style={s.hint}>
           Enter space-separated groups.{'\n'}
@@ -140,7 +215,6 @@ export function NotationHandEditor({
           returnKeyType="done"
         />
 
-        {/* ── Group chips ──────────────────────────────────────────── */}
         {groups.length > 0 && (
           <>
             <ScrollView
@@ -164,35 +238,58 @@ export function NotationHandEditor({
           </>
         )}
 
+        {/* ── 3. Alternate (-or-) notation ─────────────────────────── */}
+        {!showAlt ? (
+          <Pressable style={s.altToggle} onPress={() => setShowAlt(true)}>
+            <Text style={s.altToggleText}>+ Add alternate  <Text style={s.altOr}>-or-</Text>  pattern</Text>
+          </Pressable>
+        ) : (
+          <View style={s.altSection}>
+            <View style={s.altHeader}>
+              <Text style={s.altLabel}>-or-  Alternate Pattern</Text>
+              <Pressable onPress={() => { setShowAlt(false); setAltNotationText(''); setAltGroups([]); }}>
+                <Text style={s.altRemove}>Remove</Text>
+              </Pressable>
+            </View>
+            <TextInput
+              style={s.notationInput}
+              value={altNotationText}
+              onChangeText={handleAltNotationChange}
+              placeholder="e.g.  FF  33  4444  555  DD"
+              placeholderTextColor="#444"
+              autoCapitalize="characters"
+              autoCorrect={false}
+              returnKeyType="done"
+            />
+            {altGroups.length > 0 && (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={s.chipsScroll}
+                contentContainerStyle={s.chipsContent}
+              >
+                {altGroups.map((g, i) => (
+                  <GroupChip
+                    key={`alt-${i}-${g.token}`}
+                    group={g}
+                    groupIndex={i}
+                    onChange={(updated) => handleAltGroupChange(i, updated)}
+                  />
+                ))}
+              </ScrollView>
+            )}
+          </View>
+        )}
+
         <View style={s.divider} />
 
-        {/* ── Form fields ──────────────────────────────────────────── */}
-        <Text style={s.fieldLabel}>Category / Heading</Text>
-        <TextInput
-          style={s.input}
-          value={category}
-          onChangeText={setCategory}
-          placeholder="e.g. QUINTS, CONSECUTIVE RUN, 13579"
-          placeholderTextColor="#444"
-          returnKeyType="next"
-        />
-
-        <Text style={s.fieldLabel}>Hand Name <Text style={s.required}>*</Text></Text>
-        <TextInput
-          style={s.input}
-          value={name}
-          onChangeText={setName}
-          placeholder="e.g. FF Pung Kong 2024"
-          placeholderTextColor="#444"
-          returnKeyType="next"
-        />
-
-        <Text style={s.fieldLabel}>Description</Text>
+        {/* ── 4. Constraint description ─────────────────────────────── */}
+        <Text style={s.fieldLabel}>Constraint Description</Text>
         <TextInput
           style={[s.input, s.multilineInput]}
-          value={description}
-          onChangeText={setDescription}
-          placeholder="e.g. Any 3 Suits, Any 3 Consec. Nos."
+          value={constraintDescription}
+          onChangeText={setConstraintDescription}
+          placeholder="e.g. Any 2 Suits, These Nos. Only"
           placeholderTextColor="#444"
           multiline
           numberOfLines={2}
@@ -200,6 +297,7 @@ export function NotationHandEditor({
           returnKeyType="next"
         />
 
+        {/* ── 5. Point value ───────────────────────────────────────── */}
         <Text style={s.fieldLabel}>Point Value</Text>
         <TextInput
           style={s.input}
@@ -211,6 +309,7 @@ export function NotationHandEditor({
           returnKeyType="done"
         />
 
+        {/* ── 6. Concealed toggle ───────────────────────────────────── */}
         <View style={s.concealedRow}>
           <View>
             <Text style={s.fieldLabel}>Concealed</Text>
@@ -223,6 +322,26 @@ export function NotationHandEditor({
             thumbColor={isConcealed ? '#fff' : '#888'}
           />
         </View>
+
+        {/* ── 7. Advanced (collapsible): hand name ─────────────────── */}
+        <Pressable style={s.advancedToggle} onPress={() => setShowAdvanced((v) => !v)}>
+          <Text style={s.advancedToggleText}>
+            {showAdvanced ? '▾' : '▸'}  Advanced
+          </Text>
+        </Pressable>
+        {showAdvanced && (
+          <View style={s.advancedSection}>
+            <Text style={s.fieldLabel}>Hand Name <Text style={s.optional}>(optional)</Text></Text>
+            <TextInput
+              style={s.input}
+              value={name}
+              onChangeText={setName}
+              placeholder="e.g. FF Pung Kong 2024"
+              placeholderTextColor="#444"
+              returnKeyType="done"
+            />
+          </View>
+        )}
 
         {/* ── Buttons ──────────────────────────────────────────────── */}
         <View style={s.buttonRow}>
@@ -326,6 +445,78 @@ const s = StyleSheet.create({
   },
   required: {
     color: '#E84545',
+  },
+  optional: {
+    color: '#555',
+    fontWeight: '400',
+  },
+  groupPickerBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#141428',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#333',
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    marginBottom: 14,
+  },
+  groupPickerBtnText: {
+    color: '#F0F0F0',
+    fontSize: 15,
+    flex: 1,
+  },
+  groupPickerArrow: {
+    color: '#666',
+    fontSize: 14,
+    marginLeft: 8,
+  },
+  altToggle: {
+    alignSelf: 'flex-start',
+    marginBottom: 16,
+  },
+  altToggleText: {
+    color: '#4A6CF7',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  altOr: {
+    color: '#F7C94A',
+    fontWeight: '700',
+  },
+  altSection: {
+    borderLeftWidth: 2,
+    borderLeftColor: '#F7C94A',
+    paddingLeft: 12,
+    marginBottom: 16,
+  },
+  altHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  altLabel: {
+    color: '#F7C94A',
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  altRemove: {
+    color: '#E84545',
+    fontSize: 13,
+  },
+  advancedToggle: {
+    marginTop: 4,
+    marginBottom: 8,
+  },
+  advancedToggleText: {
+    color: '#666',
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  advancedSection: {
+    marginBottom: 12,
   },
   input: {
     backgroundColor: '#141428',

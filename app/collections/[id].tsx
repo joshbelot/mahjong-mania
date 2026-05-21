@@ -1,9 +1,8 @@
 import React from 'react';
 import {
   ActivityIndicator,
-  Alert,
-  FlatList,
   Pressable,
+  SectionList,
   StyleSheet,
   Text,
   View,
@@ -11,6 +10,7 @@ import {
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCollections } from '../../src/hooks/useCollections';
 import type { CustomHand } from '../../src/types/hands';
+import { ColoredNotationView } from '../../src/components/collections/ColoredNotationView';
 
 export default function CollectionDetailScreen() {
   const router = useRouter();
@@ -38,6 +38,20 @@ export default function CollectionDetailScreen() {
     router.push(`/hands/${hand.id}`);
   }
 
+  // Build SectionList sections
+  const grouped = collection.groups.map((g) => ({
+    groupId: g.id,
+    title: g.name,
+    data: collection.hands.filter((h) => h.groupId === g.id),
+  }));
+  const ungrouped = collection.hands.filter((h) => !h.groupId);
+  const sections = [
+    ...grouped.filter((s) => s.data.length > 0),
+    ...(ungrouped.length > 0
+      ? [{ groupId: null, title: null, data: ungrouped }]
+      : []),
+  ];
+
   return (
     <View style={s.root}>
       <View style={s.header}>
@@ -50,10 +64,18 @@ export default function CollectionDetailScreen() {
         <Text style={s.handCount}>{collection.hands.length} hands</Text>
       </View>
 
-      <FlatList
-        data={collection.hands}
+      <SectionList
+        sections={sections}
         keyExtractor={(h) => h.id}
         contentContainerStyle={s.list}
+        stickySectionHeadersEnabled={false}
+        renderSectionHeader={({ section }) =>
+          section.title ? (
+            <View style={s.sectionHeader}>
+              <Text style={s.sectionHeaderText}>{section.title}</Text>
+            </View>
+          ) : null
+        }
         renderItem={({ item }) => (
           <Pressable
             style={s.handRow}
@@ -61,16 +83,29 @@ export default function CollectionDetailScreen() {
             accessibilityRole="button"
           >
             <View style={s.handInfo}>
-              <Text style={s.handName}>{item.name}</Text>
-              <Text style={s.handLabel} numberOfLines={1}>
-                {item.displayLabel}
-              </Text>
+              {/* Color-coded notation */}
+              <ColoredNotationView
+                groupDefs={item.groupDefs ?? []}
+                altGroupDefs={item.alternateGroupDefs}
+                fallbackLabel={item.displayLabel}
+              />
+              {/* Constraint description */}
+              {item.constraintDescription ? (
+                <Text style={s.constraintDesc}>({item.constraintDescription})</Text>
+              ) : null}
+              {/* Optional hand name */}
+              {item.name ? (
+                <Text style={s.handName}>{item.name}</Text>
+              ) : null}
             </View>
             <View style={s.handMeta}>
               {item.pointValue != null && (
-                <Text style={s.handPoints}>{item.pointValue} pts</Text>
+                <View style={[s.badge, item.isConcealed ? s.badgeC : s.badgeX]}>
+                  <Text style={s.badgeText}>
+                    {item.isConcealed ? 'C' : 'X'} {item.pointValue}
+                  </Text>
+                </View>
               )}
-              {item.isConcealed && <Text style={s.handConcealed}>🔒</Text>}
               <Text style={s.handArrow}>›</Text>
             </View>
           </Pressable>
@@ -113,6 +148,22 @@ const s = StyleSheet.create({
   collectionDesc: { color: '#666', fontSize: 13 },
   handCount: { color: '#4A6CF7', fontSize: 13, fontWeight: '700', marginTop: 4 },
   list: { padding: 16, paddingBottom: 100 },
+  sectionHeader: {
+    paddingVertical: 8,
+    paddingHorizontal: 4,
+    marginTop: 8,
+    marginBottom: 4,
+    borderBottomWidth: 1,
+    borderBottomColor: '#2A2A3A',
+  },
+  sectionHeaderText: {
+    color: '#DDD',
+    fontSize: 13,
+    fontWeight: '700',
+    textAlign: 'center',
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+  },
   handRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -122,15 +173,21 @@ const s = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#2A2A3A',
     paddingHorizontal: 14,
-    paddingVertical: 12,
-    marginBottom: 8,
+    paddingVertical: 10,
+    marginBottom: 6,
   },
   handInfo: { flex: 1, marginRight: 8 },
-  handName: { color: '#DDD', fontSize: 14, fontWeight: '600', marginBottom: 2 },
-  handLabel: { color: '#555', fontSize: 12, fontFamily: 'monospace' },
+  constraintDesc: { color: '#555', fontSize: 11, marginTop: 2, fontStyle: 'italic' },
+  handName: { color: '#444', fontSize: 11, marginTop: 2 },
   handMeta: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  handPoints: { color: '#F7C94A', fontSize: 12, fontWeight: '700' },
-  handConcealed: { fontSize: 12 },
+  badge: {
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+  },
+  badgeX: { backgroundColor: '#1E3A2F' },
+  badgeC: { backgroundColor: '#1E2A4A' },
+  badgeText: { color: '#F7C94A', fontSize: 12, fontWeight: '700' },
   handArrow: { color: '#555', fontSize: 18 },
   empty: { alignItems: 'center', marginTop: 60 },
   emptyText: { color: '#555', fontSize: 16, marginBottom: 4 },

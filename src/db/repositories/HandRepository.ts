@@ -1,6 +1,6 @@
 import type { SQLiteDatabase } from 'expo-sqlite';
 import { useSQLiteContext } from 'expo-sqlite';
-import type { CustomHand } from '../../types/hands';
+import type { CustomHand, TileSlot, GroupDef } from '../../types/hands';
 import { SlotRepository } from './SlotRepository';
 
 interface HandRow {
@@ -14,9 +14,21 @@ interface HandRow {
   sort_order: number;
   created_at: number;
   updated_at: number;
+  group_id: string | null;
+  groups_json: string | null;
+  alternate_slots_json: string | null;
+  alternate_groups_json: string | null;
+  constraint_description: string | null;
 }
 
 function rowToHand(row: HandRow, slots: CustomHand['slots']): CustomHand {
+  let groupDefs: GroupDef[] | undefined;
+  let alternateSlots: TileSlot[] | undefined;
+  let alternateGroupDefs: GroupDef[] | undefined;
+  try { if (row.groups_json) groupDefs = JSON.parse(row.groups_json) as GroupDef[]; } catch { /* ignore */ }
+  try { if (row.alternate_slots_json) alternateSlots = JSON.parse(row.alternate_slots_json) as TileSlot[]; } catch { /* ignore */ }
+  try { if (row.alternate_groups_json) alternateGroupDefs = JSON.parse(row.alternate_groups_json) as GroupDef[]; } catch { /* ignore */ }
+
   return {
     id: row.id,
     collectionId: row.collection_id,
@@ -28,6 +40,11 @@ function rowToHand(row: HandRow, slots: CustomHand['slots']): CustomHand {
     slots,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
+    groupId: row.group_id ?? undefined,
+    groupDefs,
+    alternateSlots,
+    alternateGroupDefs,
+    constraintDescription: row.constraint_description ?? undefined,
   };
 }
 
@@ -71,8 +88,10 @@ export class HandRepository {
   async save(hand: CustomHand): Promise<void> {
     await this.db.runAsync(
       `INSERT OR REPLACE INTO hands
-         (id, collection_id, name, display_label, point_value, is_concealed, tags, sort_order, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+         (id, collection_id, name, display_label, point_value, is_concealed, tags, sort_order,
+          created_at, updated_at, group_id, groups_json, alternate_slots_json, alternate_groups_json,
+          constraint_description)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
       [
         hand.id,
         hand.collectionId,
@@ -84,6 +103,11 @@ export class HandRepository {
         0,
         hand.createdAt,
         hand.updatedAt,
+        hand.groupId ?? null,
+        hand.groupDefs ? JSON.stringify(hand.groupDefs) : null,
+        hand.alternateSlots ? JSON.stringify(hand.alternateSlots) : null,
+        hand.alternateGroupDefs ? JSON.stringify(hand.alternateGroupDefs) : null,
+        hand.constraintDescription ?? null,
       ],
     );
     // Delete existing slots then re-insert (simpler than diffing)

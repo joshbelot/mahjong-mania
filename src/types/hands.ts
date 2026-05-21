@@ -1,4 +1,22 @@
-import type { ConcreteTile, NumberTileValue } from './tiles';
+import type { ConcreteTile, NumberTileValue, DragonValue } from './tiles';
+
+// ── Notation display types ─────────────────────────────────────────────────────
+// Defined here (not in notationParser) to avoid a circular import.
+
+export type ColorLabel = 'RED' | 'GREEN' | 'BLUE' | 'GRAY';
+
+export interface GroupDef {
+  token: string;
+  /** Controls which suit-group ID is assigned to number-tile slots. */
+  colorLabel: ColorLabel;
+  /**
+   * For tokens detected as consecutive digits: true = any-run (RUN_ANCHOR/OFFSET),
+   * false = fixed values (SUIT_FLEXIBLE per digit).
+   */
+  isConsecRun: boolean;
+  /** Dragon type used when token contains 'D'. */
+  dragonType: DragonValue;
+}
 
 /**
  * Opaque group IDs used to link slots that share a constraint.
@@ -48,9 +66,9 @@ export interface TileSlot {
 export interface CustomHand {
   readonly id: string;
   readonly collectionId: string;
-  /** Short internal label, e.g. "FF 2025 NEWS" */
+  /** Short internal label — optional display name. */
   readonly name: string;
-  /** User-facing notation, e.g. "FF 2 0 2 5 N E W S" */
+  /** Auto-generated token string, e.g. "FF 2026 DD NEWS" */
   readonly displayLabel: string;
   readonly slots: TileSlot[];
   readonly pointValue?: number;
@@ -59,4 +77,15 @@ export interface CustomHand {
   readonly tags: string[];
   readonly createdAt: number;
   readonly updatedAt: number;
+  // ── Grouping & display (v2) ────────────────────────────────────────────────
+  /** ID of the HandGroup this hand belongs to. */
+  readonly groupId?: string;
+  /** Color-annotated token list for the primary notation — drives colored display. */
+  readonly groupDefs?: GroupDef[];
+  /** Alternate pattern slots for "-or-" hands. Scored alongside primary slots. */
+  readonly alternateSlots?: TileSlot[];
+  /** Color-annotated tokens for the alternate pattern. */
+  readonly alternateGroupDefs?: GroupDef[];
+  /** Parenthetical constraint text, e.g. "Any 2 Suits, These Nos. Only" */
+  readonly constraintDescription?: string;
 }

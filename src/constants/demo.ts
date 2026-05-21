@@ -16,6 +16,7 @@ export const DEMO_COLLECTION: CardCollection = {
   isReadOnly: true,
   createdAt: 0,
   updatedAt: 0,
+  groups: [],
   hands: [
     // ── Hand 1: Triple Pung — three pungs of the same number in three suits ──
     {

@@ -63,6 +63,20 @@ export function calculateDistance(
   activeTiles: ConcreteTile[],
   hand: CustomHand,
 ): HandScoringResult {
+  // If hand has an alternate pattern, score both and return the better result.
+  if (hand.alternateSlots && hand.alternateSlots.length > 0) {
+    const primary = calculateDistanceForSlots(activeTiles, hand, hand.slots);
+    const alternate = calculateDistanceForSlots(activeTiles, hand, hand.alternateSlots);
+    return primary.distanceScore <= alternate.distanceScore ? primary : alternate;
+  }
+  return calculateDistanceForSlots(activeTiles, hand, hand.slots);
+}
+
+function calculateDistanceForSlots(
+  activeTiles: ConcreteTile[],
+  hand: CustomHand,
+  slots: TileSlot[],
+): HandScoringResult {
   const jokerCount = activeTiles.filter((t) => t.suit === 'JOKER').length;
   const concretePool = buildMultiset(activeTiles.filter((t) => t.suit !== 'JOKER'));
 
@@ -70,18 +84,18 @@ export function calculateDistance(
 
   // SuitGroup candidates
   const suitGroupIds = [...new Set(
-    hand.slots.flatMap((s) => [s.suitGroupId, s.runSuitGroupId, s.runGroupRef].filter(Boolean) as string[]),
+    slots.flatMap((s) => [s.suitGroupId, s.runSuitGroupId, s.runGroupRef].filter(Boolean) as string[]),
   )];
   const suitCandidates: TileSuit[][] = suitGroupIds.map(() => NUMBER_SUITS);
 
   // RunGroup candidates
   const runGroupIds = [...new Set(
-    hand.slots.filter((s) => s.kind === 'RUN_ANCHOR').map((s) => s.runGroupId!).filter(Boolean),
+    slots.filter((s) => s.kind === 'RUN_ANCHOR').map((s) => s.runGroupId!).filter(Boolean),
   )];
   const runGroupCandidates: NumberTileValue[][] = runGroupIds.map((rgId) => {
     const maxOffset = Math.max(
       0,
-      ...hand.slots.filter((s) => s.kind === 'RUN_OFFSET' && s.runGroupRef === rgId).map((s) => s.offset ?? 0),
+      ...slots.filter((s) => s.kind === 'RUN_OFFSET' && s.runGroupRef === rgId).map((s) => s.offset ?? 0),
     );
     const maxAnchor = (9 - maxOffset) as NumberTileValue;
     return Array.from({ length: maxAnchor }, (_, i) => (i + 1) as NumberTileValue);
@@ -106,7 +120,7 @@ export function calculateDistance(
 
     // Build requirements map under this binding
     const requirements = new Map<string, { needed: number; jokerEligible: boolean }>();
-    for (const slot of hand.slots) {
+    for (const slot of slots) {
       if (slot.kind === 'JOKER') continue; // literal joker slots don't consume pool tiles
       const resolved = resolveSlot(slot, binding);
       if (!resolved) continue;
@@ -119,7 +133,7 @@ export function calculateDistance(
     }
 
     // Count literal JOKER slots required
-    const literalJokersNeeded = hand.slots
+    const literalJokersNeeded = slots
       .filter((s) => s.kind === 'JOKER')
       .reduce((sum, s) => sum + s.count, 0);
 
@@ -158,7 +172,7 @@ export function calculateDistance(
   const working = new Map(concretePool);
   let jokersLeft = jokerCount;
 
-  for (const slot of hand.slots) {
+  for (const slot of slots) {
     if (slot.kind === 'JOKER') {
       const have = Math.min(slot.count, jokersLeft);
       jokersLeft -= have;

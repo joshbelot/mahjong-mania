@@ -1,22 +1,13 @@
 import type { TileSlot } from '../types/hands';
 import type { NumberTileValue, DragonValue, WindValue } from '../types/tiles';
+import type { ColorLabel, GroupDef } from '../types/hands';
 
-// ── Public types ──────────────────────────────────────────────────────────────
+// Re-export so existing imports (GroupChip, NotationHandEditor, etc.) keep working.
+export type { ColorLabel, GroupDef };
 
-export type ColorLabel = 'RED' | 'GREEN' | 'BLUE' | 'GRAY';
-
-export interface GroupDef {
-  token: string;
-  /** Controls which suit-group ID is assigned to number-tile slots. */
-  colorLabel: ColorLabel;
-  /**
-   * For tokens detected as consecutive digits: true = any-run (RUN_ANCHOR/OFFSET),
-   * false = fixed values (SUIT_FLEXIBLE per digit).
-   */
-  isConsecRun: boolean;
-  /** Dragon type used when token contains 'D'. */
-  dragonType: DragonValue;
-}
+// ── Public types ─────────────────────────────────────────────────────
+// ColorLabel and GroupDef are defined in types/hands.ts to avoid a circular
+// import (notationParser imports TileSlot from types/hands).
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
