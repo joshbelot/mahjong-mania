@@ -22,3 +22,8 @@ extension View {
     font(Typography.tiny).textCase(.uppercase).tracking(0.6)
   }
 }
+
+extension Typography {
+  /// Bold monospaced text used for compact card patterns such as `FF 2026 2222`.
+  static let pattern = Font.system(.body, design: .monospaced).weight(.bold)
+}
