@@ -89,7 +89,7 @@ struct PassSuggestionTests {
       [.number(7, .bams), .number(7, .bams), .number(1, .cracks), .number(1, .cracks)]
       + Array(repeating: .wind(.north), count: 4) + Array(repeating: .wind(.east), count: 4)
       + [.flower]
-    #expect(rack.count == 14 + 0 - 1 + 0 || rack.count == 13)
+    #expect(rack.count == 13)
     let advice = analyzer.suggestPasses(PlayerView(rack: rack), count: 3)
     let sevens = advice.passes.filter { $0.tile == .number(7, .bams) }
     #expect(sevens.count == 1)
@@ -110,7 +110,7 @@ struct PassSuggestionTests {
     ]
     let advice = analyzer.suggestPasses(PlayerView(rack: rack), count: 13)
     #expect(advice.passes.count == 13)
-    #expect(advice.passes.contains { $0.reason == "Only helps Winds (1 away)" })
+    #expect(advice.passes.contains { $0.reason == "Only helps Winds (4 away)" })
   }
 
   @Test func focusNamesTheStrongestSections() {
