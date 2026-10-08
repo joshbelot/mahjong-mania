@@ -122,15 +122,21 @@ struct JSONFileStoreTests {
 }
 
 @MainActor
+private final class Box<Value> {
+  var value: Value
+  init(_ value: Value) { self.value = value }
+}
+
+@MainActor
 struct PersisterTests {
   @Test func rapidChangesCoalesceIntoOneWrite() async throws {
     let directory = makeTempDirectory()
     let file = JSONFileStore<TestDoc>(directory: directory, name: "doc")
-    var current = TestDoc(name: "0")
+    let current = Box(TestDoc(name: "0"))
     let persister = Persister(store: file, delay: .milliseconds(60))
-    persister.snapshot = { current }
+    persister.snapshot = { current.value }
     for index in 1...10 {
-      current.name = "\(index)"
+      current.value.name = "\(index)"
       persister.changed()
     }
     #expect(persister.writeCount == 0)

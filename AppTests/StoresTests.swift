@@ -75,9 +75,9 @@ struct PlayersStoreTests {
   @Test func addsPlayersWithDistinctColoursAndPersists() {
     let directory = makeTempDirectory()
     let store = PlayersStore(directory: directory, persistDelay: fast)
-    let a = store.add(name: "  Alex ")
-    let b = store.add(name: "Bea")
-    let c = store.add(name: "Cy")
+    let a = store.add(name: "  Alex ", id: "a", at: Date(timeIntervalSince1970: 1))
+    let b = store.add(name: "Bea", id: "b", at: Date(timeIntervalSince1970: 2))
+    let c = store.add(name: "Cy", id: "c", at: Date(timeIntervalSince1970: 3))
     #expect(a.name == "Alex")
     #expect([a, b, c].map(\.colorIndex) == [0, 1, 2])
     store.rename(id: b.id, to: "Beatrice")
@@ -115,7 +115,7 @@ struct SessionsStoreTests {
     store.start(seatIDs: ["A", "B", "C", "D"], cardID: "practice-v1", rules: .standard, id: id, at: Date(timeIntervalSince1970: 1_000))
   }
 
-  @Test func sessionLifecycleAndPersistence() {
+  @Test func sessionLifecycleAndPersistence() throws {
     let directory = makeTempDirectory()
     let store = SessionsStore(directory: directory, persistDelay: fast)
     #expect(store.activeSession == nil)
@@ -128,8 +128,8 @@ struct SessionsStoreTests {
     let reloaded = SessionsStore(directory: directory, persistDelay: fast)
     #expect(reloaded.sessions == store.sessions)
     #expect(reloaded.activeSession?.hands.count == 2)
-    let active = try? #require(reloaded.activeSession)
-    #expect(active.map { Scoring.totals($0)["A"] } == 100)
+    let active = try #require(reloaded.activeSession)
+    #expect(Scoring.totals(active)["A"] == 100)
 
     reloaded.end(sessionID: "s1", at: Date(timeIntervalSince1970: 2_000))
     #expect(reloaded.activeSession == nil)
