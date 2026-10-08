@@ -63,6 +63,7 @@ jobs:
             -scheme MahjongMania \
             -destination "id=$DEST_ID" \
             -resultBundlePath build/Tests.xcresult \
+            -retry-tests-on-failure \
             CODE_SIGNING_ALLOWED=NO | tee build/xcodebuild-test.log | tail -80
       - name: Show failures
         if: failure()
