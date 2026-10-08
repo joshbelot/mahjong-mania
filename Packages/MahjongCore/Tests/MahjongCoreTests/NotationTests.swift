@@ -87,8 +87,8 @@ struct BodySplittingTests {
   }
 
   @Test func whitespaceIsNormalised() throws {
-    let line = try #require(parse("  FF   2222/x  4444/y   66/z  ;25;   X  ;  Spacey  "))
-    #expect(line.variants[0].source == "FF 2222/x 4444/y 66/z")
+    let line = try #require(parse("  FF   2222/x  4444/y   66/z   88/x  ;25;   X  ;  Spacey  "))
+    #expect(line.variants[0].source == "FF 2222/x 4444/y 66/z 88/x")
     #expect(line.name == "Spacey")
     #expect(line.points == 25)
     #expect(!line.concealed)
