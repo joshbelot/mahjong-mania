@@ -2,8 +2,11 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches-ignore: [ci-screenshots]
   pull_request:
+
+permissions:
+  contents: write
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -38,6 +41,8 @@ jobs:
 
   ios:
     name: ios
+    # macOS minutes are expensive: run on pull requests and on main, not on every branch push.
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main'
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
@@ -75,6 +80,11 @@ jobs:
         run: |
           mkdir -p build/screenshots
           xcrun xcresulttool export attachments --path build/Tests.xcresult --output-path build/screenshots || true
+      - name: Publish screenshots to ci-screenshots branch
+        if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: tools/ci_publish_screenshots.sh build/screenshots ${{ github.event.pull_request.number }} || echo "screenshot publish failed (non-fatal)"
       - name: Upload screenshots
         if: always()
         uses: actions/upload-artifact@v4

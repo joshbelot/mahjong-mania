@@ -8,6 +8,13 @@ enum LaunchOptions {
   }
 }
 
+extension LaunchOptions {
+  /// `-UITestDark`: force dark mode (the `-AppleInterfaceStyle` argument is not reliable on new simulators).
+  static var forcedColorScheme: ColorScheme? {
+    ProcessInfo.processInfo.arguments.contains("-UITestDark") ? .dark : nil
+  }
+}
+
 @main
 struct MahjongManiaApp: App {
   @State private var stores = AppStores.live()
