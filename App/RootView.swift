@@ -4,23 +4,29 @@ import SwiftUI
 /// `settingsToolbar()`.
 struct RootView: View {
   @Environment(\.theme) private var theme
+  @State private var selectedTab: AppTab = .game
 
   var body: some View {
-    TabView {
+    TabView(selection: $selectedTab) {
       NavigationStack { GameHomeView() }
         .tabItem { Label("Game", systemImage: "dice") }
         .accessibilityIdentifier("tab.game")
+        .tag(AppTab.game)
       NavigationStack { HelperView() }
         .tabItem { Label("Helper", systemImage: "lightbulb") }
         .accessibilityIdentifier("tab.helper")
+        .tag(AppTab.helper)
       NavigationStack { CardsListView() }
         .tabItem { Label("Cards", systemImage: "rectangle.stack") }
         .accessibilityIdentifier("tab.cards")
+        .tag(AppTab.cards)
       NavigationStack { LearnHomeView() }
         .tabItem { Label("Learn", systemImage: "graduationcap") }
         .accessibilityIdentifier("tab.learn")
+        .tag(AppTab.learn)
     }
     .tint(theme.primary)
+    .environment(\.tabSwitcher, TabSwitcher { selectedTab = $0 })
   }
 }
 
