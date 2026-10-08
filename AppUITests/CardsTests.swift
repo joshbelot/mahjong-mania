@@ -90,7 +90,23 @@ final class CardsTests: XCTestCase {
   @discardableResult
   private func waitFor(_ app: XCUIApplication, _ id: String, timeout: TimeInterval = 10) -> XCUIElement {
     let item = element(app, id)
-    XCTAssertTrue(item.waitForExistence(timeout: timeout), "Missing element \(id)")
+    if !item.waitForExistence(timeout: timeout) {
+      // One line, so the CI failure summary shows what was on screen.
+      let tree = app.debugDescription.replacingOccurrences(of: "\n", with: " | ")
+      XCTFail("Missing element \(id). Screen: \(tree.prefix(2500))")
+    }
+    return item
+  }
+
+  /// Swipes the screen up until the element is on screen (SwiftUI scroll views may not expose far-off content).
+  @discardableResult
+  private func reveal(_ app: XCUIApplication, _ id: String) -> XCUIElement {
+    let item = waitFor(app, id)
+    var swipes = 0
+    while !item.isHittable && swipes < 6 {
+      app.swipeUp()
+      swipes += 1
+    }
     return item
   }
 
@@ -147,13 +163,15 @@ final class CardsTests: XCTestCase {
     attach("cards-detail-\(scheme)")
 
     firstRow.tap()
-    waitFor(app, "line.practise")
+    waitFor(app, "line.pattern")
     attach("cards-line-detail-\(scheme)")
     let trySuits = element(app, "line.trySuits")
-    if trySuits.exists {
+    if trySuits.exists && trySuits.isHittable {
       trySuits.tap()
       attach("cards-line-detail-suits-\(scheme)")
     }
+    reveal(app, "line.practise")
+    attach("cards-line-detail-bottom-\(scheme)")
 
     waitFor(app, "line.edit").tap()
     let notation = waitFor(app, "editor.notation")
@@ -206,10 +224,8 @@ final class CardsTests: XCTestCase {
     XCTAssertFalse(element(app, "card.builtInBanner").exists, "The copy must be editable")
 
     waitFor(app, "line.row.0").tap()
+    waitFor(app, "line.pattern")
     waitFor(app, "line.edit").tap()
-    let nameField = waitFor(app, "editor.name")
-    nameField.tap()
-    nameField.typeText(" Edited")
 
     let notation = waitFor(app, "editor.notation")
     notation.tap()
@@ -218,6 +234,10 @@ final class CardsTests: XCTestCase {
     XCTAssertFalse(element(app, "editor.save").isEnabled)
     deleteFromNotation(app, notation, count: 2)
     waitFor(app, "editor.valid")
+
+    let nameField = reveal(app, "editor.name")
+    nameField.tap()
+    nameField.typeText(" Edited")
 
     let save = element(app, "editor.save")
     XCTAssertTrue(save.isEnabled)

@@ -47,14 +47,22 @@ private struct LineDetailContent: View {
       VStack(alignment: .leading, spacing: Spacing.lg) {
         header
         patternCard
+        practiseButton
         descriptionCard
         if line.variants.count > 1 { variantsCard }
         recordCard
-        actions
       }
     }
     .navigationTitle(line.displayName)
     .navigationBarTitleDisplayMode(.inline)
+    .toolbar {
+      if !card.builtIn {
+        ToolbarItem(placement: .topBarTrailing) {
+          Button("Edit") { editorRequest = .edit(line.id) }
+            .accessibilityIdentifier("line.edit")
+        }
+      }
+    }
     .sheet(item: $editorRequest) { request in
       LineEditorSheet(cardID: card.id, request: request) { dismiss() }
     }
@@ -161,23 +169,12 @@ private struct LineDetailContent: View {
     }
   }
 
-  private var actions: some View {
-    VStack(spacing: Spacing.md) {
-      Button(action: practise) {
-        Label("Practise this hand", systemImage: "lightbulb")
-      }
-      .buttonStyle(PrimaryButton(.primary, size: .large))
-      .accessibilityIdentifier("line.practise")
-      if !card.builtIn {
-        Button {
-          editorRequest = .edit(line.id)
-        } label: {
-          Label("Edit hand", systemImage: "pencil")
-        }
-        .buttonStyle(PrimaryButton(.secondary, fullWidth: true))
-        .accessibilityIdentifier("line.edit")
-      }
+  private var practiseButton: some View {
+    Button(action: practise) {
+      Label("Practise this hand", systemImage: "lightbulb")
     }
+    .buttonStyle(PrimaryButton(.primary, size: .large))
+    .accessibilityIdentifier("line.practise")
   }
 
   // MARK: Helpers
