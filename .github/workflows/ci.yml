@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches-ignore: [ci-screenshots]
   pull_request:
 
 permissions:
@@ -32,6 +32,8 @@ jobs:
 
   ios:
     name: ios
+    # macOS minutes are expensive: run on pull requests and on main, not on every branch push.
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main'
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
