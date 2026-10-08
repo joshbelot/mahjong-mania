@@ -4,11 +4,24 @@ import Foundation
 public final class Analyzer: Sendable {
   public let card: Card
   let lineTargets: [[Target]]
+  /// Per tile (indexed by `Tile.sortIndex`): how many lines of the card have a target that uses it.
+  let coverage: [Int]
 
   public init(card: Card) {
     self.card = card
-    self.lineTargets = card.lines.map { Engine.expand($0) }
+    let expanded = card.lines.map { Engine.expand($0) }
+    self.lineTargets = expanded
+    var coverage = [Int](repeating: 0, count: Tile.allCases.count)
+    for targets in expanded {
+      var used = Set<Int>()
+      for target in targets { for need in target.needs { used.insert(need.idx) } }
+      for index in used { coverage[index] += 1 }
+    }
+    self.coverage = coverage
   }
+
+  /// Number of lines on the card that can use `tile` in some target.
+  public func coverage(of tile: Tile) -> Int { coverage[tile.sortIndex] }
 
   /// All targets of the card, in line order.
   public var targets: [Target] { lineTargets.flatMap { $0 } }
