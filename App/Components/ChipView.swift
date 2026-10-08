@@ -33,7 +33,7 @@ struct ChipView: View {
       .contentShape(Capsule())
     }
     .buttonStyle(.plain)
-    .sensoryFeedback(.impact(weight: .light), trigger: isSelected)
+    .haptic(.impact(weight: .light), trigger: isSelected)
     .accessibilityAddTraits(isSelected ? .isSelected : [])
   }
 

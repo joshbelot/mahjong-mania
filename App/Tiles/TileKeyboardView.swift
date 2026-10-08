@@ -34,7 +34,7 @@ struct TileKeyboardView: View {
       keyboard(size: .medium, spacing: 0)
       keyboard(size: .small, spacing: 4)
     }
-    .sensoryFeedback(.selection, trigger: taps)
+    .haptic(.selection, trigger: taps)
   }
 
   private func keyboard(size: TileSize, spacing: CGFloat) -> some View {
