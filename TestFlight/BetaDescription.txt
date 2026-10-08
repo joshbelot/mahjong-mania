@@ -1,0 +1,11 @@
+Mahjong Mania is a table-side companion for American Mahjong. It keeps score for experienced players and coaches newer players, giving only as much help as you ask for.
+
+Game Night: add your players, record each hand in a few taps, and the app works out the payouts for you (discards, self-picks, jokerless hands, wall games, dealer rotation). See running totals, settle up in money if your group plays for it, and look back at past game nights and player stats.
+
+Hand Helper: enter your tiles and see which hands on your card you are closest to, which tiles you still need, which hands are dead, what to pass in the Charleston, what to discard, whether you can call a tile, and what opponents' exposures might mean. Choose how much help you want: Off, Peek or Coach.
+
+Cards: the app includes an original Practice Card. You can also type in or paste hands from a card you own, using a compact notation with a live preview. Please enter only cards you own and don't share copyrighted cards.
+
+Learn: a rules quick reference, a tile guide, how to read a card, a glossary and two practice drills.
+
+Everything stays on your phone. There are no accounts and no network use. Mahjong Mania is not affiliated with the National Mah Jongg League.
