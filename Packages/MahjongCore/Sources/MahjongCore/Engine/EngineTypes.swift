@@ -38,7 +38,7 @@ public struct TargetGroup: Hashable, Sendable {
 public struct Target: Hashable, Sendable {
   public let lineID: String
   public let variantIndex: Int
-  public let binding: Binding
+  public let binding: SuitBinding
   public let groups: [TargetGroup]
   /// Per tile: sum of the counts of groups that cannot take jokers.
   public let plainNeed: TileCounts
@@ -57,7 +57,7 @@ public struct Target: Hashable, Sendable {
     var jok: Int
   }
 
-  public init(lineID: String, variantIndex: Int, binding: Binding, groups: [TargetGroup]) {
+  public init(lineID: String, variantIndex: Int, binding: SuitBinding, groups: [TargetGroup]) {
     var plain: TileCounts = [:]
     var jok: TileCounts = [:]
     for group in groups {
