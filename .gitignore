@@ -21,3 +21,6 @@ build/
 # macOS
 .DS_Store
 App/Info.plist
+
+# Agent worktrees
+.claude/worktrees/
