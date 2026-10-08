@@ -1093,7 +1093,7 @@ The Expo prototype has already been removed from the repo.
 ### Phase 3: Engine core (expand, evaluate, live, analyze)
 **Tasks:** `Engine.expand`, `Engine.evaluate`, `Engine.liveCounts`, ranking, and `Analyzer.analyze`.
 **Tests (minimum):**
-- Expansion counts: `Even Climb` → 3 targets; `Three Plus Four` → 6; `Five Step Run` → 15; `Four Winds` → 1; `Dragons And A Wind` → 4; `Like Quints` → 54 (before dedupe: none expected to collapse); `Triple Year` → 4 (x = Dots is dropped for needing 5 Soaps: x∈{C,B} × the remaining y,z permutations = 2×2).
+- Expansion counts: `Even Climb` → 3 targets; `Three Plus Four` → 6; `Five Step Run` → 15; `Four Winds` → 1; `Dragons And A Wind` → 4; `Like Quints` → 54 (before dedupe: none expected to collapse); `Triple Year` → 2 (x = Dots is dropped for needing 5 Soaps; for x∈{Cracks, Bams} the other two suits can go to y and z in either order, but both give the same multiset, so §10.1 step 6 dedupes them to one target each).
 - Distinct suits are enforced: no `Three Plus Four` target has two equal suits.
 - Matching dragon: `Even Dragons` with z = Cracks resolves `DDDD/z` to Red.
 - Evaluate: a perfect 14-tile rack → distance 0; minus one tile of a pair → distance 1 (missing that tile, `jokerOK` false); 2 jokers covering a pung deficit → distance 0, `jokersUsed` 2; a joker can't fill a pair (distance stays 1); exposure matching (correct → OK; wrong size → `.exposure`); concealed + exposure → `.concealed`.
