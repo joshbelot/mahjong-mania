@@ -1,0 +1,106 @@
+name: CI
+
+on:
+  push:
+    branches-ignore: [ci-screenshots]
+  pull_request:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  core:
+    name: core
+    runs-on: ubuntu-latest
+    container: swift:6.0
+    steps:
+      - uses: actions/checkout@v4
+      - name: Swift version
+        run: swift --version
+      - name: Test MahjongCore
+        run: swift test --package-path Packages/MahjongCore --enable-code-coverage
+      - name: Coverage summary
+        run: |
+          set -e
+          PROF=$(find Packages/MahjongCore/.build -name default.profdata | head -1)
+          BIN=$(find Packages/MahjongCore/.build -name 'MahjongCorePackageTests.xctest' | head -1)
+          llvm-cov report "$BIN" -instr-profile="$PROF" -ignore-filename-regex='(Tests|\.build)' | tail -40 || true
+
+  ios:
+    name: ios
+    # macOS minutes are expensive: run on pull requests and on main, not on every branch push.
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main'
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+      - name: Tool versions
+        run: |
+          xcodebuild -version
+          swift --version
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate project
+        run: xcodegen generate
+      - name: Test (unit + UI)
+        run: |
+          set -o pipefail
+          DEST_ID=$(tools/simulator_id.sh)
+          echo "Using simulator $DEST_ID"
+          mkdir -p build
+          xcodebuild test \
+            -project MahjongMania.xcodeproj \
+            -scheme MahjongMania \
+            -destination "id=$DEST_ID" \
+            -resultBundlePath build/Tests.xcresult \
+            CODE_SIGNING_ALLOWED=NO | tee build/xcodebuild-test.log | tail -80
+      - name: Export screenshots
+        if: always()
+        run: |
+          mkdir -p build/screenshots
+          xcrun xcresulttool export attachments --path build/Tests.xcresult --output-path build/screenshots || true
+      - name: Publish screenshots to ci-screenshots branch
+        if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: tools/ci_publish_screenshots.sh build/screenshots ${{ github.event.pull_request.number }} || echo "screenshot publish failed (non-fatal)"
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: build/screenshots
+          if-no-files-found: warn
+      - name: Upload test log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xcodebuild-log
+          path: build/xcodebuild-test.log
+          if-no-files-found: ignore
+      - name: Release archive builds (unsigned)
+        run: |
+          set -o pipefail
+          xcodebuild archive \
+            -project MahjongMania.xcodeproj \
+            -scheme MahjongMania \
+            -configuration Release \
+            -archivePath build/MahjongMania.xcarchive \
+            -destination 'generic/platform=iOS' \
+            CODE_SIGNING_ALLOWED=NO | tail -20
+      - name: Guard against permissions and entitlements
+        run: |
+          set -e
+          PLIST=build/MahjongMania.xcarchive/Products/Applications/MahjongMania.app/Info.plist
+          if plutil -p "$PLIST" | grep -E 'UsageDescription|UIBackgroundModes'; then
+            echo "Info.plist must not contain usage descriptions or background modes" >&2; exit 1
+          fi
+          if find . -name '*.entitlements' -not -path './build/*' | grep .; then
+            echo "No entitlements files allowed" >&2; exit 1
+          fi
