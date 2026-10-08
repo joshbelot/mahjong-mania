@@ -1,7 +1,7 @@
 import Foundation
 
 /// A concrete choice of suits for the variables of a pattern variant, plus the number shift `k`.
-public struct Binding: Hashable, Sendable {
+public struct SuitBinding: Hashable, Sendable {
   public var x: Suit?
   public var y: Suit?
   public var z: Suit?
@@ -48,11 +48,11 @@ enum Instantiate {
   }
 
   /// Every injective assignment of the variables to number suits not used as fixed suits (k = 0).
-  static func assignments(variables: [SuitVar], excluding fixed: Set<Suit>) -> [Binding] {
+  static func assignments(variables: [SuitVar], excluding fixed: Set<Suit>) -> [SuitBinding] {
     let available = Suit.allCases.filter { !fixed.contains($0) }
-    var result: [Binding] = []
+    var result: [SuitBinding] = []
 
-    func extend(_ index: Int, _ current: Binding, _ remaining: [Suit]) {
+    func extend(_ index: Int, _ current: SuitBinding, _ remaining: [Suit]) {
       if index == variables.count {
         result.append(current)
         return
@@ -70,11 +70,11 @@ enum Instantiate {
       }
     }
 
-    extend(0, Binding(), available)
+    extend(0, SuitBinding(), available)
     return result
   }
 
-  static func resolve(_ spec: TileSpec, binding: Binding) -> Tile? {
+  static func resolve(_ spec: TileSpec, binding: SuitBinding) -> Tile? {
     func suit(_ ref: SuitRef) -> Suit? {
       switch ref {
       case .fixed(let s): return s

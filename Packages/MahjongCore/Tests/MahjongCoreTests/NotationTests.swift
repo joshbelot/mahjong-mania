@@ -475,7 +475,7 @@ struct InstantiateTests {
   }
 
   @Test func resolveShiftsAndRejectsOutOfRange() {
-    let binding = Binding(x: .dots, y: nil, z: nil, k: 2)
+    let binding = SuitBinding(x: .dots, y: nil, z: nil, k: 2)
     #expect(Instantiate.resolve(.number(3, .variable(.x)), binding: binding) == .number(5, .dots))
     #expect(Instantiate.resolve(.number(8, .variable(.x)), binding: binding) == nil)
     #expect(Instantiate.resolve(.matchingDragon(.variable(.x)), binding: binding) == .dragon(.white))

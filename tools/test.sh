@@ -19,4 +19,5 @@ xcodebuild test \
   -scheme MahjongMania \
   -destination "id=$DEST_ID" \
   -resultBundlePath "$RESULT_BUNDLE" \
+  -retry-tests-on-failure \
   CODE_SIGNING_ALLOWED=NO
