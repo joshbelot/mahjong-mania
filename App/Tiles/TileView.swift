@@ -90,10 +90,12 @@ struct TileView: View {
     ZStack(alignment: .top) {
       if state == .missing {
         RoundedRectangle(cornerRadius: size.radius)
+          .fill(theme.tileFace.opacity(0.14))
+        RoundedRectangle(cornerRadius: size.radius)
           .strokeBorder(theme.textFaint, style: StrokeStyle(lineWidth: 1.5, dash: [4, 3]))
         TileFace(tile: tile, size: size)
           .frame(width: size.width, height: faceHeight)
-          .opacity(0.3)
+          .opacity(0.5)
       } else {
         RoundedRectangle(cornerRadius: size.radius).fill(theme.tileEdge)
         RoundedRectangle(cornerRadius: size.radius)
