@@ -197,6 +197,10 @@ final class GameNightTests: XCTestCase {
     tapID(app, "record.how.discard")
     tapID(app, "record.thrower.Dee")
     tapID(app, "record.chooseHand")
+    // The list is lazy, so search for the hand instead of scrolling to it.
+    let search = app.searchFields.firstMatch
+    tap(search, "hand search field")
+    search.typeText("Even Climb")
     let line = el(app, "pick.line.Even Climb")
     XCTAssertTrue(line.waitForExistence(timeout: 10), "Even Climb in the hand picker")
     attach("game-picker-light")
