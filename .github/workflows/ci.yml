@@ -70,11 +70,6 @@ jobs:
             -resultBundlePath build/Tests.xcresult \
             -retry-tests-on-failure \
             CODE_SIGNING_ALLOWED=NO | tee build/xcodebuild-test.log | tail -80
-      - name: Show failures
-        if: failure()
-        run: |
-          echo "=== Failures ==="
-          grep -nE "error:|✘|failed|Failing tests" build/xcodebuild-test.log | head -80 || true
       - name: Export screenshots
         if: always()
         run: |
@@ -119,3 +114,8 @@ jobs:
           if find . -name '*.entitlements' -not -path './build/*' | grep .; then
             echo "No entitlements files allowed" >&2; exit 1
           fi
+      - name: Show failures
+        if: failure()
+        run: |
+          echo "=== Failures ==="
+          grep -E "error:|Test Case .* failed|✘" build/xcodebuild-test.log | sed -E "s/^[0-9T:.Z-]+ //" | head -40 || true
