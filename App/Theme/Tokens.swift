@@ -88,6 +88,8 @@ struct Theme: Sendable {
   let varA = Color.dynamic(light: 0x2F5D9E, dark: 0x7FA6E0)
   let varB = Color.dynamic(light: 0xC8423B, dark: 0xE2675F)
   let varC = Color.dynamic(light: 0x2E7D4F, dark: 0x5BBF86)
+  // Ink for winds and other dark glyphs on the ivory tile face (does not adapt, like the face itself).
+  let tileInk = Color.fixed(0x1E2420)
   let flower = Color.fixed(0x8A4FA3)
   let joker = Color.fixed(0xB8862A)
 
