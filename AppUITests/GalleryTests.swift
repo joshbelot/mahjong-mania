@@ -26,7 +26,12 @@ final class GalleryTests: XCTestCase {
     settings.tap()
 
     let open = app.descendants(matching: .any)["gallery.open"].firstMatch
-    XCTAssertTrue(open.waitForExistence(timeout: 10), "Missing gallery row")
+    var attempts = 0
+    while !open.exists && attempts < 10 {
+      app.swipeUp()
+      attempts += 1
+    }
+    XCTAssertTrue(open.waitForExistence(timeout: 5), "Missing gallery row")
     open.tap()
     XCTAssertTrue(
       app.navigationBars["Component gallery"].waitForExistence(timeout: 10), "Gallery did not open")
