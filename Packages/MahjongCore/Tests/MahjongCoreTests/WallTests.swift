@@ -30,7 +30,7 @@ struct WallTests {
 
   @Test func differentSeedsGiveDifferentDeals() {
     var hands: Set<[Tile]> = []
-    for seed in 1...20 as ClosedRange<UInt64> { hands.insert(Wall.deal(seed: seed).hand) }
+    for seed in UInt64(1)...20 { hands.insert(Wall.deal(seed: seed).hand) }
     #expect(hands.count == 20)
   }
 
