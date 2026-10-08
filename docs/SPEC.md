@@ -1060,20 +1060,20 @@ General rules for every phase:
 ### Phase 0: Native project foundation (TestFlight-ready skeleton)
 The Expo prototype has already been removed from the repo.
 **Tasks**
-- [ ] `Packages/MahjongCore/Package.swift` (swift-tools-version 6.0, platforms `.iOS(.v17), .macOS(.v14)`, library + test target), with a placeholder `public enum MahjongCore { public static let version = "1.0" }` and one passing Swift Testing test.
-- [ ] `project.yml` exactly as in §6.4. `App/MahjongManiaApp.swift` + `RootView.swift` with the 4 tabs as placeholder screens (titles + SF Symbols) and the settings sheet button.
-- [ ] `App/Theme/Tokens.swift` (§11.2 as `Color` values with light/dark variants via `Color(UIColor { traits in … })`), plus the `Theme` environment and the `LaunchBackground` colour set in the asset catalog (`#F7F3EA` / `#121614`).
-- [ ] App icon: `App/Resources/Assets.xcassets/AppIcon.appiconset` with a **single 1024×1024 PNG, no alpha channel** (`Contents.json` uses the single-size "universal / ios" format). Use a temporary simple design (an ivory tile on jade); Phase 12 replaces it. Verify there's no alpha: `sips -g hasAlpha icon.png` → `no` (or Python `PIL.Image.open(...).mode == "RGB"`).
-- [ ] `App/Resources/PrivacyInfo.xcprivacy` per §16.2.
-- [ ] `.swift-format` config (2-space indent, line length 110) and `tools/bootstrap.sh`, `tools/test.sh`, `tools/bump_build.sh` (§16.3).
-- [ ] `AppUITests/SmokeTests.swift`: launches the app, taps each tab, and attaches a screenshot per tab (`XCTAttachment(screenshot:)`, `lifetime = .keepAlways`). Launch argument `-UITestResetData` makes the app start from an empty data directory and skip onboarding.
-- [ ] `.github/workflows/ci.yml` per §14.2.
-- [ ] Update `README.md` (what it is, how to bootstrap/run/test, link to this spec and `RELEASING.md`).
+- [x] `Packages/MahjongCore/Package.swift` (swift-tools-version 6.0, platforms `.iOS(.v17), .macOS(.v14)`, library + test target), with a placeholder `public enum MahjongCore { public static let version = "1.0" }` and one passing Swift Testing test.
+- [x] `project.yml` exactly as in §6.4. `App/MahjongManiaApp.swift` + `RootView.swift` with the 4 tabs as placeholder screens (titles + SF Symbols) and the settings sheet button.
+- [x] `App/Theme/Tokens.swift` (§11.2 as `Color` values with light/dark variants via `Color(UIColor { traits in … })`), plus the `Theme` environment and the `LaunchBackground` colour set in the asset catalog (`#F7F3EA` / `#121614`).
+- [x] App icon: `App/Resources/Assets.xcassets/AppIcon.appiconset` with a **single 1024×1024 PNG, no alpha channel** (`Contents.json` uses the single-size "universal / ios" format). Use a temporary simple design (an ivory tile on jade); Phase 12 replaces it. Verify there's no alpha: `sips -g hasAlpha icon.png` → `no` (or Python `PIL.Image.open(...).mode == "RGB"`).
+- [x] `App/Resources/PrivacyInfo.xcprivacy` per §16.2.
+- [x] `.swift-format` config (2-space indent, line length 110) and `tools/bootstrap.sh`, `tools/test.sh`, `tools/bump_build.sh` (§16.3).
+- [x] `AppUITests/SmokeTests.swift`: launches the app, taps each tab, and attaches a screenshot per tab (`XCTAttachment(screenshot:)`, `lifetime = .keepAlways`). Launch argument `-UITestResetData` makes the app start from an empty data directory and skip onboarding.
+- [x] `.github/workflows/ci.yml` per §14.2.
+- [x] Update `README.md` (what it is, how to bootstrap/run/test, link to this spec and `RELEASING.md`).
 **Acceptance**
-- [ ] `tools/test.sh` passes on macOS: the package tests run, `xcodegen generate` succeeds, and `xcodebuild test` passes on an iPhone simulator.
-- [ ] CI green on both jobs, with tab screenshots in the artifact (light and dark: run the UI test twice, or toggle with the `-AppleInterfaceStyle Dark` launch argument).
-- [ ] `xcodebuild archive` for `generic/platform=iOS` succeeds locally **with signing** when `DEVELOPMENT_TEAM` is set. This proves the skeleton can go to TestFlight. (The owner may run `tools/upload_testflight.sh` after Phase 12, or earlier to test the pipeline.)
-- [ ] No `NS*UsageDescription`, `UIBackgroundModes` or entitlements exist.
+- [x] `tools/test.sh` passes on macOS: the package tests run, `xcodegen generate` succeeds, and `xcodebuild test` passes on an iPhone simulator. (Verified by the CI `ios` job, which runs the same steps; the script itself is for the owner's Mac.)
+- [x] CI green on both jobs, with tab screenshots in the artifact (light and dark: run the UI test twice, or toggle with the `-AppleInterfaceStyle Dark` launch argument).
+- [ ] **Owner step:** `xcodebuild archive` for `generic/platform=iOS` succeeds locally **with signing** when `DEVELOPMENT_TEAM` is set. CI proves the Release archive builds unsigned; signing needs the owner's Apple team. (The owner may run `tools/upload_testflight.sh --dry-run` after Phase 12, or earlier to test the pipeline.)
+- [x] No `NS*UsageDescription`, `UIBackgroundModes` or entitlements exist.
 
 ### Phase 1: Tiles, random, wall (MahjongCore)
 **Tasks:** `Tile`, `TileCounts` helpers, `SeededRandom` (SplitMix64), `shuffle(using:)` (use the stdlib's `shuffled(using:)` with `SeededRandom`, which is deterministic for a fixed generator), `Wall.full()` (152 tiles), `Wall.deal(seed:count:)`.

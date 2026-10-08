@@ -7,7 +7,7 @@ final class SmokeTests: XCTestCase {
     continueAfterFailure = false
     let app = XCUIApplication()
     app.launchArguments += ["-UITestResetData"]
-    if dark { app.launchArguments += ["-AppleInterfaceStyle", "Dark"] }
+    if dark { app.launchArguments += ["-UITestDark"] }
     app.launch()
     return app
   }
