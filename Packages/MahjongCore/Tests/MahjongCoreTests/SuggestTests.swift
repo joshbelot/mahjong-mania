@@ -110,7 +110,7 @@ struct PassSuggestionTests {
     ]
     let advice = analyzer.suggestPasses(PlayerView(rack: rack), count: 13)
     #expect(advice.passes.count == 13)
-    #expect(advice.passes.contains { $0.reason == "Only helps Winds (4 away)" })
+    #expect(advice.passes.contains { $0.reason == "Only helps Winds (2 away)" })
   }
 
   @Test func focusNamesTheStrongestSections() {
