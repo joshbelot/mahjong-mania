@@ -114,7 +114,7 @@ final class Persister<Value: VersionedDocument> {
   func changed() {
     task?.cancel()
     task = Task { [delay] in
-      try? await Task.sleep(for: delay)
+      _ = try? await Task.sleep(for: delay)
       guard !Task.isCancelled else { return }
       self.writeNow()
     }

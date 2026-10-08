@@ -103,10 +103,10 @@ final class SettingsStore {
   }
 
   /// A binding to one setting, for use in forms.
-  func binding<Value>(_ keyPath: WritableKeyPath<AppSettings, Value>) -> Binding<Value> {
+  func binding<Value: Sendable>(_ keyPath: WritableKeyPath<AppSettings, Value> & Sendable) -> Binding<Value> {
     Binding(
-      get: { self.settings[keyPath: keyPath] },
-      set: { newValue in self.update { $0[keyPath: keyPath] = newValue } })
+      get: { MainActor.assumeIsolated { self.settings[keyPath: keyPath] } },
+      set: { newValue in MainActor.assumeIsolated { self.update { $0[keyPath: keyPath] = newValue } } })
   }
 
   func setBestStreak(pickAHand: Int? = nil, charleston: Int? = nil) {
