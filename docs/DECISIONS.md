@@ -34,3 +34,7 @@ The spec says to add live jokers to `liveOuts` "if any jokerOK deficit". When ra
 ## 2026-10-08, §1 Phase 1: shuffle is implemented with `SeededRandom` directly
 
 The spec suggests the stdlib's `shuffled(using:)`. Its algorithm is not guaranteed to be stable across Swift versions, which would silently change "Try again" replays and any golden test. `SeededRandom.shuffled(_:seed:)` is a plain Fisher–Yates driven only by SplitMix64, so a seed always gives the same deal. SplitMix64 is tested against reference vectors.
+
+## 2026-10-08, §7.3: `Binding` renamed to `SuitBinding`
+
+MahjongCore's `Binding` (suit assignment + shift of a target) clashes with `SwiftUI.Binding` in every app file that imports both (compile error "cannot specialize non-generic type 'Binding'"). The core type is `SuitBinding`; its fields are unchanged (`x`, `y`, `z`, `k`). SPEC §7.3 updated.

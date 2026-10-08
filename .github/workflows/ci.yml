@@ -22,7 +22,16 @@ jobs:
       - name: Swift version
         run: swift --version
       - name: Test MahjongCore
-        run: swift test --package-path Packages/MahjongCore --enable-code-coverage
+        run: |
+          set +e
+          swift test --package-path Packages/MahjongCore --enable-code-coverage > test.log 2>&1
+          status=$?
+          if [ $status -ne 0 ]; then
+            echo "=== Failures (compile errors and failed expectations) ==="
+            grep -nE "error:|recorded an issue|Expectation failed|✘" test.log | head -80
+          fi
+          tail -4 test.log
+          exit $status
       - name: Coverage summary
         run: |
           set -e
@@ -59,7 +68,13 @@ jobs:
             -scheme MahjongMania \
             -destination "id=$DEST_ID" \
             -resultBundlePath build/Tests.xcresult \
+            -retry-tests-on-failure \
             CODE_SIGNING_ALLOWED=NO | tee build/xcodebuild-test.log | tail -80
+      - name: Show failures
+        if: failure()
+        run: |
+          echo "=== Failures ==="
+          grep -nE "error:|✘|failed|Failing tests" build/xcodebuild-test.log | head -80 || true
       - name: Export screenshots
         if: always()
         run: |

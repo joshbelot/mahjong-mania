@@ -301,7 +301,7 @@ struct LiveAndDeadTests {
 
   @Test func needingANorthPairWhenThreeAreSeenIsDead() {
     let target = Target(
-      lineID: "t", variantIndex: 0, binding: Binding(),
+      lineID: "t", variantIndex: 0, binding: SuitBinding(),
       groups: [
         TargetGroup(tile: .wind(.north), count: 2, jokerOK: false, groupIndex: 0),
         TargetGroup(tile: .number(1, .dots), count: 3, jokerOK: true, groupIndex: 1),
@@ -321,7 +321,7 @@ struct LiveAndDeadTests {
 
   @Test func oneMissingNorthWithNoneLeftIsDeadButOneLeftIsAlive() {
     let target = Target(
-      lineID: "t", variantIndex: 0, binding: Binding(),
+      lineID: "t", variantIndex: 0, binding: SuitBinding(),
       groups: [TargetGroup(tile: .wind(.north), count: 2, jokerOK: false, groupIndex: 0)])
     let view = PlayerView(rack: [.wind(.north)])
     // We hold one North and three more are visible: the second one we need can't exist.
@@ -339,7 +339,7 @@ struct LiveAndDeadTests {
   @Test func jokerableShortfallBeyondWhatIsLeftIsDead() {
     // Need a pung of 3 Dots with nothing in hand; every 3 Dot and every joker is gone.
     let target = Target(
-      lineID: "t", variantIndex: 0, binding: Binding(),
+      lineID: "t", variantIndex: 0, binding: SuitBinding(),
       groups: [TargetGroup(tile: .number(3, .dots), count: 3, jokerOK: true, groupIndex: 0)])
     let view = PlayerView(rack: [])
     var seen: TileCounts = [.number(3, .dots): 4, .joker: 8]
@@ -353,7 +353,7 @@ struct LiveAndDeadTests {
 
   @Test func liveOutsCountLiveCopiesOfMissingTilesPlusJokers() {
     let target = Target(
-      lineID: "t", variantIndex: 0, binding: Binding(),
+      lineID: "t", variantIndex: 0, binding: SuitBinding(),
       groups: [
         TargetGroup(tile: .wind(.north), count: 2, jokerOK: false, groupIndex: 0),
         TargetGroup(tile: .number(3, .dots), count: 3, jokerOK: true, groupIndex: 1),
@@ -412,7 +412,7 @@ struct BruteForceTests {
           rack.append(pool[Int(rng.next() % UInt64(pool.count))])
         }
       }
-      let target = Target(lineID: "t", variantIndex: 0, binding: Binding(), groups: groups)
+      let target = Target(lineID: "t", variantIndex: 0, binding: SuitBinding(), groups: groups)
       let slots = groups.flatMap { g in Array(repeating: (tile: g.tile, jokerOK: g.jokerOK), count: g.count) }
       let expected = bruteDistance(slots: slots, rack: rack)
       let result = Engine.evaluate(target, line: line("Four Winds"), view: PlayerView(rack: rack), live: nil)

@@ -440,10 +440,10 @@ public enum PracticeCard { public static let text: String; public static let car
 ```swift
 public struct Exposure: Hashable, Codable, Sendable { public var tiles: [Tile] }   // naturals (all identical) + jokers
 public struct PlayerView: Hashable, Sendable { public var rack: [Tile]; public var exposures: [Exposure] }
-public struct Binding: Hashable, Sendable { public var x: Suit?; public var y: Suit?; public var z: Suit?; public var k: Int }
+public struct SuitBinding: Hashable, Sendable { public var x: Suit?; public var y: Suit?; public var z: Suit?; public var k: Int }
 public struct TargetGroup: Hashable, Sendable { public var tile: Tile; public var count: Int; public var jokerOK: Bool; public var groupIndex: Int }
 public struct Target: Hashable, Sendable {
-  public var lineID: String; public var variantIndex: Int; public var binding: Binding
+  public var lineID: String; public var variantIndex: Int; public var binding: SuitBinding
   public var groups: [TargetGroup]; public var plainNeed: TileCounts; public var jokerNeed: TileCounts
   public var hasJokerGroups: Bool; public var signature: String
 }
