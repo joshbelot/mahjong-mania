@@ -1,0 +1,11 @@
+Thanks for testing Mahjong Mania! Please try as much of this as you can and tell me what felt slow, confusing or wrong.
+
+1. First launch: go through the welcome screens and pick how much help you want (Off, Peek, Coach).
+2. Game Night: add 3 or 4 players, start a game night and record a few hands: a discard, a self-pick, a jokerless win, a wall game and an adjustment. Check the payouts against how your group scores. Edit a hand, undo one, then end the game night and look at the summary and the settle-up.
+3. Hand Helper: enter 13 tiles in Charleston mode and check the pass suggestions (jokers should never be suggested). Try Playing mode with an exposure and "Can I call it?", and Scout mode with an opponent's exposure.
+4. Cards: duplicate the Practice Card, edit a hand, import a few lines of your own, and share a card.
+5. Learn: skim the topics and try both drills.
+6. Look at everything in dark mode and with a larger text size, and try it with VoiceOver if you use it.
+7. Force-quit in the middle of a game night and reopen: your game should still be there. Try airplane mode too.
+
+Known limits in this first build: iPhone only, portrait only, no iPad layout, no 5-player tables.
