@@ -50,7 +50,7 @@ final class SettingsTests: XCTestCase {
     XCTAssertTrue(first.waitForExistence(timeout: 5), "First confirmation did not appear")
     attach("settings-reset-confirm-1-dark")
     first.tap()
-    let second = app.alerts.buttons["Delete everything"]
+    let second = app.alerts.buttons["Delete everything"].firstMatch
     XCTAssertTrue(second.waitForExistence(timeout: 5), "Second confirmation did not appear")
     attach("settings-reset-confirm-2-dark")
     second.tap()
@@ -68,7 +68,7 @@ final class SettingsTests: XCTestCase {
     let first = app.buttons["Continue…"]
     XCTAssertTrue(first.waitForExistence(timeout: 5))
     first.tap()
-    let alert = app.alerts.buttons["Cancel"]
+    let alert = app.alerts.buttons["Cancel"].firstMatch
     XCTAssertTrue(alert.waitForExistence(timeout: 5), "Second confirmation did not appear")
     alert.tap()
     XCTAssertTrue(app.buttons["settings.done"].waitForExistence(timeout: 5))
