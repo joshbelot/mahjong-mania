@@ -35,10 +35,12 @@ final class AppStores {
       (try? FileManager.default.url(
         for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true))
       ?? FileManager.default.temporaryDirectory
-    return AppStores(
+    let stores = AppStores(
       directory: base.appendingPathComponent("MahjongMania", isDirectory: true),
       resetFirst: LaunchOptions.resetData || LaunchOptions.showOnboarding,
       showOnboarding: LaunchOptions.showOnboarding)
+    stores.applyHelperLaunchOptions()
+    return stores
   }
 
   /// Stores backed by a fresh temporary directory (tests and previews).
