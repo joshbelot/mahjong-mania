@@ -1,0 +1,5 @@
+Query chain:
+ →Find: Target Application 'com.joshbelot.mahjongmania'
+  ↪︎Find: Descendants matching type Any
+    ↪︎Find: Elements matching predicate 'label CONTAINS "Year Kongs Edited"'
+      ↪︎Find: First Match
