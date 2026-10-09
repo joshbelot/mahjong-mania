@@ -43,6 +43,7 @@ struct MahjongManiaApp: App {
         .environment(stores.cards)
         .environment(stores.helper)
         .environment(stores)
+        .environment(\.hapticsEnabled, stores.settings.settings.haptics)
         .preferredColorScheme(
           LaunchOptions.forcedColorScheme ?? stores.settings.settings.theme.colorScheme
         )

@@ -33,7 +33,7 @@ PY
 
 for f in "$OUT"/*.png; do
   [ -e "$f" ] || continue
-  sips -Z 700 "$f" >/dev/null
+  sips -Z 700 "$f" >/dev/null 2>&1 || true
 done
 
 REPO_URL="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
