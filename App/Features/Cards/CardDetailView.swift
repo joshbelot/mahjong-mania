@@ -77,7 +77,7 @@ struct CardDetailView: View {
     .sheet(item: $editorRequest) { request in
       LineEditorSheet(cardID: cardID, request: request) { savedTick += 1 }
     }
-    .sensoryFeedback(.success, trigger: savedTick)
+    .haptic(.success, trigger: savedTick)
   }
 
   // MARK: Content

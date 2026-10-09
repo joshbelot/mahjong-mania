@@ -65,7 +65,7 @@ struct LineEditorView: View {
       }
     }
     .interactiveDismissDisabled(model != original)
-    .sensoryFeedback(.selection, trigger: keyTick)
+    .haptic(.selection, trigger: keyTick)
     .onChange(of: model.notation) { _, newValue in
       if newValue.contains(where: { $0.isNewline }) {
         model.notation = String(newValue.filter { !$0.isNewline })
@@ -359,7 +359,7 @@ struct LineEditorView: View {
 
   private func press(_ key: EditorKey) {
     model.press(key)
-    if settings.settings.haptics { keyTick += 1 }
+    keyTick += 1
   }
 
   // MARK: Save

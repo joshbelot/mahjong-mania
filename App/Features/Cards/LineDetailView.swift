@@ -66,7 +66,7 @@ private struct LineDetailContent: View {
     .sheet(item: $editorRequest) { request in
       LineEditorSheet(cardID: card.id, request: request) { dismiss() }
     }
-    .sensoryFeedback(.selection, trigger: suitTick)
+    .haptic(.selection, trigger: suitTick)
   }
 
   // MARK: Sections
@@ -111,7 +111,7 @@ private struct LineDetailContent: View {
       if model.canTrySuits {
         Button {
           model.nextSuits()
-          if settings.settings.haptics { suitTick += 1 }
+          suitTick += 1
         } label: {
           Label("Try other suits", systemImage: "arrow.triangle.2.circlepath")
         }
