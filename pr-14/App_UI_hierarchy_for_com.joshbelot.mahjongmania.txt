@@ -1,0 +1,246 @@
+Application, 0x1167b5400, pid: 18942, label: 'Mahjong Mania' <App element pid: 18942>
+  Window (Main), 0x1167b5540, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 18942, elementOrHash.elementID: 4343678976.4>
+    Other, 0x1167b66c0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 18942, elementOrHash.elementID: 4393697792.5>
+      Other, 0x1167b6800, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 18942, elementOrHash.elementID: 4394157952.6>
+        Other, 0x1167b4000, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 18942, elementOrHash.elementID: 4343677952.7>
+          Other, 0x1167b4640, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 18942, elementOrHash.elementID: 4391873024.8>
+            Other, 0x1167b4780, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 18942, elementOrHash.elementID: 4392820160.9>
+              Other, 0x1167b48c0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 18942, elementOrHash.elementID: 4393701376.10>
+                Other, 0x1167b4a00, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 18942, elementOrHash.elementID: 4391935424.12>
+                  Other, 0x1167b4b40, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 18942, elementOrHash.elementID: 4343686144.61>
+                    Other, 0x1167b4c80, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 18942, elementOrHash.elementID: 4391458496.62>
+                      Other, 0x1167b4dc0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 18942, elementOrHash.elementID: 4391458944.63>
+                        Other, 0x1167b75c0, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'tab.cards' <AX element pid: 18942, elementOrHash.elementID: 4392299456.64>
+                          NavigationBar, 0x1167b7700, {{0.0, 62.0}, {402.0, 114.0}}, identifier: 'Practice Card copy' <AX element pid: 18942, elementOrHash.elementID: 4394430464.65>
+                            Button, 0x1167b7840, {{16.0, 62.0}, {44.0, 44.0}}, identifier: 'BackButton', label: 'Practice Card' <AX element pid: 18942, elementOrHash.elementID: 4659963456.111>
+                            StaticText, 0x1167b7980, {{72.0, 73.7}, {150.7, 20.7}}, label: 'Practice Card copy' <AX element pid: 18942, elementOrHash.elementID: 4788416768.902>
+                            Button, 0x1167b7ac0, {{288.7, 66.0}, {37.3, 36.0}}, identifier: 'card.addHand', label: 'Add hand' <AX element pid: 18942, elementOrHash.elementID: 4741326208.903>
+                            Other, 0x1167b7c00, {{342.0, 66.0}, {40.0, 36.0}}, identifier: 'card.menu', label: 'Card options' <AX element pid: 18942, elementOrHash.elementID: 4660188160.292>
+                              Other, 0x1167b7d40, {{342.0, 66.0}, {40.0, 36.0}} <AX element pid: 18942, elementOrHash.elementID: 4742196608.904>
+                                Button, 0x1167b7e80, {{342.0, 66.0}, {40.0, 36.0}}, identifier: 'card.menu', label: 'Card options' <AX element pid: 18942, elementOrHash.elementID: 4742197056.905>
+                                  Button, 0x11678e800, {{342.0, 66.0}, {40.0, 36.0}} <AX element pid: 18942, elementOrHash.elementID: 4655174016.299>
+                                    Image, 0x11678e940, {{351.0, 73.0}, {22.0, 22.0}}, identifier: 'ellipsis.circle', label: 'More' <AX element pid: 18942, elementOrHash.elementID: 4742197952.906>
+                            SearchField, 0x11678ea80, {{16.0, 117.0}, {370.0, 44.0}}, label: 'Search hands', placeholderValue: 'Search hands' <AX element pid: 18942, elementOrHash.elementID: 4660185600.293>
+                              Image, 0x11678ebc0, {{28.0, 129.3}, {20.3, 18.7}}, identifier: 'magnifyingglass', label: 'Search' <AX element pid: 18942, elementOrHash.elementID: 4655653888.295>
+                          Other, 0x11678ed00, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 18942, elementOrHash.elementID: 4392300352.66>
+                            Other, 0x11678e300, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 18942, elementOrHash.elementID: 4392307328.70>
+                              Other, 0x11678e440, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 18942, elementOrHash.elementID: 4655171328.296>
+                                Other, 0x11678e580, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 18942, elementOrHash.elementID: 4392448704.298>
+                                  CollectionView, 0x11678e6c0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 18942, elementOrHash.elementID: 4394052096.300>
+                                    Other, 0x116766940, {{-16.0, -1572.0}, {434.0, 2136.7}} <AX element pid: 18942, elementOrHash.elementID: 4664683520.304>
+                                    Other, 0x11667fe80, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 18942, elementOrHash.elementID: 4392472512.305>
+                                      Other, 0x1167bc000, {{0.0, 0.0}, {402.0, 225.8}} <AX element pid: 18942, elementOrHash.elementID: 4392556224.326>
+                                      Other, 0x1167bc140, {{0.0, 726.2}, {402.0, 147.8}} <AX element pid: 18942, elementOrHash.elementID: 4392619968.327>
+                                    Other, 0x1167bc280, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 18942, elementOrHash.elementID: 4392472064.306>
+                                      Other, 0x1167bc3c0, {{0.0, 726.2}, {402.0, 147.8}} <AX element pid: 18942, elementOrHash.elementID: 4666982400.328>
+                                        Image, 0x1167bc500, {{-120.0, 731.0}, {642.0, 286.0}}, identifier: 'AdditionalDimmingOverlay' <AX element pid: 18942, elementOrHash.elementID: 4666998784.350>
+                                        Other, 0x1167bc640, {{0.0, 726.2}, {402.0, 147.8}} <AX element pid: 18942, elementOrHash.elementID: 4666411264.351>
+                                          Other, 0x1167bc780, {{0.0, 726.2}, {402.0, 147.8}} <AX element pid: 18942, elementOrHash.elementID: 4392620416.371>
+                                        Other, 0x1167bc8c0, {{0.0, 726.2}, {402.0, 147.8}} <AX element pid: 18942, elementOrHash.elementID: 4666983040.352>
+                                          Other, 0x1167bca00, {{0.0, 726.2}, {402.0, 147.8}} <AX element pid: 18942, elementOrHash.elementID: 4392620864.372>
+                                          Other, 0x1167bcb40, {{0.0, 726.2}, {402.0, 147.8}} <AX element pid: 18942, elementOrHash.elementID: 4392697152.908>
+                                    Cell, 0x1167bcc80, {{16.0, 176.0}, {370.0, 40.3}} <AX element pid: 18942, elementOrHash.elementID: 4664168192.307>
+                                      Other, 0x1167bcdc0, {{16.0, 176.0}, {370.0, 40.3}} <AX element pid: 18942, elementOrHash.elementID: 4664679424.329>
+                                      Other, 0x1167bcf00, {{16.0, 176.0}, {370.0, 40.3}} <AX element pid: 18942, elementOrHash.elementID: 4392527488.330>
+                                        Other, 0x1167bd040, {{16.0, 176.0}, {370.0, 40.3}} <AX element pid: 18942, elementOrHash.elementID: 4662670848.353>
+                                          Other, 0x1167bd180, {{16.0, 176.0}, {370.0, 40.3}} <AX element pid: 18942, elementOrHash.elementID: 4392694912.909>
+                                            StaticText, 0x1167bd2c0, {{16.0, 176.0}, {370.0, 40.3}}, label: 'Year' <AX element pid: 18942, elementOrHash.elementID: 4392692672.927>
+                                    Cell, 0x1167bd400, {{16.0, 216.3}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4660189440.308>
+                                      Other, 0x1167bd540, {{16.0, 216.3}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4654412800.331>
+                                        Other, 0x1167bd680, {{16.0, 216.3}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4655176704.354>
+                                          Other, 0x1167bd7c0, {{16.0, 216.3}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4392413696.910>
+                                      Other, 0x1167bd900, {{16.0, 216.3}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4392521216.332>
+                                        Other, 0x1167bda40, {{16.0, 216.3}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4652365312.355>
+                                          Other, 0x1167bdb80, {{16.0, 216.3}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4392414144.911>
+                                            Button, 0x1167bdcc0, {{16.0, 216.3}, {370.0, 82.7}}, identifier: 'line.row.0', label: 'Year  Edited, 25 pts, Exposed hand, Pair of Flowers · 2026 in suit A (0 is Soap) · Kong of 2s in suit B · Kong of 6s in suit B · A and B are different suits.' <AX element pid: 18942, elementOrHash.elementID: 4392375104.928>
+                                              StaticText, 0x1167bde00, {{32.0, 235.3}, {94.3, 20.3}}, label: 'Year  Edited' <AX element pid: 18942, elementOrHash.elementID: 4392324160.937>
+                                              StaticText, 0x1167bdf40, {{274.7, 237.7}, {40.7, 15.7}}, label: '25 pts' <AX element pid: 18942, elementOrHash.elementID: 4392795456.938>
+                                              Other, 0x1167be080, {{323.3, 236.0}, {24.7, 19.0}}, label: 'Exposed hand' <AX element pid: 18942, elementOrHash.elementID: 4392441536.939>
+                                                StaticText, 0x1167be1c0, {{331.3, 238.8}, {8.7, 13.3}}, label: 'X' <AX element pid: 18942, elementOrHash.elementID: 4392560704.977>
+                                              Other, 0x1167be300, {{32.0, 259.7}, {172.3, 20.3}}, label: 'Pair of Flowers · 2026 in suit A (0 is Soap) · Kong of 2s in suit B · Kong of 6s in suit B · A and B are different suits.' <AX element pid: 18942, elementOrHash.elementID: 4392373760.940>
+                                                StaticText, 0x1167be440, {{32.0, 259.7}, {21.3, 20.3}}, label: 'FF' <AX element pid: 18942, elementOrHash.elementID: 4392440640.978>
+                                                StaticText, 0x1167be580, {{61.3, 259.7}, {42.3, 20.3}}, label: '2026' <AX element pid: 18942, elementOrHash.elementID: 4392439744.979>
+                                                StaticText, 0x1167be6c0, {{111.7, 259.7}, {42.3, 20.3}}, label: '2222' <AX element pid: 18942, elementOrHash.elementID: 4392376000.980>
+                                                StaticText, 0x1167be800, {{162.0, 259.7}, {42.3, 20.3}}, label: '6666' <AX element pid: 18942, elementOrHash.elementID: 4392373312.981>
+                                              Image, 0x1167be940, {{360.7, 251.7}, {7.0, 12.0}}, identifier: 'chevron.forward' <AX element pid: 18942, elementOrHash.elementID: 4392374208.941>
+                                    Cell, 0x1167bea80, {{16.0, 299.0}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4660190720.309>
+                                      Other, 0x1167bebc0, {{16.0, 299.0}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4654401536.333>
+                                        Other, 0x1167bed00, {{16.0, 299.0}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4655177600.356>
+                                          Other, 0x1167bee40, {{16.0, 299.0}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4392325056.912>
+                                      Other, 0x1167bef80, {{16.0, 299.0}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4392521664.334>
+                                        Other, 0x1167bf0c0, {{16.0, 299.0}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4662657024.357>
+                                          Other, 0x1167bf200, {{16.0, 299.0}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4392325504.913>
+                                            Button, 0x1167bf340, {{16.0, 299.0}, {370.0, 82.7}}, identifier: 'line.row.1', label: 'Soap Year, 25 pts, Exposed hand, Kong of 2s in suit A · Pung of Soap · Pung of 2s in suit B · Kong of 6s in suit C · A, B and C are different suits.' <AX element pid: 18942, elementOrHash.elementID: 4392753728.929>
+                                              StaticText, 0x1167bf480, {{32.0, 318.0}, {80.0, 20.3}}, label: 'Soap Year' <AX element pid: 18942, elementOrHash.elementID: 4392752832.942>
+                                              StaticText, 0x1167bf5c0, {{274.7, 320.3}, {40.7, 15.7}}, label: '25 pts' <AX element pid: 18942, elementOrHash.elementID: 4392760896.943>
+                                              Other, 0x1167bf700, {{323.3, 318.7}, {24.7, 19.0}}, label: 'Exposed hand' <AX element pid: 18942, elementOrHash.elementID: 4392748800.944>
+                                                StaticText, 0x1167bf840, {{331.3, 321.5}, {8.7, 13.3}}, label: 'X' <AX element pid: 18942, elementOrHash.elementID: 4392754624.982>
+                                              Other, 0x1167bf980, {{32.0, 342.3}, {172.0, 20.3}}, label: 'Kong of 2s in suit A · Pung of Soap · Pung of 2s in suit B · Kong of 6s in suit C · A, B and C are different suits.' <AX element pid: 18942, elementOrHash.elementID: 4392762240.945>
+                                                StaticText, 0x1167bfac0, {{32.0, 342.3}, {42.3, 20.3}}, label: '2222' <AX element pid: 18942, elementOrHash.elementID: 4392749248.983>
+                                                StaticText, 0x1167bfc00, {{82.3, 342.3}, {31.7, 20.3}}, label: '000' <AX element pid: 18942, elementOrHash.elementID: 4392752384.984>
+                                                StaticText, 0x1167bfd40, {{122.0, 342.3}, {31.7, 20.3}}, label: '222' <AX element pid: 18942, elementOrHash.elementID: 4392761792.985>
+                                                StaticText, 0x1167bfe80, {{161.7, 342.3}, {42.3, 20.3}}, label: '6666' <AX element pid: 18942, elementOrHash.elementID: 4392762688.986>
+                                              Image, 0x1167c0000, {{360.7, 334.3}, {7.0, 12.0}}, identifier: 'chevron.forward' <AX element pid: 18942, elementOrHash.elementID: 4392754176.946>
+                                    Other, 0x1167c0140, {{32.0, 298.0}, {338.0, 1.0}} <AX element pid: 18942, elementOrHash.elementID: 4664684032.310>
+                                    Cell, 0x1167c0280, {{16.0, 381.7}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4660192000.311>
+                                      Other, 0x1167c03c0, {{16.0, 381.7}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4662854144.335>
+                                        Other, 0x1167c0500, {{16.0, 381.7}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4655178496.358>
+                                          Other, 0x1167c0640, {{16.0, 381.7}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4392753280.914>
+                                      Other, 0x1167c0780, {{16.0, 381.7}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4392522560.336>
+                                        Other, 0x1167c08c0, {{16.0, 381.7}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4662658560.359>
+                                          Other, 0x1167c0a00, {{16.0, 381.7}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4392749696.915>
+                                            Button, 0x1167c0b40, {{16.0, 381.7}, {370.0, 82.7}}, identifier: 'line.row.2', label: 'Compass Year, 50 pts, Concealed hand, Pair of Flowers · One each of North, East, West and South · 2026 in suit A (0 is Soap) · 2026 in suit B (0 is Soap) · A and B are different suits. · Concealed — only the last tile may be called' <AX element pid: 18942, elementOrHash.elementID: 4392750144.930>
+                                              StaticText, 0x1167c0c80, {{32.0, 400.7}, {114.0, 20.3}}, label: 'Compass Year' <AX element pid: 18942, elementOrHash.elementID: 4392391488.947>
+                                              StaticText, 0x1167c0dc0, {{274.3, 403.0}, {40.7, 15.7}}, label: '50 pts' <AX element pid: 18942, elementOrHash.elementID: 4392399552.948>
+                                              Other, 0x1167c0f00, {{323.0, 401.3}, {25.0, 19.0}}, label: 'Concealed hand' <AX element pid: 18942, elementOrHash.elementID: 4392392384.949>
+                                                StaticText, 0x1167c1040, {{331.0, 404.2}, {9.0, 13.3}}, label: 'C' <AX element pid: 18942, elementOrHash.elementID: 4392400000.987>
+                                              Other, 0x1167c1180, {{32.0, 425.0}, {172.3, 20.3}}, label: 'Pair of Flowers · One each of North, East, West and South · 2026 in suit A (0 is Soap) · 2026 in suit B (0 is Soap) · A and B are different suits. · Concealed — only the last tile may be called' <AX element pid: 18942, elementOrHash.elementID: 4392751040.950>
+                                                StaticText, 0x1167c12c0, {{32.0, 425.0}, {21.3, 20.3}}, label: 'FF' <AX element pid: 18942, elementOrHash.elementID: 4392398208.988>
+                                                StaticText, 0x1167c1400, {{61.3, 425.0}, {42.3, 20.3}}, label: 'NEWS' <AX element pid: 18942, elementOrHash.elementID: 4392396416.989>
+                                                StaticText, 0x1167c1540, {{111.7, 425.0}, {42.3, 20.3}}, label: '2026' <AX element pid: 18942, elementOrHash.elementID: 4392396864.990>
+                                                StaticText, 0x1167c1680, {{162.0, 425.0}, {42.3, 20.3}}, label: '2026' <AX element pid: 18942, elementOrHash.elementID: 4392761344.991>
+                                              Image, 0x1167c17c0, {{360.7, 417.0}, {7.0, 12.0}}, identifier: 'chevron.forward' <AX element pid: 18942, elementOrHash.elementID: 4392750592.951>
+                                    Other, 0x1167c1900, {{32.0, 380.7}, {338.0, 1.0}} <AX element pid: 18942, elementOrHash.elementID: 4664684544.312>
+                                    Cell, 0x1167c1a40, {{16.0, 464.3}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4660193280.313>
+                                      Other, 0x1167c1b80, {{16.0, 464.3}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4662858752.337>
+                                        Other, 0x1167c1cc0, {{16.0, 464.3}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4655179392.360>
+                                          Other, 0x1167c1e00, {{16.0, 464.3}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4392398656.916>
+                                      Other, 0x1167c1f40, {{16.0, 464.3}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4392523456.338>
+                                        Other, 0x1167c2080, {{16.0, 464.3}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4662660096.361>
+                                          Other, 0x1167c21c0, {{16.0, 464.3}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4392395968.917>
+                                            Button, 0x1167c2300, {{16.0, 464.3}, {370.0, 82.7}}, identifier: 'line.row.3', label: 'Triple Year, 75 pts, Concealed hand, 2026 in suit A (0 is Soap) · 2026 in suit B (0 is Soap) · 2026 in suit C (0 is Soap) · Pair of Dragons matching suit A · A, B and C are different suits. · Concealed — only the last tile may be called' <AX element pid: 18942, elementOrHash.elementID: 4392402240.931>
+                                              StaticText, 0x1167c2440, {{32.0, 483.3}, {84.3, 20.3}}, label: 'Triple Year' <AX element pid: 18942, elementOrHash.elementID: 4392550848.952>
+                                              StaticText, 0x1167c2580, {{274.3, 485.7}, {40.7, 15.7}}, label: '75 pts' <AX element pid: 18942, elementOrHash.elementID: 4392565632.953>
+                                              Other, 0x1167c26c0, {{323.0, 484.0}, {25.0, 19.0}}, label: 'Concealed hand' <AX element pid: 18942, elementOrHash.elementID: 4392562944.954>
+                                                StaticText, 0x1167c2800, {{331.0, 486.8}, {9.0, 13.3}}, label: 'C' <AX element pid: 18942, elementOrHash.elementID: 4392563392.992>
+                                              Other, 0x1167c2940, {{32.0, 507.7}, {172.3, 20.3}}, label: '2026 in suit A (0 is Soap) · 2026 in suit B (0 is Soap) · 2026 in suit C (0 is Soap) · Pair of Dragons matching suit A · A, B and C are different suits. · Concealed — only the last tile may be called' <AX element pid: 18942, elementOrHash.elementID: 4392400896.955>
+                                                StaticText, 0x1167c2a80, {{32.0, 507.7}, {42.3, 20.3}}, label: '2026' <AX element pid: 18942, elementOrHash.elementID: 4392397312.993>
+                                                StaticText, 0x1167c2bc0, {{82.3, 507.7}, {42.3, 20.3}}, label: '2026' <AX element pid: 18942, elementOrHash.elementID: 4392401792.994>
+                                                StaticText, 0x1167c2d00, {{132.7, 507.7}, {42.3, 20.3}}, label: '2026' <AX element pid: 18942, elementOrHash.elementID: 4392391040.995>
+                                                StaticText, 0x1167c2e40, {{183.0, 507.7}, {21.3, 20.3}}, label: 'DD' <AX element pid: 18942, elementOrHash.elementID: 4392400448.996>
+                                              Image, 0x1167c2f80, {{360.7, 499.7}, {7.0, 12.0}}, identifier: 'chevron.forward' <AX element pid: 18942, elementOrHash.elementID: 4392391936.956>
+                                    Other, 0x1167c30c0, {{32.0, 463.3}, {338.0, 1.0}} <AX element pid: 18942, elementOrHash.elementID: 4664685056.314>
+                                    Other, 0x1167c3200, {{-16.0, 564.7}, {434.0, 471.3}} <AX element pid: 18942, elementOrHash.elementID: 4664685568.315>
+                                    Cell, 0x1167c3340, {{16.0, 564.7}, {370.0, 40.3}} <AX element pid: 18942, elementOrHash.elementID: 4664169472.316>
+                                      Other, 0x1167c3480, {{16.0, 564.7}, {370.0, 40.3}} <AX element pid: 18942, elementOrHash.elementID: 4664680960.339>
+                                      Other, 0x1167c35c0, {{16.0, 564.7}, {370.0, 40.3}} <AX element pid: 18942, elementOrHash.elementID: 4392528384.340>
+                                        Other, 0x1167c3700, {{16.0, 564.7}, {370.0, 40.3}} <AX element pid: 18942, elementOrHash.elementID: 4665049088.362>
+                                          Other, 0x1167c3840, {{16.0, 564.7}, {370.0, 40.3}} <AX element pid: 18942, elementOrHash.elementID: 4392688640.918>
+                                            StaticText, 0x1167c3980, {{16.0, 564.7}, {370.0, 40.3}}, label: '2468' <AX element pid: 18942, elementOrHash.elementID: 4392687296.932>
+                                    Cell, 0x1167c3ac0, {{16.0, 605.0}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4660194560.317>
+                                      Other, 0x1167c3c00, {{16.0, 605.0}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4662863360.341>
+                                        Other, 0x1167c3d40, {{16.0, 605.0}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4655180288.363>
+                                          Other, 0x1167c3e80, {{16.0, 605.0}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4392564736.919>
+                                      Other, 0x1167c8000, {{16.0, 605.0}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4392524352.342>
+                                        Other, 0x1167c8140, {{16.0, 605.0}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4662661632.364>
+                                          Other, 0x1167c8280, {{16.0, 605.0}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4392562496.920>
+                                            Button, 0x1167c83c0, {{16.0, 605.0}, {370.0, 82.7}}, identifier: 'line.row.4', label: 'Even Climb, 25 pts, Exposed hand, Pung of 2s in suit A · Kong of 4s in suit A · Pung of 6s in suit A · Kong of 8s in suit A' <AX element pid: 18942, elementOrHash.elementID: 4392562048.933>
+                                              StaticText, 0x1167c8500, {{32.0, 624.0}, {88.7, 20.3}}, label: 'Even Climb' <AX element pid: 18942, elementOrHash.elementID: 4392650048.957>
+                                              StaticText, 0x1167c8640, {{274.7, 626.3}, {40.7, 15.7}}, label: '25 pts' <AX element pid: 18942, elementOrHash.elementID: 4392650496.958>
+                                              Other, 0x1167c8780, {{323.3, 624.7}, {24.7, 19.0}}, label: 'Exposed hand' <AX element pid: 18942, elementOrHash.elementID: 4392651392.959>
+                                                StaticText, 0x1167c88c0, {{331.3, 627.5}, {8.7, 13.3}}, label: 'X' <AX element pid: 18942, elementOrHash.elementID: 4392650944.997>
+                                              Other, 0x1167c8a00, {{32.0, 648.3}, {172.0, 20.3}}, label: 'Pung of 2s in suit A · Kong of 4s in suit A · Pung of 6s in suit A · Kong of 8s in suit A' <AX element pid: 18942, elementOrHash.elementID: 4392552640.960>
+                                                StaticText, 0x1167c8b40, {{32.0, 648.3}, {31.7, 20.3}}, label: '222' <AX element pid: 18942, elementOrHash.elementID: 4392663936.998>
+                                                StaticText, 0x1167c8c80, {{71.7, 648.3}, {42.3, 20.3}}, label: '4444' <AX element pid: 18942, elementOrHash.elementID: 4392561600.999>
+                                                StaticText, 0x1167c8dc0, {{122.0, 648.3}, {31.7, 20.3}}, label: '666' <AX element pid: 18942, elementOrHash.elementID: 4392566080.1000>
+                                                StaticText, 0x1167c8f00, {{161.7, 648.3}, {42.3, 20.3}}, label: '8888' <AX element pid: 18942, elementOrHash.elementID: 4392553536.1001>
+                                              Image, 0x1167c9040, {{360.7, 640.3}, {7.0, 12.0}}, identifier: 'chevron.forward' <AX element pid: 18942, elementOrHash.elementID: 4392553088.961>
+                                    Cell, 0x1167c9180, {{16.0, 687.7}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4660195840.318>
+                                      Other, 0x1167c92c0, {{16.0, 687.7}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4662867968.343>
+                                        Other, 0x1167c9400, {{16.0, 687.7}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4655181184.365>
+                                          Other, 0x1167c9540, {{16.0, 687.7}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4392649600.921>
+                                      Other, 0x1167c9680, {{16.0, 687.7}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4392524800.344>
+                                        Other, 0x1167c97c0, {{16.0, 687.7}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4662663168.366>
+                                          Other, 0x1167c9900, {{16.0, 687.7}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4392657664.922>
+                                            Button, 0x1167c9a40, {{16.0, 687.7}, {370.0, 82.7}}, identifier: 'line.row.5', label: 'Even Bookends, 25 pts, Exposed hand, Pair of Flowers · Kong of 2s in suit A · Pair of 4s in suit B · Pair of 6s in suit B · Kong of 8s in suit A · A and B are different suits.' <AX element pid: 18942, elementOrHash.elementID: 4392656768.934>
+                                              StaticText, 0x1167c9b80, {{32.0, 706.7}, {121.3, 20.3}}, label: 'Even Bookends' <AX element pid: 18942, elementOrHash.elementID: 4392657216.962>
+                                              StaticText, 0x1167c9cc0, {{274.7, 709.0}, {40.7, 15.7}}, label: '25 pts' <AX element pid: 18942, elementOrHash.elementID: 4392652288.963>
+                                              Other, 0x1167c9e00, {{323.3, 707.3}, {24.7, 19.0}}, label: 'Exposed hand' <AX element pid: 18942, elementOrHash.elementID: 4392653184.964>
+                                                StaticText, 0x1167c9f40, {{331.3, 710.2}, {8.7, 13.3}}, label: 'X' <AX element pid: 18942, elementOrHash.elementID: 4392652736.1002>
+                                              Other, 0x1167ca080, {{32.0, 731.0}, {180.7, 20.3}}, label: 'Pair of Flowers · Kong of 2s in suit A · Pair of 4s in suit B · Pair of 6s in suit B · Kong of 8s in suit A · A and B are different suits.' <AX element pid: 18942, elementOrHash.elementID: 4392655872.965>
+                                                StaticText, 0x1167ca1c0, {{32.0, 731.0}, {21.3, 20.3}}, label: 'FF' <AX element pid: 18942, elementOrHash.elementID: 4392653632.1003>
+                                                StaticText, 0x1167ca300, {{61.3, 731.0}, {42.3, 20.3}}, label: '2222' <AX element pid: 18942, elementOrHash.elementID: 4392654080.1004>
+                                                StaticText, 0x1167ca440, {{111.7, 731.0}, {21.3, 20.3}}, label: '44' <AX element pid: 18942, elementOrHash.elementID: 4392654528.1005>
+                                                StaticText, 0x1167ca580, {{141.0, 731.0}, {21.3, 20.3}}, label: '66' <AX element pid: 18942, elementOrHash.elementID: 4392654976.1006>
+                                                StaticText, 0x1167ca6c0, {{170.3, 731.0}, {42.3, 20.3}}, label: '8888' <AX element pid: 18942, elementOrHash.elementID: 4392655424.1007>
+                                              Image, 0x1167ca800, {{360.7, 723.0}, {7.0, 12.0}}, identifier: 'chevron.forward' <AX element pid: 18942, elementOrHash.elementID: 4392656320.966>
+                                    Other, 0x1167ca940, {{32.0, 686.7}, {338.0, 1.0}} <AX element pid: 18942, elementOrHash.elementID: 4664686080.319>
+                                    Cell, 0x1167caa80, {{16.0, 770.3}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4660197120.320>
+                                      Other, 0x1167cabc0, {{16.0, 770.3}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4663888896.345>
+                                        Other, 0x1167cad00, {{16.0, 770.3}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4655182080.367>
+                                          Other, 0x1167cae40, {{16.0, 770.3}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4392651840.923>
+                                      Other, 0x1167caf80, {{16.0, 770.3}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4392525248.346>
+                                        Other, 0x1167cb0c0, {{16.0, 770.3}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4662664704.368>
+                                          Other, 0x1167cb200, {{16.0, 770.3}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4392663040.924>
+                                            Button, 0x1167cb340, {{16.0, 770.3}, {370.0, 82.7}}, identifier: 'line.row.6', label: 'Even Dragons, 30 pts, Exposed hand, Pair of 2s in suit A · Pung of 4s in suit A · Pair of 6s in suit B · Pung of 8s in suit B · Kong of Dragons matching suit C · A, B and C are different suits.' <AX element pid: 18942, elementOrHash.elementID: 4392662592.935>
+                                              StaticText, 0x1167cb480, {{32.0, 789.3}, {109.7, 20.3}}, label: 'Even Dragons' <AX element pid: 18942, elementOrHash.elementID: 4782884160.967>
+                                              StaticText, 0x1167cb5c0, {{274.7, 791.7}, {40.7, 15.7}}, label: '30 pts' <AX element pid: 18942, elementOrHash.elementID: 4392663488.968>
+                                              Other, 0x1167cb700, {{323.3, 790.0}, {24.7, 19.0}}, label: 'Exposed hand' <AX element pid: 18942, elementOrHash.elementID: 4392659008.969>
+                                                StaticText, 0x1167cb840, {{331.3, 792.8}, {8.7, 13.3}}, label: 'X' <AX element pid: 18942, elementOrHash.elementID: 4392658560.1008>
+                                              Other, 0x1167cb980, {{32.0, 813.7}, {180.3, 20.3}}, label: 'Pair of 2s in suit A · Pung of 4s in suit A · Pair of 6s in suit B · Pung of 8s in suit B · Kong of Dragons matching suit C · A, B and C are different suits.' <AX element pid: 18942, elementOrHash.elementID: 4392661696.970>
+                                                StaticText, 0x1167cbac0, {{32.0, 813.7}, {21.3, 20.3}}, label: '22' <AX element pid: 18942, elementOrHash.elementID: 4392659456.1009>
+                                                StaticText, 0x1167cbc00, {{61.3, 813.7}, {31.7, 20.3}}, label: '444' <AX element pid: 18942, elementOrHash.elementID: 4392659904.1010>
+                                                StaticText, 0x1167cbd40, {{101.0, 813.7}, {21.3, 20.3}}, label: '66' <AX element pid: 18942, elementOrHash.elementID: 4392660352.1011>
+                                                StaticText, 0x1167cbe80, {{130.3, 813.7}, {31.7, 20.3}}, label: '888' <AX element pid: 18942, elementOrHash.elementID: 4392660800.1012>
+                                                StaticText, 0x1167d0000, {{170.0, 813.7}, {42.3, 20.3}}, label: 'DDDD' <AX element pid: 18942, elementOrHash.elementID: 4392661248.1013>
+                                              Image, 0x1167d0140, {{360.7, 805.7}, {7.0, 12.0}}, identifier: 'chevron.forward' <AX element pid: 18942, elementOrHash.elementID: 4392662144.971>
+                                    Other, 0x1167d0280, {{32.0, 769.3}, {338.0, 1.0}} <AX element pid: 18942, elementOrHash.elementID: 4664686592.321>
+                                    Cell, 0x1167d03c0, {{16.0, 852.7}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4664164352.322>
+                                      Other, 0x1167d0500, {{16.0, 852.7}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4663894016.347>
+                                        Other, 0x1167d0640, {{16.0, 852.7}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4655182976.369>
+                                          Other, 0x1167d0780, {{16.0, 852.7}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4782884608.925>
+                                      Other, 0x1167d08c0, {{16.0, 852.7}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4392525696.348>
+                                        Other, 0x1167d0a00, {{16.0, 852.7}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4662666240.370>
+                                          Other, 0x1167d0b40, {{16.0, 852.7}, {370.0, 82.7}} <AX element pid: 18942, elementOrHash.elementID: 4782883264.926>
+                                            Button, 0x1167d0c80, {{16.0, 852.7}, {370.0, 82.7}}, identifier: 'line.row.7', label: 'Even Spread, 25 pts, Exposed hand, Kong of Flowers · 2 4 6 8 in suit A · Pung of 2s in suit B · Pung of 8s in suit C · A, B and C are different suits.' <AX element pid: 18942, elementOrHash.elementID: 4782883712.936>
+                                              StaticText, 0x1167d0dc0, {{32.0, 871.7}, {99.7, 20.3}}, label: 'Even Spread' <AX element pid: 18942, elementOrHash.elementID: 4392691328.972>
+                                              StaticText, 0x1167d0f00, {{274.7, 874.0}, {40.7, 15.7}}, label: '25 pts' <AX element pid: 18942, elementOrHash.elementID: 4392691776.973>
+                                              Other, 0x1167d1040, {{323.3, 872.3}, {24.7, 19.0}}, label: 'Exposed hand' <AX element pid: 18942, elementOrHash.elementID: 4392693120.974>
+                                                StaticText, 0x1167d1180, {{331.3, 875.2}, {8.7, 13.3}}, label: 'X' <AX element pid: 18942, elementOrHash.elementID: 4392692224.1014>
+                                              Other, 0x1167d12c0, {{32.0, 896.0}, {172.0, 20.3}}, label: 'Kong of Flowers · 2 4 6 8 in suit A · Pung of 2s in suit B · Pung of 8s in suit C · A, B and C are different suits.' <AX element pid: 18942, elementOrHash.elementID: 4782885504.975>
+                                                StaticText, 0x1167d1400, {{32.0, 896.0}, {42.3, 20.3}}, label: 'FFFF' <AX element pid: 18942, elementOrHash.elementID: 4392441984.1015>
+                                                StaticText, 0x1167d1540, {{82.3, 896.0}, {42.3, 20.3}}, label: '2468' <AX element pid: 18942, elementOrHash.elementID: 4392658112.1016>
+                                                StaticText, 0x1167d1680, {{132.7, 896.0}, {31.7, 20.3}}, label: '222' <AX element pid: 18942, elementOrHash.elementID: 4392664384.1017>
+                                                StaticText, 0x1167d17c0, {{172.3, 896.0}, {31.7, 20.3}}, label: '888' <AX element pid: 18942, elementOrHash.elementID: 4392648704.1018>
+                                              Image, 0x1167d1900, {{360.7, 888.0}, {7.0, 12.0}}, identifier: 'chevron.forward' <AX element pid: 18942, elementOrHash.elementID: 4782885056.976>
+                                    Other, 0x1167d1a40, {{32.0, 851.7}, {338.0, 1.0}} <AX element pid: 18942, elementOrHash.elementID: 4664687104.323>
+                                    Other, 0x1167d1b80, {{369.0, 176.0}, {30.0, 615.0}}, label: 'Vertical scroll bar, 5 pages', value: 0% <AX element pid: 18942, elementOrHash.elementID: 4664672256.324>
+                                      Other, 0x1167d1cc0, {{396.0, 179.0}, {3.0, 177.7}} <AX element pid: 18942, elementOrHash.elementID: 4392362752.349>
+                                    Other, 0x1167d1e00, {{369.0, 176.0}, {30.0, 615.0}}, label: 'Vertical scroll bar, 5 pages', value: 0% <AX element pid: 18942, elementOrHash.elementID: 4664672256.324>
+                                      Other, 0x1167d1f40, {{396.0, 179.0}, {3.0, 177.7}} <AX element pid: 18942, elementOrHash.elementID: 4392362752.349>
+                          Other, 0x1167d2080, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 18942, elementOrHash.elementID: 4583261184.67>
+                            Other, 0x1167d21c0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 18942, elementOrHash.elementID: 4583263232.71>
+              Other, 0x1167d2300, {{0.0, 791.0}, {402.0, 83.0}} <AX element pid: 18942, elementOrHash.elementID: 4392820608.11>
+                Other, 0x1167d2440, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 18942, elementOrHash.elementID: 4392827328.13>
+                  TabBar, 0x1167d2580, {{0.0, 791.0}, {402.0, 83.0}}, label: 'Tab Bar' <AX element pid: 18942, elementOrHash.elementID: 4394159232.16>
+                    Other, 0x1167d26c0, {{21.0, 791.0}, {360.0, 62.0}} <AX element pid: 18942, elementOrHash.elementID: 4392821056.19>
+                      Other, 0x1167d2800, {{21.0, 791.0}, {98.0, 54.0}} <AX element pid: 18942, elementOrHash.elementID: 4391935872.22>
+                      Other, 0x1167d2940, {{21.0, 791.0}, {360.0, 62.0}} <AX element pid: 18942, elementOrHash.elementID: 4392821504.23>
+                        Button, 0x1167d2a80, {{25.0, 795.0}, {98.0, 54.0}}, identifier: 'dice', label: 'Game' <AX element pid: 18942, elementOrHash.elementID: 4343699712.28>
+                          Image, 0x1167d2bc0, {{59.0, 800.7}, {30.3, 29.7}}, identifier: 'dice.fill', label: 'dice.fill' <AX element pid: 18942, elementOrHash.elementID: 4393701888.38>
+                        Button, 0x1167d2d00, {{109.7, 795.0}, {98.0, 54.0}}, identifier: 'lightbulb', label: 'Helper' <AX element pid: 18942, elementOrHash.elementID: 4343702272.29>
+                          Image, 0x1167d2e40, {{147.7, 799.3}, {21.3, 30.7}}, identifier: 'lightbulb.fill', label: 'Lightbulb' <AX element pid: 18942, elementOrHash.elementID: 4393703424.39>
+                        Button, 0x1167d2f80, {{194.3, 795.0}, {98.0, 54.0}}, identifier: 'rectangle.stack', label: 'Cards', Selected <AX element pid: 18942, elementOrHash.elementID: 4343704832.30>
+                          Image, 0x1167d30c0, {{228.3, 800.0}, {30.0, 31.3}}, identifier: 'rectangle.stack.fill', label: 'Album' <AX element pid: 18942, elementOrHash.elementID: 4393704448.40>
+                        Button, 0x1167d3200, {{279.0, 795.0}, {98.0, 54.0}}, identifier: 'graduationcap', label: 'Learn' <AX element pid: 18942, elementOrHash.elementID: 4343707392.31>
+                          Image, 0x1167d3340, {{310.0, 801.7}, {36.7, 31.3}}, identifier: 'graduationcap.fill', label: 'itunes u' <AX element pid: 18942, elementOrHash.elementID: 4393705472.41>
+                      Other, 0x1167d3480, {{194.3, 795.0}, {98.0, 54.0}} <AX element pid: 18942, elementOrHash.elementID: 4394159872.24>
+                        Other, 0x1167d35c0, {{194.3, 795.0}, {98.0, 54.0}} <AX element pid: 18942, elementOrHash.elementID: 4392823296.32>
+                          Other, 0x1167d3700, {{194.3, 795.0}, {98.0, 54.0}} <AX element pid: 18942, elementOrHash.elementID: 4392821952.42>
+                          Other, 0x1167d3840, {{194.3, 795.0}, {98.0, 54.0}} <AX element pid: 18942, elementOrHash.elementID: 4392823744.43>
+                            Other, 0x1167d3980, {{194.3, 795.0}, {98.0, 54.0}} <AX element pid: 18942, elementOrHash.elementID: 4392825088.49>
+                              Other, 0x1167d3ac0, {{194.3, 795.0}, {98.0, 54.0}} <AX element pid: 18942, elementOrHash.elementID: 4392825536.53>
+                                Other, 0x1167d3c00, {{194.3, 795.0}, {98.0, 54.0}} <AX element pid: 18942, elementOrHash.elementID: 4392825984.57>
+                              Other, 0x1167d3d40, {{194.3, 795.0}, {98.0, 54.0}} <AX element pid: 18942, elementOrHash.elementID: 4392824192.54>
+                            Other, 0x1167d3e80, {{194.3, 795.0}, {98.0, 54.0}} <AX element pid: 18942, elementOrHash.elementID: 4392824640.50>
+                Other, 0x1167d8000, {{0.0, 791.0}, {402.0, 83.0}} <AX element pid: 18942, elementOrHash.elementID: 4393699840.14>
+                  Other, 0x1167d8140, {{0.0, 791.0}, {402.0, 83.0}} <AX element pid: 18942, elementOrHash.elementID: 4391951360.17>
+                    Other, 0x1167d8280, {{0.0, 791.0}, {402.0, 83.0}} <AX element pid: 18942, elementOrHash.elementID: 4391936320.20>
+                      Other, 0x1167d83c0, {{0.0, 791.0}, {402.0, 83.0}} <AX element pid: 18942, elementOrHash.elementID: 4391937216.25>
+                        Other, 0x1167d8500, {{0.0, 791.0}, {402.0, 83.0}} <AX element pid: 18942, elementOrHash.elementID: 4393707520.33>
+                          Other, 0x1167d8640, {{0.0, 791.0}, {402.0, 83.0}} <AX element pid: 18942, elementOrHash.elementID: 4391937664.44>
+                      Other, 0x1167d8780, {{0.0, 791.0}, {402.0, 83.0}} <AX element pid: 18942, elementOrHash.elementID: 4393708032.26>
+                        Other, 0x1167d88c0, {{0.0, 791.0}, {402.0, 83.0}} <AX element pid: 18942, elementOrHash.elementID: 4391938560.34>
+  Window, 0x1167d8a00, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 18942, elementOrHash.elementID: 4738145792.669>
+    Other, 0x1167d8b40, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 18942, elementOrHash.elementID: 4740524096.671>
+      Other, 0x1167d8c80, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 18942, elementOrHash.elementID: 4740525888.673>
