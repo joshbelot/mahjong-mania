@@ -12,8 +12,12 @@ final class AppStores {
   let cards: CardsStore
   let helper: HelperStore
 
-  /// `resetFirst` wipes the directory before loading (the `-UITestResetData` launch flag).
-  init(directory: URL, persistDelay: Duration = .milliseconds(300), resetFirst: Bool = false) {
+  /// `resetFirst` wipes the directory before loading (the `-UITestResetData` launch flag). A reset skips
+  /// onboarding unless `showOnboarding` is set (the `-UITestShowOnboarding` launch flag).
+  init(
+    directory: URL, persistDelay: Duration = .milliseconds(300), resetFirst: Bool = false,
+    showOnboarding: Bool = false
+  ) {
     self.directory = directory
     if resetFirst { try? FileManager.default.removeItem(at: directory) }
     settings = SettingsStore(directory: directory, persistDelay: persistDelay)
@@ -21,10 +25,11 @@ final class AppStores {
     sessions = SessionsStore(directory: directory, persistDelay: persistDelay)
     cards = CardsStore(directory: directory, persistDelay: persistDelay)
     helper = HelperStore(directory: directory, persistDelay: persistDelay)
-    if resetFirst { settings.update { $0.onboardingDone = true } }
+    if resetFirst && !showOnboarding { settings.update { $0.onboardingDone = true } }
   }
 
-  /// The app's real stores. `-UITestResetData` starts from an empty directory and skips onboarding.
+  /// The app's real stores. `-UITestResetData` starts from an empty directory and skips onboarding;
+  /// `-UITestShowOnboarding` starts from an empty directory and shows it.
   static func live() -> AppStores {
     let base =
       (try? FileManager.default.url(
@@ -32,7 +37,8 @@ final class AppStores {
       ?? FileManager.default.temporaryDirectory
     return AppStores(
       directory: base.appendingPathComponent("MahjongMania", isDirectory: true),
-      resetFirst: LaunchOptions.resetData)
+      resetFirst: LaunchOptions.resetData || LaunchOptions.showOnboarding,
+      showOnboarding: LaunchOptions.showOnboarding)
   }
 
   /// Stores backed by a fresh temporary directory (tests and previews).

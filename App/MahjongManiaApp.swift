@@ -6,6 +6,11 @@ enum LaunchOptions {
   static var resetData: Bool {
     ProcessInfo.processInfo.arguments.contains("-UITestResetData")
   }
+
+  /// `-UITestShowOnboarding`: like `-UITestResetData`, but onboarding is still shown.
+  static var showOnboarding: Bool {
+    ProcessInfo.processInfo.arguments.contains("-UITestShowOnboarding")
+  }
 }
 
 extension LaunchOptions {
@@ -18,18 +23,27 @@ extension LaunchOptions {
 @main
 struct MahjongManiaApp: App {
   @State private var stores = AppStores.live()
+  @State private var tips = TipCenter()
   @Environment(\.scenePhase) private var scenePhase
 
   var body: some Scene {
     WindowGroup {
-      RootView()
+      Group {
+        if stores.settings.settings.onboardingDone {
+          RootView()
+        } else {
+          OnboardingView()
+        }
+      }
         .environment(\.theme, Theme.standard)
+        .environment(tips)
         .environment(stores.settings)
         .environment(stores.players)
         .environment(stores.sessions)
         .environment(stores.cards)
         .environment(stores.helper)
         .environment(stores)
+        .environment(\.hapticsEnabled, stores.settings.settings.haptics)
         .preferredColorScheme(
           LaunchOptions.forcedColorScheme ?? stores.settings.settings.theme.colorScheme
         )

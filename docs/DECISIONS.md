@@ -38,3 +38,22 @@ The spec suggests the stdlib's `shuffled(using:)`. Its algorithm is not guarante
 ## 2026-10-08, §7.3: `Binding` renamed to `SuitBinding`
 
 MahjongCore's `Binding` (suit assignment + shift of a target) clashes with `SwiftUI.Binding` in every app file that imports both (compile error "cannot specialize non-generic type 'Binding'"). The core type is `SuitBinding`; its fields are unchanged (`x`, `y`, `z`, `k`). SPEC §7.3 updated.
+
+## 2026-10-09, §11.7 / §13 Phase 11 (Learn drills, onboarding, content)
+
+- Pick-a-Hand counts a pick as right if it is in the top 3 or ties the third line's distance (strict top-3 would mark an equally close line wrong). Only the first answer to a deal moves the streak, so "Try again" can't farm it.
+- Charleston streak grows only on 3 of 3 and resets otherwise; when several copies of one tile are passed, the lowest-utility copies count.
+- `-UITestDrillSeed <n>` launch argument fixes the first drill deal; `-UITestShowOnboarding` wipes data but leaves onboarding on.
+- "I'll enter my own card" on onboarding page 3 keeps the Practice Card active and shows a hint to open Cards → New (no tab-selection binding exists yet).
+- `LearnSection` has an `id`, `LearnTopic` has a `summary`, and `LearnBlock` is not `Identifiable` (views use `enumerated()`). Glossary terms use the exact strings `Concealed (C)`, `Exposed (X)`, `East (Dealer)`, `Family (Section)`, `Joker exchange`.
+
+## 2026-10-09, §11.5 / §11.2 (Phase 6 design system)
+
+- Added the `tileInk` token (winds need dark ink on the ivory face in dark mode) and `Typography.pattern`.
+- `.missing` tiles also show a faint ghost face (a bare dashed box was unreadable in dark mode).
+- `TileRackView.onRemove` takes a `Tile` (remove one copy), not an index; `TileKeyboardView.limit` is an optional cap on the total of `usage`.
+- Settings is a full-height sheet (`.large` only) because it pushes screens.
+
+## 2026-10-09, CI
+
+The `ios` job's UI suite grows with each phase (about 20 minutes by Phase 11). The test step retries failing tests once (`-retry-tests-on-failure`); the last step prints a failure summary; screenshots are published to the `ci-screenshots` branch.
