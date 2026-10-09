@@ -252,12 +252,9 @@ final class CardsTests: XCTestCase {
     let save = button(app, "editor.save")
     XCTAssertTrue(save.isEnabled)
     save.tap()
-    let edited = app.descendants(matching: .any)
-      .matching(NSPredicate(format: "label CONTAINS %@", "Year Kongs Edited")).firstMatch
-    XCTAssertTrue(
-      edited.waitForExistence(timeout: 10),
-      "The edited hand should show in the card detail. Screen: \(screenSummary(app))")
-    waitFor(app, "line.row.0")
+    let row = app.buttons.matching(identifier: "line.row.0").firstMatch
+    XCTAssertTrue(row.waitForExistence(timeout: 10), "Missing the first hand row. Screen: \(screenSummary(app))")
+    XCTAssertTrue(row.label.contains("Edited"), "The edited name should show in the first row: \(row.label)")
     attach("cards-edited-detail-light")
   }
 
