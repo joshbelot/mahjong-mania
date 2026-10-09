@@ -46,6 +46,11 @@ final class LearnOnboardingTests: XCTestCase {
   /// Waits until an element is on screen, for controls that sit on another page of a pager.
   private func tapWhenHittable(_ app: XCUIApplication, _ id: String, file: StaticString = #filePath, line: UInt = #line) {
     let target = element(app, id)
+    var swipes = 0
+    while !(target.exists && target.isHittable) && swipes < 6 {
+      app.swipeUp()
+      swipes += 1
+    }
     let hittable = XCTNSPredicateExpectation(
       predicate: NSPredicate(format: "isHittable == true"), object: target)
     XCTAssertEqual(
