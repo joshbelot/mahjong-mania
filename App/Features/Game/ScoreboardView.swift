@@ -389,7 +389,7 @@ private extension View {
     self
       .listRowBackground(Color.clear)
       .listRowSeparator(.hidden)
-      .listRowInsets(EdgeInsets(top: Spacing.xs, leading: 0, bottom: Spacing.xs, trailing: 0))
+      .listRowInsets(EdgeInsets(top: Spacing.sm, leading: 0, bottom: Spacing.sm, trailing: 0))
   }
 }
 
