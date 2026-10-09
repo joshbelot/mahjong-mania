@@ -128,7 +128,7 @@ struct CardDetailView: View {
     .safeAreaInset(edge: .top, spacing: 0) {
       if card.builtIn { builtInBanner(card) }
     }
-    .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .automatic), prompt: "Search hands")
+    .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search hands")
     .navigationTitle(card.name)
     .navigationBarTitleDisplayMode(.inline)
     .toolbar {

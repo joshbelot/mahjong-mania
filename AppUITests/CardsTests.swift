@@ -87,6 +87,10 @@ final class CardsTests: XCTestCase {
     app.descendants(matching: .any).matching(identifier: id).firstMatch
   }
 
+  private func button(_ app: XCUIApplication, _ id: String) -> XCUIElement {
+    app.buttons.matching(identifier: id).firstMatch
+  }
+
   @discardableResult
   private func waitFor(_ app: XCUIApplication, _ id: String, timeout: TimeInterval = 10) -> XCUIElement {
     let item = element(app, id)
@@ -183,12 +187,12 @@ final class CardsTests: XCTestCase {
     notation.tap()
     appendToNotation(app, notation, keys: ["9", "9"])
     waitFor(app, "editor.error")
-    XCTAssertFalse(element(app, "editor.save").isEnabled, "Save must be disabled while there are errors")
+    XCTAssertFalse(button(app, "editor.save").isEnabled, "Save must be disabled while there are errors")
     attach("cards-editor-error-\(scheme)")
 
     deleteFromNotation(app, notation, count: 2)
     waitFor(app, "editor.valid")
-    XCTAssertTrue(element(app, "editor.save").isEnabled)
+    XCTAssertTrue(button(app, "editor.save").isEnabled)
     attach("cards-editor-fixed-\(scheme)")
   }
 
@@ -233,7 +237,7 @@ final class CardsTests: XCTestCase {
     notation.tap()
     appendToNotation(app, notation, keys: ["9", "9"])
     waitFor(app, "editor.error")
-    XCTAssertFalse(element(app, "editor.save").isEnabled)
+    XCTAssertFalse(button(app, "editor.save").isEnabled)
     deleteFromNotation(app, notation, count: 2)
     waitFor(app, "editor.valid")
 
@@ -241,7 +245,7 @@ final class CardsTests: XCTestCase {
     nameField.tap()
     nameField.typeText(" Edited")
 
-    let save = element(app, "editor.save")
+    let save = button(app, "editor.save")
     XCTAssertTrue(save.isEnabled)
     save.tap()
     XCTAssertTrue(
@@ -249,5 +253,16 @@ final class CardsTests: XCTestCase {
       "The edited hand should show in the card detail")
     waitFor(app, "line.row.0")
     attach("cards-edited-detail-light")
+  }
+
+  func testPractiseThisHandOpensTheHelper() {
+    let app = launch(dark: false)
+    openCards(app)
+    waitFor(app, "cards.row.practice-v1").tap()
+    waitFor(app, "line.row.1").tap()
+    waitFor(app, "line.pattern")
+    attach("cards-line-detail-builtin-light")
+    reveal(app, "line.practise").tap()
+    XCTAssertTrue(app.navigationBars["Helper"].waitForExistence(timeout: 10), "Helper tab did not open")
   }
 }

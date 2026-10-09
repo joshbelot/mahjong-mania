@@ -26,6 +26,12 @@ struct CardsListView: View {
   var body: some View {
     List {
       Section {
+        actionBar
+          .listRowInsets(EdgeInsets(top: Spacing.sm, leading: 0, bottom: Spacing.sm, trailing: 0))
+          .listRowBackground(Color.clear)
+          .listRowSeparator(.hidden)
+      }
+      Section {
         ForEach(cards.cards) { card in
           row(card)
         }
@@ -34,7 +40,6 @@ struct CardsListView: View {
     }
     .scrollContentBackground(.hidden)
     .background(theme.bg)
-    .safeAreaInset(edge: .top, spacing: 0) { actionBar }
     .navigationTitle("Cards")
     .settingsToolbar()
     .navigationDestination(for: CardsRoute.self) { route in
@@ -98,9 +103,6 @@ struct CardsListView: View {
       .buttonStyle(PrimaryButton(.secondary, fullWidth: true))
       .accessibilityIdentifier("cards.import")
     }
-    .padding(.horizontal, Spacing.lg)
-    .padding(.vertical, Spacing.sm)
-    .background(theme.bg)
   }
 
   private func row(_ card: Card) -> some View {

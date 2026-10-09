@@ -108,11 +108,16 @@ struct ImportView: View {
 
   private var destinationSection: some View {
     SectionCard("Import into") {
-      SegmentedPicker(
-        "Destination", selection: $destination,
-        options: cards.records.isEmpty ? [Destination.newCard] : [Destination.newCard, Destination.existing]
-      ) { $0 == .newCard ? "New card" : "Add to existing" }
-      .accessibilityIdentifier("import.destination")
+      if cards.records.isEmpty {
+        Text("New card")
+          .font(Typography.body.weight(.semibold))
+          .foregroundStyle(theme.text)
+      } else {
+        SegmentedPicker(
+          "Destination", selection: $destination, options: [Destination.newCard, Destination.existing]
+        ) { $0 == .newCard ? "New card" : "Add to existing" }
+        .accessibilityIdentifier("import.destination")
+      }
       switch destination {
       case .newCard:
         TextField("Card name (optional)", text: $newName)

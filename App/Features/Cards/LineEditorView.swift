@@ -138,8 +138,7 @@ struct LineEditorView: View {
     case .valid(let line):
       VStack(alignment: .leading, spacing: Spacing.md) {
         if let variant = line.variants.first {
-          ResolvedPatternView(
-            variant: variant, target: Engine.expand(line).first { $0.variantIndex == 0 }, size: .small)
+          ResolvedPatternView(variant: variant, target: LineDetailModel(line: line).current, size: .small)
         }
         ForEach(Array(line.variants.enumerated()), id: \.offset) { entry in
           let text = Notation.describe(entry.element, shift: line.shift, concealed: line.concealed)
