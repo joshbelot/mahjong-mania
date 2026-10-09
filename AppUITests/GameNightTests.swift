@@ -92,7 +92,9 @@ final class GameNightTests: XCTestCase {
   }
 
   private func waitForSheetToClose(_ app: XCUIApplication, _ id: String) {
-    XCTAssertTrue(el(app, id).waitForNonExistence(timeout: 10), "\(id) did not close")
+    let closed = el(app, id).waitForNonExistence(timeout: 10)
+    if !closed { attach("debug-\(id)-did-not-close") }
+    XCTAssertTrue(closed, "\(id) did not close")
   }
 
   // MARK: Flow pieces
@@ -223,6 +225,8 @@ final class GameNightTests: XCTestCase {
     tapID(app, "adjust.from.Dee")
     tapID(app, "adjust.to.Alex")
     tapID(app, "adjust.points.10")
+    attach("game-adjustment-light")
+    XCTAssertTrue(el(app, "adjust.save").isEnabled, "Adjustment Save should be enabled")
     tapID(app, "adjust.save")
     waitForSheetToClose(app, "adjust.save")
     expectScores(app, ["Alex": 0, "Bea": 80, "Cy": 115, "Dee": -195], "after the adjustment")

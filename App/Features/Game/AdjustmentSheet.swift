@@ -43,7 +43,7 @@ struct AdjustmentSheet: View {
         }
       }
     }
-    .presentationDetents([.medium, .large])
+    .presentationDetents([.large])
     .presentationDragIndicator(.visible)
     .onAppear(perform: load)
   }
