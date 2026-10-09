@@ -74,6 +74,7 @@ final class GameNightTests: XCTestCase {
     var actual: [String: Int] = [:]
     repeat {
       actual = [:]
+      if !el(app, "score.\(expected.keys.first ?? "")").exists { app.swipeDown() }
       for name in expected.keys {
         let element = el(app, "score.\(name)")
         if element.exists, let value = Self.value(ofSpoken: element.label) { actual[name] = value }
@@ -239,6 +240,12 @@ final class GameNightTests: XCTestCase {
     attach("game-scoreboard-light")
 
     // Edit hand 1 from 25 to 30 points: Alex +20, Bea -10, Cy -5, Dee -5.
+    // The hand log is a lazy List: scroll until the oldest hand's row exists.
+    var scrolls = 0
+    while !el(app, "log.row.1").exists && scrolls < 8 {
+      app.swipeUp()
+      scrolls += 1
+    }
     tapID(app, "log.row.1")
     let editSave = el(app, "record.save")
     XCTAssertTrue(editSave.waitForExistence(timeout: 10))
