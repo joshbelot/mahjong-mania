@@ -43,8 +43,8 @@ final class SettingsTests: XCTestCase {
     let app = launch(dark: true)
     app.buttons["settings.open"].firstMatch.tap()
     let reset = app.buttons["settings.reset"]
-    XCTAssertTrue(reset.waitForExistence(timeout: 10))
     scrollTo(reset, in: app)
+    XCTAssertTrue(reset.exists, "Reset button not found")
     reset.tap()
     let first = app.buttons["Continue…"]
     XCTAssertTrue(first.waitForExistence(timeout: 5), "First confirmation did not appear")
@@ -67,7 +67,10 @@ final class SettingsTests: XCTestCase {
     reset.tap()
     let first = app.buttons["Continue…"]
     XCTAssertTrue(first.waitForExistence(timeout: 5))
-    app.buttons["Cancel"].tap()
+    first.tap()
+    let alert = app.alerts.buttons["Cancel"]
+    XCTAssertTrue(alert.waitForExistence(timeout: 5), "Second confirmation did not appear")
+    alert.tap()
     XCTAssertTrue(app.buttons["settings.done"].waitForExistence(timeout: 5))
     app.buttons["settings.done"].tap()
     XCTAssertTrue(app.tabBars.buttons["Game"].waitForExistence(timeout: 5), "Settings closed but app state lost")
