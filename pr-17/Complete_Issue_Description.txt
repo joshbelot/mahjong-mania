@@ -1,0 +1,18 @@
+Failed to tap "Cancel" Button: No matches found for Elements matching predicate '"Cancel" IN identifiers' from input {(
+    Button, label: 'Sheet Grabber', value: Expanded,
+    Button, identifier: 'dice', label: 'Game', Selected,
+    Button, identifier: 'lightbulb', label: 'Helper',
+    Button, identifier: 'rectangle.stack', label: 'Cards',
+    Button, identifier: 'graduationcap', label: 'Learn',
+    Button, identifier: 'settings.done', label: 'Done',
+    Button, label: 'Continue…',
+    Button, identifier: 'settings.open', label: 'Settings',
+    Button, label: 'Tile sort, By suit',
+    Button, identifier: 'settings.reset', label: 'Reset all data',
+    Button, identifier: 'Decrement', label: 'Self-pick ×2, Decrement', value: 2,
+    Button, identifier: 'Increment', label: 'Self-pick ×2, Increment', value: 2,
+    Button, identifier: 'Decrement', label: 'Jokerless ×2, Decrement', value: 2,
+    Button, identifier: 'Increment', label: 'Jokerless ×2, Increment', value: 2,
+    Button, identifier: 'Decrement', label: '1¢ per point, Decrement', value: 1,
+    Button, identifier: 'Increment', label: '1¢ per point, Increment', value: 1
+)}

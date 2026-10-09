@@ -1,0 +1,5 @@
+Query chain:
+ →Find: Target Application 'com.joshbelot.mahjongmania'
+  ↪︎Find: Descendants matching type Any
+    ↪︎Find: Elements matching predicate '"gallery.open" IN identifiers'
+      ↪︎Find: First Match
