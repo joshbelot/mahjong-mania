@@ -91,15 +91,19 @@ final class CardsTests: XCTestCase {
     app.buttons.matching(identifier: id).firstMatch
   }
 
+  /// One line listing the identifiers and labels on screen, for failure messages.
+  private func screenSummary(_ app: XCUIApplication) -> String {
+    let lines = app.debugDescription.components(separatedBy: "\n")
+      .filter { $0.contains("identifier:") || $0.contains("label:") }
+      .map { $0.trimmingCharacters(in: .whitespaces) }
+    return String(lines.joined(separator: " | ").prefix(3500))
+  }
+
   @discardableResult
   private func waitFor(_ app: XCUIApplication, _ id: String, timeout: TimeInterval = 10) -> XCUIElement {
     let item = element(app, id)
     if !item.waitForExistence(timeout: timeout) {
-      // One line, so the CI failure summary shows what was on screen.
-      let lines = app.debugDescription.components(separatedBy: "\n")
-        .filter { $0.contains("identifier:") || $0.contains("label:") }
-        .map { $0.trimmingCharacters(in: .whitespaces) }
-      XCTFail("Missing element \(id). Screen: \(lines.joined(separator: " | ").prefix(3500))")
+      XCTFail("Missing element \(id). Screen: \(screenSummary(app))")
     }
     return item
   }
@@ -248,9 +252,11 @@ final class CardsTests: XCTestCase {
     let save = button(app, "editor.save")
     XCTAssertTrue(save.isEnabled)
     save.tap()
+    let edited = app.descendants(matching: .any)
+      .matching(NSPredicate(format: "label CONTAINS %@", "Year Kongs Edited")).firstMatch
     XCTAssertTrue(
-      app.staticTexts["Year Kongs Edited"].waitForExistence(timeout: 10),
-      "The edited hand should show in the card detail")
+      edited.waitForExistence(timeout: 10),
+      "The edited hand should show in the card detail. Screen: \(screenSummary(app))")
     waitFor(app, "line.row.0")
     attach("cards-edited-detail-light")
   }

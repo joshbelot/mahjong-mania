@@ -103,6 +103,7 @@ struct CardsListView: View {
       .buttonStyle(PrimaryButton(.secondary, fullWidth: true))
       .accessibilityIdentifier("cards.import")
     }
+    .padding(.horizontal, Spacing.xs)
   }
 
   private func row(_ card: Card) -> some View {
