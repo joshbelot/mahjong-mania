@@ -4,15 +4,18 @@ import SwiftUI
 /// `settingsToolbar()`.
 struct RootView: View {
   @Environment(\.theme) private var theme
+  @Environment(SettingsStore.self) private var settings
 
   var body: some View {
     TabView {
       NavigationStack { GameHomeView() }
         .tabItem { Label("Game", systemImage: "dice") }
         .accessibilityIdentifier("tab.game")
-      NavigationStack { HelperView() }
-        .tabItem { Label("Helper", systemImage: "lightbulb") }
-        .accessibilityIdentifier("tab.helper")
+      if HelperGate(settings.settings.assistLevel).showsHelperTab {
+        NavigationStack { HelperView() }
+          .tabItem { Label("Helper", systemImage: "lightbulb") }
+          .accessibilityIdentifier("tab.helper")
+      }
       NavigationStack { CardsListView() }
         .tabItem { Label("Cards", systemImage: "rectangle.stack") }
         .accessibilityIdentifier("tab.cards")
@@ -25,9 +28,13 @@ struct RootView: View {
 }
 
 #Preview("Light") {
-  RootView().preferredColorScheme(.light)
+  RootView()
+    .environment(AppStores.inMemory().settings)
+    .preferredColorScheme(.light)
 }
 
 #Preview("Dark") {
-  RootView().preferredColorScheme(.dark)
+  RootView()
+    .environment(AppStores.inMemory().settings)
+    .preferredColorScheme(.dark)
 }
