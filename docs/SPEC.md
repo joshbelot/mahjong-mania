@@ -1126,10 +1126,10 @@ The Expo prototype has already been removed from the repo.
 ### Phase 8: Cards feature
 **Tasks:** Cards list, Card detail, Line detail, Line editor (key row via `.toolbar { ToolbarItemGroup(placement: .keyboard) }`, live preview), Import, Share (`ShareLink` with the card file text), duplicating the built-in card, setting the active card, and the copyright notice.
 **Acceptance:**
-- [ ] Duplicate the Practice Card, edit a line, see live errors, save, and see it in the detail view.
-- [ ] Paste the Practice Card text into Import → "37 hands ✓" → import into a new card.
-- [ ] Sharing produces the canonical card file text.
-- [ ] UI test: create a card via Import using a pasteboard fixture (set `UIPasteboard.general.string` in the test, or type into the field), then screenshot.
+- [x] Duplicate the Practice Card, edit a line, see live errors, save, and see it in the detail view.
+- [x] Paste the Practice Card text into Import → "37 hands ✓" → import into a new card.
+- [x] Sharing produces the canonical card file text.
+- [x] UI test: create a card via Import using a pasteboard fixture (set `UIPasteboard.general.string` in the test, or type into the field), then screenshot.
 
 ### Phase 9: Game Night feature
 **Tasks:** Game home, Session setup, Scoreboard, Record hand (create/edit), Wall game, Adjustment sheet, Undo, Rules editor, End & Summary, History, Players, Player stats, keep-awake.

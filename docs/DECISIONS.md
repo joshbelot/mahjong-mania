@@ -57,3 +57,17 @@ MahjongCore's `Binding` (suit assignment + shift of a target) clashes with `Swif
 ## 2026-10-09, CI
 
 The `ios` job's UI suite grows with each phase (about 20 minutes by Phase 11). The test step retries failing tests once (`-retry-tests-on-failure`); the last step prints a failure summary; screenshots are published to the `ci-screenshots` branch.
+
+## 2026-10-09, §11.7 Cards (Phase 8)
+
+- "Practise this hand" calls `HelperStore.pin(lineID:)`, sets `settings.activeCardID` to the line's card, and switches to the Helper tab (the pinned line is resolved in the active card).
+- `RootView` owns tab selection (`AppTab`, `\.tabSwitcher`) and the Cards navigation path (`\.cardsNavigator`); mixing item destinations with value links made Line detail unreachable in UI tests.
+- The key row appends at the end of the notation (no cursor API on iOS 17). Editing a hand rewrites the card text via parse → change → `Notation.serialize`, so comments and invalid lines in a user card are dropped then; imports keep valid lines only.
+- The import destination picker is a plain "New card" label when no user cards exist.
+
+## 2026-10-09, §11.7 Game Night (Phase 9)
+
+- Session setup turns into the scoreboard in place (`NewGameView`) and End game night swaps to the summary in place (`GameSessionView`), so no `NavigationPath` is needed; Back returns to the Game tab.
+- "How?" starts unselected with two chips (Self-pick / Discard) instead of a segmented picker, so Discard is a real tap in the 5-tap path. The adjustment sheet is `.large` only (medium detent taps were unreliable in UI tests).
+- The scoreboard uses a local `ScorePointsText` (the shared `PointsText` has no large size). Self-pick explanation wording is new: "Others pay 50 (self-pick)" / "Base 25. Bea drew the winning tile, so everyone else pays double (50). Bea collects 150."
+- Rules editor: "Use as default" writes `settings.defaultRules`, "Save ruleset" appends to `settings.savedRules`.
