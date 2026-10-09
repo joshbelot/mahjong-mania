@@ -1,6 +1,6 @@
 # Release handoff — Mahjong Mania v1.0 (first TestFlight build)
 
-_Status: DRAFT. The lead fills in the final sections when every phase is merged and CI is green on `main`._
+_Status: all phases 0–12 are merged. The final CI run on `main` after the last merge was still in progress when this was written; check that it is green before releasing._
 
 ## What was built
 
@@ -15,7 +15,14 @@ A native iPhone app (Swift 6, SwiftUI, iOS 17+, portrait only) with these parts.
 
 ## Known limitations
 
-_(filled in at the end)_
+- **Never run on a device or by a human.** The authoring sandbox had no Swift toolchain or Xcode; everything was compiled and tested only by GitHub Actions (Linux `swift test` for MahjongCore; macOS simulator build, unit tests, UI tests and an unsigned Release archive for the app). Screenshots were reviewed from CI.
+- **The signed archive and the TestFlight upload have never been run.** `tools/upload_testflight.sh` was syntax-checked and its failure paths exercised, but archive/export/upload need your Mac, Xcode 26 and your credentials. Run `--dry-run` first.
+- Phase 0 acceptance "signed archive with `DEVELOPMENT_TEAM`" and Phase 12 "owner runs a real upload" are owner steps (SPEC ticks left open).
+- MahjongCore line coverage was printed by CI but not checked against the 95% target; the Phase 10 Instruments timing check could not be done (the `core` job's 200-analysis timing test is the only performance evidence).
+- Cards: editing a hand in a user card rewrites its text, dropping comments and invalid lines; the notation key row appends at the end of the text.
+- iPhone only, portrait only, no iPad layout, no 5-player tables. Helper results are not run off the main actor.
+- The full `ios` CI job takes 25–50 minutes because of the UI-test suite.
+- Spec deviations are listed in `docs/DECISIONS.md`.
 
 ## Your one-time setup (only you can do these)
 
@@ -54,4 +61,12 @@ Processing takes 5–30 minutes; you get an email and the build appears under Te
 
 ## Device-only checks still to do
 
-_(filled in at the end)_
+Covered by UI tests on the simulator: onboarding, Game Night 6-hand script with totals/settle-up/persistence across relaunch, Cards import/duplicate/edit, Learn tour and drills (incl. large text), Helper assist gating, Settings and reset. Still to do by hand on a physical iPhone (manual QA checklist, SPEC §13):
+
+- [ ] First launch → onboarding → Game tab; play a real 8-hand game night (self-pick jokerless, discard, wall game, adjustment, edit, undo), end it, check settle-up and the share text.
+- [ ] Helper: Charleston never suggests jokers; Playing discard + call check; Scout with 2 opponents; speed of results per tile tap.
+- [ ] Cards: duplicate, edit, import, export; the active card is used in Record hand and the Helper.
+- [ ] Dark mode everywhere; largest accessibility text size; VoiceOver on tiles and the rack.
+- [ ] Force-quit mid-session → reopen → session intact. Airplane mode.
+- [ ] Haptics feel right and the screen stays awake on the scoreboard.
+- [ ] Signed archive, `--dry-run`, then the real upload; install the TestFlight build.

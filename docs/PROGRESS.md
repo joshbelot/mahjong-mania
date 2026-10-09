@@ -14,10 +14,10 @@ Source of truth for where the build is. Updated by the lead on `main`.
 | 7 Stores | merged | PR 9 |
 | 8 Cards | merged | PR 14 |
 | 9 Game Night | merged | PR 16 |
-| 10 Helper | in progress (sub-agent) | `claude/phase-10-helper` |
+| 10 Helper | merged | PR 18 |
 | 11 Learn | merged (11a content PR 10, 11b screens PR 13) | |
 | 12 Settings, polish, release | 12a release tooling (PR 12), 12b Settings (PR 15), 12c Settings UI tests (PR 17) merged; remaining: final QA pass, `docs/RELEASE_HANDOFF.md` | |
 
-**Next:** merge Phase 10 (Helper); then tick remaining SPEC boxes, final QA pass and `docs/RELEASE_HANDOFF.md`.
+**Next (owner):** confirm CI is green on `main`, then follow `docs/RELEASE_HANDOFF.md` (setup, `--dry-run`, upload) and do the device-only QA.
 
 **Environment notes:** no Swift toolchain in the authoring sandbox (see DECISIONS.md); rely on CI. The `core` job runs on every push; the `ios` job runs on PRs and `main` (~10 min; a simulator launch timeout flake can happen, the test step retries failing tests and a failed job can be re-run once). UI screenshots are published by CI to the `ci-screenshots` branch (`pr-<number>/`); view them via `raw.githubusercontent.com`.
