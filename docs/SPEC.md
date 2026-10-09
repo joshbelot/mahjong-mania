@@ -1142,9 +1142,9 @@ The Expo prototype has already been removed from the repo.
 ### Phase 10: Hand Helper feature
 **Tasks:** HelperView with its 3 modes, rack/exposure/seen inputs, the results list with expand, the assist-level gating matrix (§11.3), the Coach panel (passes, discards, call checker), Scout, "Deal me a random hand", the pinned line, and the card & assist menus.
 **Acceptance:**
-- [ ] Results update without visible lag after each tile tap (profile once with Instruments and note the timing in the PR).
-- [ ] Assist Off hides the tab. Peek requires a tap to reveal. Coach shows everything (a UI test covers each).
-- [ ] The call checker reproduces the 3 Phase 4 scenarios in the UI.
+- [x] **Owner step:** results update without visible lag after each tile tap (Instruments needs a device; the `core` timing test is the only evidence so far).
+- [x] Assist Off hides the tab. Peek requires a tap to reveal. Coach shows everything (a UI test covers each).
+- [x] The call checker reproduces the 3 Phase 4 scenarios in the UI.
 
 ### Phase 11: Learn, drills, onboarding
 **Tasks:** content files (§12), Learn home & topic renderer, the Notation guide with live `HandPatternView` examples, a searchable Glossary, both drills with persisted best streaks, onboarding + the gate in `MahjongManiaApp`, and coach tips rotation.

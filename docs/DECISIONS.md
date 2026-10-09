@@ -71,3 +71,11 @@ The `ios` job's UI suite grows with each phase (about 20 minutes by Phase 11). T
 - "How?" starts unselected with two chips (Self-pick / Discard) instead of a segmented picker, so Discard is a real tap in the 5-tap path. The adjustment sheet is `.large` only (medium detent taps were unreliable in UI tests).
 - The scoreboard uses a local `ScorePointsText` (the shared `PointsText` has no large size). Self-pick explanation wording is new: "Others pay 50 (self-pick)" / "Base 25. Bea drew the winning tile, so everyone else pays double (50). Bea collects 150."
 - Rules editor: "Use as default" writes `settings.defaultRules`, "Save ruleset" appends to `settings.savedRules`.
+
+## 2026-10-09, §11.7 Hand Helper (Phase 10)
+
+- Charleston rack limit is 14 (the dealer holds 14); the keyboard still auto-collapses at 13.
+- The Assist chip offers Peek and Coach only; Off stays in Settings (choosing it in the Helper would hide the tab you are on). If the Helper tab disappears while selected, the app falls back to Game.
+- The Coach panel sits above the results list. Discard suggestions need all 14 tiles (rack plus exposures), otherwise a hint is shown.
+- "Could be going for" shows line names only; the Scout "why" is "Fits N of <opponent>'s possible hands". Peek shows the top 3 hands without "Show all"; Coach shows 8 with "Show all". A pinned line has an "Unpin this hand" button.
+- The exposure sheet is large-detent only. UI-test launch arguments `-UITestHelperRack`, `-UITestHelperMode`, `-UITestAssist` are honoured only with `-UITestResetData`.
