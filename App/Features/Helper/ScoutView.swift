@@ -147,7 +147,6 @@ struct ScoutView: View {
         }
       }
     }
-    .accessibilityIdentifier("scout.danger")
   }
 
   private func dangerLevel(_ value: Double) -> String {
@@ -198,7 +197,6 @@ struct ScoutView: View {
       }
       .frame(maxWidth: .infinity, alignment: .leading)
     }
-    .accessibilityIdentifier("scout.safe")
   }
 
   /// A short "why" per risky tile: which opponents' possible hands use it (Coach).

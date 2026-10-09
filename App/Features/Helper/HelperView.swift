@@ -94,6 +94,11 @@ struct HelperView: View {
   @ViewBuilder
   private func tilesContent(_ analyzer: Analyzer) -> some View {
     let limit = HelperRules.rackLimit(mode: helper.mode, exposedTiles: exposedTileCount)
+    let isEmpty = helper.rack.isEmpty && helper.exposures.isEmpty
+    // The empty state comes first so it is never hidden behind the keyboard.
+    if isEmpty {
+      emptyState
+    }
     TileRackView(
       tiles: settings.settings.tileSort == .suit ? helper.rack.sorted() : helper.rack,
       limit: limit,
@@ -103,9 +108,7 @@ struct HelperView: View {
       exposuresCard
       SeenTilesSection()
     }
-    if helper.rack.isEmpty && helper.exposures.isEmpty {
-      emptyState
-    } else {
+    if !isEmpty {
       CoachPanel(
         mode: helper.mode, analyzer: analyzer, view: helper.view, seen: helper.seen,
         danger: playingDanger(analyzer), gate: gate, advisor: advisor,
@@ -135,11 +138,7 @@ struct HelperView: View {
   }
 
   private var emptyState: some View {
-    VStack(spacing: Spacing.md) {
-      Image(systemName: "square.grid.3x2")
-        .font(.largeTitle)
-        .foregroundStyle(theme.textFaint)
-        .accessibilityHidden(true)
+    VStack(spacing: Spacing.xs) {
       Text("Add your tiles to see which hands you're closest to.")
         .font(Typography.body)
         .foregroundStyle(theme.textMuted)
@@ -149,7 +148,7 @@ struct HelperView: View {
         .accessibilityIdentifier("helper.deal")
     }
     .frame(maxWidth: .infinity)
-    .padding(Spacing.lg)
+    .accessibilityElement(children: .contain)
   }
 
   // MARK: Tile input

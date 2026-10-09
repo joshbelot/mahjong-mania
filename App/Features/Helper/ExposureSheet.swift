@@ -141,7 +141,7 @@ struct ExposureSheet: View {
         if jokers > newSize - 1 { jokers = newSize - 1 }
       }
     }
-    .presentationDetents([.medium, .large])
+    .presentationDetents([.large])
     .presentationDragIndicator(.visible)
   }
 
