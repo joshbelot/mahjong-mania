@@ -1134,10 +1134,10 @@ The Expo prototype has already been removed from the repo.
 ### Phase 9: Game Night feature
 **Tasks:** Game home, Session setup, Scoreboard, Record hand (create/edit), Wall game, Adjustment sheet, Undo, Rules editor, End & Summary, History, Players, Player stats, keep-awake.
 **Acceptance:**
-- [ ] A UI test plays a scripted 6-hand game night and asserts the scoreboard totals (via accessibility identifiers like `score.<playerName>`) and the settle-up lines.
-- [ ] The experienced record-hand path is 5 taps (winner → Discard → thrower → 25 → Save).
-- [ ] Editing a hand updates the totals, undo works, and the dealer badge rotates.
-- [ ] Data persists across relaunches (the UI test terminates and relaunches without the reset flag).
+- [x] A UI test plays a scripted 6-hand game night and asserts the scoreboard totals (via accessibility identifiers like `score.<playerName>`) and the settle-up lines.
+- [x] The experienced record-hand path is 5 taps (winner → Discard → thrower → 25 → Save).
+- [x] Editing a hand updates the totals, undo works, and the dealer badge rotates.
+- [x] Data persists across relaunches (the UI test terminates and relaunches without the reset flag).
 
 ### Phase 10: Hand Helper feature
 **Tasks:** HelperView with its 3 modes, rack/exposure/seen inputs, the results list with expand, the assist-level gating matrix (§11.3), the Coach panel (passes, discards, call checker), Scout, "Deal me a random hand", the pinned line, and the card & assist menus.
