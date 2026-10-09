@@ -27,7 +27,7 @@ final class GalleryTests: XCTestCase {
 
     let open = app.descendants(matching: .any)["gallery.open"].firstMatch
     var attempts = 0
-    while !open.exists && attempts < 10 {
+    while !(open.exists && open.isHittable) && attempts < 12 {
       app.swipeUp()
       attempts += 1
     }
