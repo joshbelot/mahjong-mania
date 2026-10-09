@@ -1,18 +1,22 @@
-Failed to tap "Cancel" Button: No matches found for Elements matching predicate '"Cancel" IN identifiers' from input {(
-    Button, label: 'Sheet Grabber', value: Expanded,
-    Button, identifier: 'dice', label: 'Game', Selected,
-    Button, identifier: 'lightbulb', label: 'Helper',
-    Button, identifier: 'rectangle.stack', label: 'Cards',
-    Button, identifier: 'graduationcap', label: 'Learn',
-    Button, identifier: 'settings.done', label: 'Done',
-    Button, label: 'Continue…',
-    Button, identifier: 'settings.open', label: 'Settings',
-    Button, label: 'Tile sort, By suit',
-    Button, identifier: 'settings.reset', label: 'Reset all data',
-    Button, identifier: 'Decrement', label: 'Self-pick ×2, Decrement', value: 2,
-    Button, identifier: 'Increment', label: 'Self-pick ×2, Increment', value: 2,
-    Button, identifier: 'Decrement', label: 'Jokerless ×2, Decrement', value: 2,
-    Button, identifier: 'Increment', label: 'Jokerless ×2, Increment', value: 2,
-    Button, identifier: 'Decrement', label: '1¢ per point, Decrement', value: 1,
-    Button, identifier: 'Increment', label: '1¢ per point, Increment', value: 1
-)}
+Failed to tap "Delete everything" Button: Find single matching element. Multiple matching elements found for <XCUIElementQuery: 0x11790d450>.
+Sparse tree of matches:
+→Application, pid: 38305, label: 'Mahjong Mania'
+  ↳Window (Main)
+    ↳Other
+      ↳Alert, label: 'This cannot be undone'
+        ↳Other
+          ↳Other
+            ↳Other
+              ↳ScrollView
+                ↳Other
+                  ↳Other
+                    ↳Button, identifier: 'settings.reset.confirm', label: 'Delete everything'
+                      ↳Button, identifier: 'settings.reset.confirm', label: 'Delete everything'
+Possibly caused by runtime issues:
+Automation type mismatch: computed Alert from legacy attributes vs Sheet from modern attribute. Input attributes and values: {
+    "XC_kAXXCAttributeAutomationType" = 3;
+    "XC_kAXXCAttributeElementBaseType" = "_UIAlertControllerPhoneTVMacView";
+    "XC_kAXXCAttributeElementType" = "_UIAlertControllerPhoneTVMacView";
+    "XC_kAXXCAttributeTraits" = 72057602627862528;
+}
+See test report attachments for more detail.

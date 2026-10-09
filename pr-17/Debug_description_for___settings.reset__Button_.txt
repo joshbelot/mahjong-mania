@@ -1,4 +1,0 @@
-Query chain:
- →Find: Target Application 'com.joshbelot.mahjongmania'
-  ↪︎Find: Descendants matching type Button
-    ↪︎Find: Elements matching predicate '"settings.reset" IN identifiers'
