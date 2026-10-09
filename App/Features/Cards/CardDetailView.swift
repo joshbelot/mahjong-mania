@@ -55,6 +55,7 @@ struct CardDetailView: View {
   @Environment(\.dismiss) private var dismiss
   @Environment(CardsStore.self) private var cards
   @Environment(SettingsStore.self) private var settings
+  @Environment(\.cardsNavigator) private var navigator
 
   @State private var query = ""
   @State private var editorRequest: LineEditorRequest?
@@ -62,7 +63,6 @@ struct CardDetailView: View {
   @State private var showRename = false
   @State private var renameText = ""
   @State private var showDeleteCard = false
-  @State private var pushedCardID: String?
   @State private var savedTick = 0
 
   var body: some View {
@@ -74,9 +74,6 @@ struct CardDetailView: View {
       }
     }
     .background(theme.bg)
-    .navigationDestination(item: $pushedCardID) { id in
-      CardDetailView(cardID: id)
-    }
     .sheet(item: $editorRequest) { request in
       LineEditorSheet(cardID: cardID, request: request) { savedTick += 1 }
     }
@@ -312,7 +309,7 @@ struct CardDetailView: View {
   }
 
   private func duplicate(_ card: Card) {
-    if let record = cards.duplicate(cardID: card.id) { pushedCardID = record.id }
+    if let record = cards.duplicate(cardID: card.id) { navigator.push(.card(record.id)) }
   }
 
   private func deleteCard(_ card: Card) {

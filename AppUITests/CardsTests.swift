@@ -92,8 +92,10 @@ final class CardsTests: XCTestCase {
     let item = element(app, id)
     if !item.waitForExistence(timeout: timeout) {
       // One line, so the CI failure summary shows what was on screen.
-      let tree = app.debugDescription.replacingOccurrences(of: "\n", with: " | ")
-      XCTFail("Missing element \(id). Screen: \(tree.prefix(2500))")
+      let lines = app.debugDescription.components(separatedBy: "\n")
+        .filter { $0.contains("identifier:") || $0.contains("label:") }
+        .map { $0.trimmingCharacters(in: .whitespaces) }
+      XCTFail("Missing element \(id). Screen: \(lines.joined(separator: " | ").prefix(3500))")
     }
     return item
   }

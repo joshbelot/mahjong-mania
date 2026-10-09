@@ -12,6 +12,7 @@ struct CardsListView: View {
   @Environment(\.theme) private var theme
   @Environment(CardsStore.self) private var cards
   @Environment(SettingsStore.self) private var settings
+  @Environment(\.cardsNavigator) private var navigator
 
   @State private var showImport = false
   @State private var showNew = false
@@ -19,7 +20,6 @@ struct CardsListView: View {
   @State private var renameID: String?
   @State private var renameText = ""
   @State private var deleteTarget: Card?
-  @State private var pushedCardID: String?
   /// Set by the import sheet; opened once the sheet has gone.
   @State private var pendingOpenID: String?
 
@@ -45,13 +45,10 @@ struct CardsListView: View {
         LineDetailView(cardID: cardID, lineID: lineID)
       }
     }
-    .navigationDestination(item: $pushedCardID) { id in
-      CardDetailView(cardID: id)
-    }
     .sheet(isPresented: $showImport) {
       if let id = pendingOpenID {
         pendingOpenID = nil
-        pushedCardID = id
+        navigator.push(.card(id))
       }
     } content: {
       ImportView { pendingOpenID = $0 }
@@ -129,7 +126,7 @@ struct CardsListView: View {
       }
       .disabled(active)
       Button {
-        if let record = cards.duplicate(cardID: card.id) { pushedCardID = record.id }
+        if let record = cards.duplicate(cardID: card.id) { navigator.push(.card(record.id)) }
       } label: {
         Label("Duplicate", systemImage: "plus.square.on.square")
       }
@@ -173,7 +170,7 @@ struct CardsListView: View {
   private func createCard() {
     let trimmed = newName.trimmingCharacters(in: .whitespacesAndNewlines)
     let record = cards.createCard(name: trimmed.isEmpty ? "My card" : trimmed)
-    pushedCardID = record.id
+    navigator.push(.card(record.id))
   }
 
   private func delete(_ card: Card) {

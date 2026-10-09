@@ -5,6 +5,7 @@ import SwiftUI
 struct RootView: View {
   @Environment(\.theme) private var theme
   @State private var selectedTab: AppTab = .game
+  @State private var cardsPath: [CardsRoute] = []
 
   var body: some View {
     TabView(selection: $selectedTab) {
@@ -16,7 +17,7 @@ struct RootView: View {
         .tabItem { Label("Helper", systemImage: "lightbulb") }
         .accessibilityIdentifier("tab.helper")
         .tag(AppTab.helper)
-      NavigationStack { CardsListView() }
+      NavigationStack(path: $cardsPath) { CardsListView() }
         .tabItem { Label("Cards", systemImage: "rectangle.stack") }
         .accessibilityIdentifier("tab.cards")
         .tag(AppTab.cards)
@@ -27,6 +28,7 @@ struct RootView: View {
     }
     .tint(theme.primary)
     .environment(\.tabSwitcher, TabSwitcher { selectedTab = $0 })
+    .environment(\.cardsNavigator, CardsNavigator { cardsPath.append($0) })
   }
 }
 

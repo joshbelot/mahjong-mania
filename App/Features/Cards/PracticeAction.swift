@@ -23,3 +23,22 @@ extension EnvironmentValues {
     set { self[TabSwitcherKey.self] = newValue }
   }
 }
+
+/// Pushes a screen onto the Cards tab's navigation stack from code (after creating, duplicating or
+/// importing a card). `RootView` owns the stack's path and provides the real one.
+struct CardsNavigator {
+  let push: @MainActor (CardsRoute) -> Void
+
+  static var none: CardsNavigator { CardsNavigator(push: { _ in }) }
+}
+
+private struct CardsNavigatorKey: EnvironmentKey {
+  static var defaultValue: CardsNavigator { CardsNavigator.none }
+}
+
+extension EnvironmentValues {
+  var cardsNavigator: CardsNavigator {
+    get { self[CardsNavigatorKey.self] }
+    set { self[CardsNavigatorKey.self] = newValue }
+  }
+}
