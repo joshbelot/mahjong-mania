@@ -334,6 +334,13 @@ struct SessionSetupView: View {
   private func addNewPlayer() {
     let name = trimmedNewName
     guard !name.isEmpty else { return }
+    // Typing the name of someone already on the roster picks that person instead of adding a twin.
+    if let existing = players.activePlayer(named: name) {
+      if !selected.contains(existing.id), selected.count < 4 { selected.append(existing.id) }
+      newName = ""
+      nameFocused = false
+      return
+    }
     let player = players.add(name: name)
     if let newColor { players.setColor(id: player.id, index: newColor) }
     if selected.count < 4 { selected.append(player.id) }

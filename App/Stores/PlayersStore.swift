@@ -26,6 +26,13 @@ final class PlayersStore {
 
   func player(id: String) -> Player? { players.first { $0.id == id } }
 
+  /// The active player with this name, ignoring case and surrounding spaces. Names identify people at
+  /// the table, so two active players never share one.
+  func activePlayer(named name: String, excluding id: String? = nil) -> Player? {
+    let key = name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+    return activePlayers.first { $0.id != id && $0.name.lowercased() == key }
+  }
+
   /// Adds a player with the first palette colour not used by an active player.
   @discardableResult
   func add(name: String, id: String = UUID().uuidString, at date: Date = Date()) -> Player {
@@ -39,7 +46,9 @@ final class PlayersStore {
     return player
   }
 
+  /// Renames the player; ignored when another active player already has that name.
   func rename(id: String, to name: String) {
+    guard activePlayer(named: name, excluding: id) == nil else { return }
     mutate(id) { $0.name = name.trimmingCharacters(in: .whitespacesAndNewlines) }
   }
 

@@ -149,6 +149,12 @@ struct CardEditingTests {
     #expect(edited == "! Mine\nFF 2026/x 2222/y 6666/y ; 25 ; X\n")
   }
 
+  @Test func sharedFileIsNamedAfterTheCard() {
+    #expect(CardFileExport.fileName(for: "Club Card") == "Club Card.txt")
+    #expect(CardFileExport.fileName(for: " 2027 / Mah:jong  ") == "2027 Mah jong.txt")
+    #expect(CardFileExport.fileName(for: "///") == "Card.txt")
+  }
+
   @Test func sharingEmitsTheCanonicalCardFile() {
     let text = Notation.serialize(card)
     #expect(text.hasPrefix("! Practice Card\n!year 2026\n# Year\n"))

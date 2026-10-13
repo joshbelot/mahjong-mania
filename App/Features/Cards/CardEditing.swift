@@ -1,4 +1,6 @@
+import CoreTransferable
 import Foundation
+import UniformTypeIdentifiers
 import MahjongCore
 
 /// Pure helpers that turn card edits into new card-file text (SPEC §9.5). User cards are stored as text, so
@@ -151,5 +153,34 @@ enum CardImport {
     var text = "! \(name)\n"
     if let year = report.year { text += "!year \(year)\n" }
     return text + report.body
+  }
+}
+
+/// A card shared as a text file named after the card ("Club Card.txt") instead of an anonymous "text".
+/// Copy and message targets still get the plain text.
+struct CardFileExport: Transferable {
+  let name: String
+  let text: String
+
+  init(card: Card) {
+    name = card.name
+    text = Notation.serialize(card)
+  }
+
+  /// A name that is safe as a file name: no path separators or control characters, never empty.
+  static func fileName(for cardName: String) -> String {
+    let banned = CharacterSet(charactersIn: "/\\:*?\"<>|").union(.controlCharacters)
+    let cleaned = cardName.components(separatedBy: banned).joined(separator: " ")
+      .split(separator: " ", omittingEmptySubsequences: true).joined(separator: " ")
+    return (cleaned.isEmpty ? "Card" : cleaned) + ".txt"
+  }
+
+  static var transferRepresentation: some TransferRepresentation {
+    FileRepresentation(exportedContentType: .plainText) { item in
+      let url = FileManager.default.temporaryDirectory.appendingPathComponent(fileName(for: item.name))
+      try item.text.write(to: url, atomically: true, encoding: .utf8)
+      return SentTransferredFile(url)
+    }
+    ProxyRepresentation(exporting: \.text)
   }
 }
