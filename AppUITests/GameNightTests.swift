@@ -74,7 +74,7 @@ final class GameNightTests: XCTestCase {
     var actual: [String: Int] = [:]
     repeat {
       actual = [:]
-      if !el(app, "score.\(expected.keys.first ?? "")").exists { app.swipeDown() }
+      if expected.keys.contains(where: { !el(app, "score.\($0)").exists }) { app.swipeDown() }
       for name in expected.keys {
         let element = el(app, "score.\(name)")
         if element.exists, let value = Self.value(ofSpoken: element.label) { actual[name] = value }
