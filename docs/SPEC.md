@@ -1154,7 +1154,7 @@ The Expo prototype has already been removed from the repo.
 **Tasks:** the complete Settings screen (§4.5), Reset all data, About + disclaimer ("Not affiliated with the National Mah Jongg League. Practice Card hands are original."), haptics and motion per §11.8, an accessibility pass (VoiceOver labels/hints, focus order), empty states everywhere, and the **final app icon** (§16.2). Add `tools/upload_testflight.sh` and `RELEASING.md` exactly per §16, plus `TestFlight/WhatToTest.txt` and `TestFlight/BetaDescription.txt` drafts.
 **Acceptance:**
 - [ ] The manual QA checklist below passes on a simulator and on a physical iPhone.
-- [ ] A dry run, `tools/upload_testflight.sh --dry-run`, performs every step except the final upload (it archives and exports with `destination = export`) and leaves the build number unchanged.
+- [x] A dry run, `tools/upload_testflight.sh --dry-run`, performs every step except the final upload (it archives and exports with `destination = export`) and leaves the build number unchanged.
 - [ ] The owner runs a real upload and the build appears in TestFlight. (This is the owner's step; the agent prepares everything.)
 
 ### Manual QA checklist (final)
