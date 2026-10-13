@@ -79,3 +79,7 @@ The `ios` job's UI suite grows with each phase (about 20 minutes by Phase 11). T
 - The Coach panel sits above the results list. Discard suggestions need all 14 tiles (rack plus exposures), otherwise a hint is shown.
 - "Could be going for" shows line names only; the Scout "why" is "Fits N of <opponent>'s possible hands". Peek shows the top 3 hands without "Show all"; Coach shows 8 with "Show all". A pinned line has an "Unpin this hand" button.
 - The exposure sheet is large-detent only. UI-test launch arguments `-UITestHelperRack`, `-UITestHelperMode`, `-UITestAssist` are honoured only with `-UITestResetData`.
+
+## 2026-10-13, §11.7 Cards (stabilisation item 7): edits change only the affected line of the card text
+
+This reverses the Phase 8 note that editing a hand rewrites the whole card text and drops comments and invalid lines. `CardEditing` now edits the stored text itself: it uses the new `CardFileParseResult.sourceLineNumbers` to replace or remove just the edited line, and inserts a new line after the last line of its section (or in a new `# Section` at the end). Comments, blank lines, section order and lines that do not parse stay as the user wrote them. Moving a hand to another section appends it to that section. Line IDs still contain the line's index, so adding or removing a hand renumbers the IDs of the hands after it (unchanged, per §9.5).

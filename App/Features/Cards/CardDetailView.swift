@@ -163,7 +163,9 @@ struct CardDetailView: View {
       "Delete this hand?", isPresented: lineDeleteBinding, titleVisibility: .visible, presenting: lineToDelete
     ) { line in
       Button("Delete hand", role: .destructive) {
-        cards.updateText(id: card.id, text: CardEditing.text(removing: line.id, from: card))
+        if let source = cards.record(id: card.id)?.text {
+          cards.updateText(id: card.id, text: CardEditing.text(removing: line.id, from: source))
+        }
       }
     } message: { line in
       Text(line.displayName)

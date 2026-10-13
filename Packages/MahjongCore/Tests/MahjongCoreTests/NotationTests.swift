@@ -349,6 +349,12 @@ struct CardFileTests {
     #expect(result.errors[1].text == "FF 2222 4444 6666 88 ; 25 ; X")
   }
 
+  @Test func reportsTheSourceLineOfEachValidLine() {
+    let result = Notation.parseCardFile(sample)
+    #expect(result.sourceLineNumbers == [5, 9])
+    #expect(result.sourceLineNumbers.count == result.lines.count)
+  }
+
   @Test func lineIDsAreStableAcrossReparse() {
     let a = Notation.parseCardFile(sample)
     let b = Notation.parseCardFile(sample)

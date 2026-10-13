@@ -8,6 +8,7 @@ extension Notation {
     var year: Int?
     var section = "Hands"
     var lines: [CardLine] = []
+    var sourceLineNumbers: [Int] = []
     var errors: [CardFileError] = []
     var perSection: [String: Int] = [:]
 
@@ -53,13 +54,15 @@ extension Notation {
       case .success(var line):
         line.id = "L\(lines.count)_" + fnv1aBase36(line.source)
         lines.append(line)
+        sourceLineNumbers.append(lineNumber)
         perSection[section] = index
       case .failure(let list):
         errors.append(CardFileError(lineNumber: lineNumber, text: raw, errors: list.errors))
       }
     }
 
-    return CardFileParseResult(name: name, year: year, lines: lines, errors: errors)
+    return CardFileParseResult(
+      name: name, year: year, lines: lines, errors: errors, sourceLineNumbers: sourceLineNumbers)
   }
 
   /// Builds a `Card` from a parsed file.

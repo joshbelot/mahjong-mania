@@ -365,12 +365,12 @@ struct LineEditorView: View {
   // MARK: Save
 
   private func save() {
-    guard let line = model.validLine, let card = cards.card(id: cardID) else { return }
+    guard let line = model.validLine, let source = cards.record(id: cardID)?.text else { return }
     let text: String
     if let lineID {
-      text = CardEditing.text(replacing: lineID, with: line, in: card)
+      text = CardEditing.text(replacing: lineID, with: line, in: source)
     } else {
-      text = CardEditing.text(adding: line, to: card)
+      text = CardEditing.text(adding: line, to: source)
     }
     cards.updateText(id: cardID, text: text)
     if !settings.settings.cardNoticeSeen { settings.update { $0.cardNoticeSeen = true } }
