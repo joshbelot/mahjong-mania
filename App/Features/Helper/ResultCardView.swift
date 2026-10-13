@@ -5,6 +5,7 @@ import SwiftUI
 /// into tile mode with the missing tiles and a plain-English description (SPEC §11.7).
 struct ResultCardView: View {
   @Environment(\.theme) private var theme
+  @Environment(\.dynamicTypeSize) private var typeSize
 
   let result: LineResult
   let index: Int
@@ -69,7 +70,7 @@ struct ResultCardView: View {
   }
 
   private var titleRow: some View {
-    HStack(alignment: .firstTextBaseline, spacing: Spacing.sm) {
+    AdaptiveStack(verticalAlignment: .firstTextBaseline, spacing: Spacing.sm) {
       if isPinned {
         Image(systemName: "pin.fill")
           .font(Typography.small)
@@ -80,10 +81,11 @@ struct ResultCardView: View {
         .font(Typography.body.weight(.semibold))
         .foregroundStyle(theme.text)
         .multilineTextAlignment(.leading)
-      Spacer(minLength: Spacing.sm)
+      if !typeSize.isAccessibilitySize { Spacer(minLength: Spacing.sm) }
       Text(awayLabel)
         .font(Typography.small.weight(.bold))
         .monospacedDigit()
+        .fixedSize()
         .foregroundStyle(result.best.possible ? theme.primary : theme.textMuted)
         .padding(.horizontal, Spacing.sm)
         .padding(.vertical, 3)

@@ -69,6 +69,8 @@ final class LargeTextTests: XCTestCase {
       tapID(app, "setup.addPlayer")
       XCTAssertTrue(el(app, "setup.player.\(name)").waitForExistence(timeout: 5))
     }
+    attach("large-setup-\(scheme)")
+    scrollTo(app, "setup.start")
     tapID(app, "setup.start")
     XCTAssertTrue(el(app, "score.Alex").waitForExistence(timeout: 10))
     scrollTo(app, "score.record")
@@ -95,6 +97,54 @@ final class LargeTextTests: XCTestCase {
     XCTAssertGreaterThan(
       score.frame.width, score.frame.height, "A score must stay on one line (no \"+12\" / \"0\" wrap)")
     attach("large-scoreboard-\(scheme)")
+
+    // Adjustment sheet, summary, players and stats.
+    scrollToTop(app)
+    openMenuItem(app, id: "menu.adjustment", label: "Adjustment")
+    if el(app, "adjust.cancel").waitForExistence(timeout: 5) {
+      attach("large-adjustment-\(scheme)")
+      el(app, "adjust.cancel").tap()
+      XCTAssertTrue(el(app, "adjust.cancel").waitForNonExistence(timeout: 10))
+    }
+    scrollToTop(app)
+    openMenuItem(app, id: "menu.end", label: "End game night")
+    let confirm = app.buttons["End game night"]
+    XCTAssertTrue(confirm.waitForExistence(timeout: 5))
+    confirm.tap()
+    XCTAssertTrue(el(app, "summary.done").waitForExistence(timeout: 10), "Summary did not open")
+    attach("large-summary-\(scheme)")
+    app.swipeUp()
+    attach("large-summary-2-\(scheme)")
+    scrollTo(app, "summary.done")
+    tapID(app, "summary.done")
+    XCTAssertTrue(el(app, "game.players").waitForExistence(timeout: 10))
+    attach("large-game-home-\(scheme)")
+    tapID(app, "game.players")
+    XCTAssertTrue(el(app, "players.row.Cy").waitForExistence(timeout: 10))
+    attach("large-players-\(scheme)")
+    tapID(app, "players.row.Cy")
+    XCTAssertTrue(app.navigationBars["Cy"].waitForExistence(timeout: 10))
+    attach("large-player-stats-\(scheme)")
+  }
+
+  private func scrollToTop(_ app: XCUIApplication) {
+    var swipes = 0
+    while !el(app, "score.menu").isHittable && swipes < 8 {
+      app.swipeDown()
+      swipes += 1
+    }
+  }
+
+  private func openMenuItem(_ app: XCUIApplication, id: String, label: String) {
+    tapID(app, "score.menu")
+    let byID = app.buttons[id]
+    if byID.waitForExistence(timeout: 3) {
+      byID.tap()
+    } else {
+      let byLabel = app.buttons[label]
+      XCTAssertTrue(byLabel.waitForExistence(timeout: 5), "Missing menu item \(label)")
+      byLabel.tap()
+    }
   }
 
   func testLargeTextLight() { check(dark: false) }

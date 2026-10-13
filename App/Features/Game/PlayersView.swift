@@ -4,6 +4,7 @@ import SwiftUI
 /// The player roster with wins and net points. Tap a player for their stats.
 struct PlayersView: View {
   @Environment(\.theme) private var theme
+  @Environment(\.dynamicTypeSize) private var typeSize
   @Environment(PlayersStore.self) private var players
   @Environment(SessionsStore.self) private var sessions
   @State private var showAdd = false
@@ -77,7 +78,7 @@ struct PlayersView: View {
 
   private func row(_ player: Player) -> some View {
     let stats = Scoring.playerStats(player.id, sessions: sessions.sessions)
-    return HStack(spacing: Spacing.md) {
+    let identity = HStack(spacing: Spacing.md) {
       AvatarView(name: player.name, colorIndex: player.colorIndex, size: 44)
       VStack(alignment: .leading, spacing: 2) {
         Text(player.name)
@@ -87,12 +88,25 @@ struct PlayersView: View {
           .font(Typography.small)
           .foregroundStyle(theme.textMuted)
       }
-      Spacer(minLength: Spacing.sm)
-      PointsText(stats.netPoints)
-      Image(systemName: "chevron.right")
-        .font(.footnote.weight(.semibold))
-        .foregroundStyle(theme.textFaint)
-        .accessibilityHidden(true)
+    }
+    return Group {
+      if typeSize.isAccessibilitySize {
+        VStack(alignment: .leading, spacing: Spacing.xs) {
+          identity
+          PointsText(stats.netPoints)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+      } else {
+        HStack(spacing: Spacing.md) {
+          identity
+          Spacer(minLength: Spacing.sm)
+          PointsText(stats.netPoints)
+          Image(systemName: "chevron.right")
+            .font(.footnote.weight(.semibold))
+            .foregroundStyle(theme.textFaint)
+            .accessibilityHidden(true)
+        }
+      }
     }
     .frame(minHeight: 60)
     .contentShape(Rectangle())
