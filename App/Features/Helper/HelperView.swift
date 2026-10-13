@@ -192,7 +192,7 @@ struct HelperView: View {
   }
 
   private func add(_ tile: Tile) {
-    withAnimation(.snappy(duration: 0.12)) { helper.add(tile) }
+    withAnimation(.snappy(duration: 0.12)) { _ = helper.add(tile) }
   }
 
   private func remove(_ tile: Tile) {

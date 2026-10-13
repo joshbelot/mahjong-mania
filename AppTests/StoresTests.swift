@@ -216,10 +216,11 @@ struct CardsStoreTests {
   @Test func analyzerIsCachedPerCardVersion() throws {
     let store = CardsStore(directory: makeTempDirectory(), persistDelay: fast)
     store.createCard(name: "Mine", text: text, id: "c1", at: Date(timeIntervalSince1970: 10))
-    let first = try #require(store.analyzer(for: "c1"))
+    let first = store.analyzer(for: "c1")
+    #expect(first != nil)
     #expect(store.analyzer(for: "c1") === first)
     store.updateText(id: "c1", text: text, at: Date(timeIntervalSince1970: 11))
-    #expect(try #require(store.analyzer(for: "c1")) !== first)
+    #expect(store.analyzer(for: "c1") !== first)
     #expect(store.analyzer(for: "practice-v1")?.card.lines.count == 37)
     #expect(store.analyzer(for: "nope") == nil)
   }
