@@ -359,8 +359,23 @@ struct CardFileTests {
     let a = Notation.parseCardFile(sample)
     let b = Notation.parseCardFile(sample)
     #expect(a.lines.map(\.id) == b.lines.map(\.id))
-    #expect(a.lines[0].id.hasPrefix("L0_"))
-    #expect(a.lines[1].id.hasPrefix("L1_"))
+    #expect(a.lines.allSatisfy { $0.id.hasPrefix("L_") })
+  }
+
+  @Test func lineIDsSurviveAddingAndDeletingOtherLines() {
+    let a = Notation.parseCardFile(sample)
+    let extra = "NNNN EEE WWW SSSS ; 30 ; C ; Inserted\n"
+    let withInserted = Notation.parseCardFile(sample.replacingOccurrences(of: "# First\n", with: "# First\n" + extra))
+    #expect(withInserted.lines.count == a.lines.count + 1)
+    for line in a.lines { #expect(withInserted.lines.contains { $0.id == line.id }, "\(line.displayName)") }
+    let withoutFirst = Notation.parseCardFile(sample.replacingOccurrences(of: "FF 2222/x 4444/y 66/z 88/x ; 25 ; X ; Good One\n", with: ""))
+    #expect(withoutFirst.lines.map(\.id) == [a.lines[1].id])
+  }
+
+  @Test func identicalLinesGetDistinctIDs() {
+    let text = "NNNN EEE WWW SSSS ; 25 ; X\nNNNN EEE WWW SSSS ; 25 ; X\n"
+    let ids = Notation.parseCardFile(text).lines.map(\.id)
+    #expect(ids.count == 2 && Set(ids).count == 2)
   }
 
   @Test func firstNameWinsAndSectionDefaultsToHands() {

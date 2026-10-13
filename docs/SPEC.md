@@ -633,7 +633,7 @@ FF 2026/x 2222/y 6666/y ; 25 ; X ; Year Kongs
 ...
 ```
 - `! <name>`: card name (first one wins). `!year <n>`: optional year. `# <section>`: sets the current section for the following lines (default section "Hands"). Blank lines are ignored.
-- `parseCardFile(text)` → `{ card: Omit<Card,'id'|'createdAt'|'updatedAt'|'builtIn'>, errors: { lineNumber: number; text: string; errors: ParseError[] }[] }`. Valid lines are kept and invalid ones reported. Line IDs are **stable**: `L${index}_${hash(source)}` where hash = 32-bit FNV-1a in base36. This lets session records referencing a `lineId` survive re-parsing as long as the line is unchanged.
+- `parseCardFile(text)` → `{ card: Omit<Card,'id'|'createdAt'|'updatedAt'|'builtIn'>, errors: { lineNumber: number; text: string; errors: ParseError[] }[] }`. Valid lines are kept and invalid ones reported. Line IDs are **stable**: `L_${hash(source)}` where hash = 32-bit FNV-1a in base36, with `_2`, `_3`… appended to a second, third… identical line. This lets session records referencing a `lineId` survive re-parsing and survive other hands being added or deleted, as long as the line itself is unchanged.
 - `serializeCardFile(card)` emits the name, year, sections in order, and lines.
 
 ### 9.6 The built-in Practice Card (original; source of truth)

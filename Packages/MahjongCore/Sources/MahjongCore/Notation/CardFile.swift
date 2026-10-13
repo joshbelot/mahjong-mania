@@ -11,6 +11,7 @@ extension Notation {
     var sourceLineNumbers: [Int] = []
     var errors: [CardFileError] = []
     var perSection: [String: Int] = [:]
+    var idCounts: [String: Int] = [:]
 
     let normalised = text.replacingOccurrences(of: "\r\n", with: "\n").replacingOccurrences(of: "\r", with: "\n")
     let rawLines = normalised.split(separator: "\n", omittingEmptySubsequences: false)
@@ -52,7 +53,12 @@ extension Notation {
       let index = (perSection[section] ?? 0) + 1
       switch parseLine(raw, id: nil, section: section, indexInSection: index) {
       case .success(var line):
-        line.id = "L\(lines.count)_" + fnv1aBase36(line.source)
+        // The ID depends on the line's text, not its position, so adding or deleting other hands keeps it.
+        // A second identical line gets a "_2" suffix, and so on.
+        let base = "L_" + fnv1aBase36(line.source)
+        let seen = (idCounts[base] ?? 0) + 1
+        idCounts[base] = seen
+        line.id = seen == 1 ? base : "\(base)_\(seen)"
         lines.append(line)
         sourceLineNumbers.append(lineNumber)
         perSection[section] = index
