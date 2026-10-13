@@ -190,12 +190,17 @@ public struct CardFileParseResult: Hashable, Sendable {
   public var year: Int?
   public var lines: [CardLine]
   public var errors: [CardFileError]
+  /// For each element of `lines`, the 1-based number of the line of the file it was parsed from.
+  public var sourceLineNumbers: [Int]
 
-  public init(name: String?, year: Int?, lines: [CardLine], errors: [CardFileError]) {
+  public init(
+    name: String?, year: Int?, lines: [CardLine], errors: [CardFileError], sourceLineNumbers: [Int] = []
+  ) {
     self.name = name
     self.year = year
     self.lines = lines
     self.errors = errors
+    self.sourceLineNumbers = sourceLineNumbers
   }
 }
 
