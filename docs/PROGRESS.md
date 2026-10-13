@@ -44,4 +44,4 @@ Item 6 result (2026-10-13): `zsh -ic 'tools/upload_testflight.sh --dry-run'` on 
 
 _None yet._
 
-**Environment notes:** phases 0–12 were written in a sandbox with no Swift toolchain (see DECISIONS.md); the owner's Mac has one, see `AGENTS.md`. The `core` job runs on every push; the `ios` job runs on PRs and `main` (~10 min; a simulator launch timeout flake can happen, the test step retries failing tests and a failed job can be re-run once). UI screenshots are published by CI to the `ci-screenshots` branch (`pr-<number>/`); view them via `raw.githubusercontent.com`.
+**Environment notes:** phases 0–12 were written in a sandbox with no Swift toolchain and verified only by CI (see DECISIONS.md). CI has been disabled by the owner since 2026-10-13; everything is now verified locally on the owner's Mac, see `AGENTS.md`. The last green CI run on `main` was on `57d6397` (2026-10-09); screenshots from that period are on the `ci-screenshots` branch.
