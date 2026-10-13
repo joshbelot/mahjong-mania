@@ -83,6 +83,7 @@ The `ios` job's UI suite grows with each phase (about 20 minutes by Phase 11). T
 ## 2026-10-13, §11.7 Cards (stabilisation item 7): edits change only the affected line of the card text
 
 This reverses the Phase 8 note that editing a hand rewrites the whole card text and drops comments and invalid lines. `CardEditing` now edits the stored text itself: it uses the new `CardFileParseResult.sourceLineNumbers` to replace or remove just the edited line, and inserts a new line after the last line of its section (or in a new `# Section` at the end). Comments, blank lines, section order and lines that do not parse stay as the user wrote them. Moving a hand to another section appends it to that section. Line IDs still contain the line's index, so adding or removing a hand renumbers the IDs of the hands after it (unchanged, per §9.5).
+
 ## 2026-10-13, §11.7 Hand Helper responsiveness (stabilisation item 5)
 
 Analysis stays on the main actor. Measured per tile tap for a full 14-tile rack (60 seeded deals) on an Apple-silicon Mac: Release max 4.4 ms (closest hands 0.3 ms, pass advice 0.3 ms, discard advice 3.5 ms; with three opponents' exposures scouted, discard advice 1.3 ms), Debug max 66 ms. That is far below the 50 ms goal in a Release build, so moving it off the main actor would add concurrency complexity for no visible gain. `HelperTimingTests` keeps a loose 250 ms bound as a regression guard.
@@ -90,3 +91,7 @@ Analysis stays on the main actor. Measured per tile tap for a full 14-tile rack 
 ## 2026-10-13, §14.2 / §14.3: CI disabled by the owner
 
 The GitHub Actions workflow is disabled (the `ios` job took 25–90 minutes per run) and stays off. `.github/workflows/ci.yml` is kept only for reference. The definition of done is now: `tools/test.sh` passes locally on the owner's Mac (core tests, app unit tests, UI tests), there are no compiler warnings, and new UI has been looked at in the simulator. Wherever the spec says "CI is green", read "the local run is green".
+
+## 2026-10-13, §11.2 Large text (stabilisation item 3)
+
+Custom rows no longer squeeze at accessibility text sizes: `AdaptiveStack` turns a row into a column and `AdaptiveLabelStyle` drops the icon in buttons, so names, scores and labels wrap by word instead of truncating. Applied to the scoreboard, hand log, summary, players, seat setup, card rows, Helper header, rack header and result cards. `LargeTextTests` runs the Cards and Game flows at AX5 in light and dark. The system segmented picker for the Helper mode does not scale with text size; left as is.
