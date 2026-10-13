@@ -50,6 +50,6 @@ Item 6 result (2026-10-13): `zsh -ic 'tools/upload_testflight.sh --dry-run'` on 
 
 Answered by the owner ("choose by best practice and consistency") and done in the follow-up PR: unique player names (typing an existing name picks that person), Share card as `<name>.txt`, keep-awake takes effect immediately, Import keeps skipping invalid lines (the user is told first).
 
-Still open: **line identity across card edits.** Line IDs are `L<index>_<hash>` (SPEC §9.5), so adding or deleting a hand renumbers the IDs of the hands after it, and editing a hand changes its own ID. Per-hand win counts ("You've won this 3 times") and a pinned hand can then point at the wrong hand. A persisted per-line ID would fix it but changes the card file format. Best done before real data exists.
+Line identity across card edits was fixed too (line IDs are `L_<hash>`, see DECISIONS). Remaining limitation: editing a hand's own text gives it a new ID, so its win count starts again.
 
 **Environment notes:** phases 0–12 were written in a sandbox with no Swift toolchain and verified only by CI (see DECISIONS.md). CI has been disabled by the owner since 2026-10-13; everything is now verified locally on the owner's Mac, see `AGENTS.md`. The last green CI run on `main` was on `57d6397` (2026-10-09); screenshots from that period are on the `ci-screenshots` branch.

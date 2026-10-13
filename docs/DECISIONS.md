@@ -102,3 +102,7 @@ Custom rows no longer squeeze at accessibility text sizes: `AdaptiveStack` turns
 - Share card shares a text file named after the card (`CardFileExport`, "Club Card.txt"); copy and message targets still receive the plain text.
 - Toggling "Keep screen awake" applies at once on the scoreboard.
 - Import keeps skipping lines that do not parse; the Check step lists them before anything is imported.
+
+## 2026-10-13, §9.5 Line IDs no longer contain the line's position
+
+`L<index>_<hash>` became `L_<hash>` (plus `_2`, `_3` for identical lines). With the index in the ID, adding or deleting a hand renumbered the IDs of every hand after it, so per-hand win counts, "Practise this hand" pins and the line recorded with a hand could silently point at another hand. IDs now change only when the hand's own text (notation, points, name, X/C, shift) changes. Done before the first release so no session data exists with the old format.
