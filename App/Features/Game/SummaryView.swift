@@ -4,6 +4,7 @@ import SwiftUI
 /// Final standings, highlights and the money settle-up for a game night.
 struct SummaryView: View {
   @Environment(\.theme) private var theme
+  @Environment(\.dynamicTypeSize) private var typeSize
   @Environment(\.dismiss) private var dismiss
   @Environment(PlayersStore.self) private var players
   @Environment(SessionsStore.self) private var sessions
@@ -69,19 +70,21 @@ struct SummaryView: View {
         ForEach(model.standings) { standing in
           let name = players.name(of: standing.id)
           let isLeader = model.leaderIDs.contains(standing.id)
-          HStack(spacing: Spacing.md) {
+          let identity = HStack(spacing: Spacing.md) {
             Text("\(standing.rank)")
               .font(Typography.small.weight(.bold))
               .foregroundStyle(isLeader ? theme.onPrimary : theme.textMuted)
-              .frame(width: 24, height: 24)
-              .background(isLeader ? theme.gold : theme.surfaceAlt, in: Circle())
+              .fixedSize()
+              .frame(minWidth: 24, minHeight: 24)
+              .padding(typeSize.isAccessibilitySize ? Spacing.xs : 0)
+              .background(isLeader ? theme.gold : theme.surfaceAlt, in: Capsule())
               .accessibilityHidden(true)
             AvatarView(name: name, colorIndex: players.colorIndex(of: standing.id), size: 40)
             HStack(spacing: Spacing.xs) {
               Text(name)
                 .font(Typography.body.weight(.semibold))
                 .foregroundStyle(theme.text)
-                .lineLimit(1)
+                .lineLimit(typeSize.isAccessibilitySize ? nil : 1)
               if isLeader {
                 Image(systemName: "crown.fill")
                   .font(.footnote)
@@ -89,11 +92,25 @@ struct SummaryView: View {
                   .accessibilityLabel("Winner")
               }
             }
-            Spacer(minLength: Spacing.sm)
-            VStack(alignment: .trailing, spacing: 2) {
-              PointsText(standing.points)
-              if session.rules.money.enabled {
-                MoneyText(cents: standing.cents, symbol: session.rules.money.currencySymbol)
+          }
+          let scores = VStack(alignment: typeSize.isAccessibilitySize ? .leading : .trailing, spacing: 2) {
+            PointsText(standing.points)
+            if session.rules.money.enabled {
+              MoneyText(cents: standing.cents, symbol: session.rules.money.currencySymbol)
+            }
+          }
+          Group {
+            if typeSize.isAccessibilitySize {
+              VStack(alignment: .leading, spacing: Spacing.xs) {
+                identity
+                scores
+              }
+              .frame(maxWidth: .infinity, alignment: .leading)
+            } else {
+              HStack(spacing: Spacing.md) {
+                identity
+                Spacer(minLength: Spacing.sm)
+                scores
               }
             }
           }

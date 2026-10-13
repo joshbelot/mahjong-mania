@@ -5,6 +5,7 @@ import SwiftUI
 /// Tapping a tile calls `onRemove` with that tile (the caller removes one copy).
 struct TileRackView: View {
   @Environment(\.theme) private var theme
+  @Environment(\.dynamicTypeSize) private var typeSize
   @State private var sortOn = false
   @State private var confirmClear = false
 
@@ -53,19 +54,21 @@ struct TileRackView: View {
   }
 
   private var header: some View {
-    HStack(spacing: Spacing.sm) {
+    AdaptiveStack(spacing: Spacing.sm) {
       Text("\(tiles.count)/\(limit)")
         .font(Typography.h2)
         .monospacedDigit()
+        .fixedSize()
         .foregroundStyle(tiles.count > limit ? theme.danger : theme.text)
         .accessibilityLabel("\(tiles.count) of \(limit) tiles")
         .accessibilityIdentifier("rack.count")
-      Spacer(minLength: Spacing.sm)
+      if !typeSize.isAccessibilitySize { Spacer(minLength: Spacing.sm) }
       Button {
         sortOn.toggle()
       } label: {
         Label("Sort", systemImage: "arrow.up.arrow.down")
           .font(Typography.small.weight(.semibold))
+          .fixedSize()
           .padding(.horizontal, Spacing.md)
           .frame(minHeight: 44)
       }
@@ -83,6 +86,7 @@ struct TileRackView: View {
         } label: {
           Text("Clear")
             .font(Typography.small.weight(.semibold))
+            .fixedSize()
             .padding(.horizontal, Spacing.md)
             .frame(minHeight: 44)
         }
@@ -127,6 +131,7 @@ struct TileRackView: View {
 
 private struct RackPreview: View {
   @Environment(\.theme) private var theme
+  @Environment(\.dynamicTypeSize) private var typeSize
   @State private var tiles: [Tile] = ["1C", "2C", "3C", "5D", "5D", "N", "R", "0", "F", "J", "9B", "9B"]
     .compactMap { Tile(code: $0) }
 

@@ -30,10 +30,13 @@ private struct PrimaryButtonBody: View {
 
   var body: some View {
     configuration.label
+      .labelStyle(AdaptiveLabelStyle())
       .font(Typography.body.weight(.semibold))
       .multilineTextAlignment(.center)
+      .fixedSize(horizontal: false, vertical: true)
       .foregroundStyle(foreground)
       .padding(.horizontal, Spacing.lg)
+      .padding(.vertical, Spacing.sm)
       .frame(maxWidth: maxWidth, minHeight: size == .large ? 56 : 44)
       .background(background, in: RoundedRectangle(cornerRadius: Radius.md))
       .contentShape(RoundedRectangle(cornerRadius: Radius.md))

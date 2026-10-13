@@ -4,6 +4,7 @@ import SwiftUI
 /// Pick 3-4 players, seat order and East, card, rules and money, then start the game night.
 struct SessionSetupView: View {
   @Environment(\.theme) private var theme
+  @Environment(\.dynamicTypeSize) private var typeSize
   @Environment(SettingsStore.self) private var settings
   @Environment(PlayersStore.self) private var players
   @Environment(SessionsStore.self) private var sessions
@@ -145,38 +146,51 @@ struct SessionSetupView: View {
 
   private func seatRow(index: Int, id: String) -> some View {
     let name = players.name(of: id)
+    let nameBlock = VStack(alignment: .leading, spacing: 0) {
+      Text(name)
+        .font(Typography.body.weight(.semibold))
+        .foregroundStyle(theme.text)
+        .lineLimit(typeSize.isAccessibilitySize ? nil : 1)
+      if id == effectiveEastID {
+        BadgeView(.east)
+      } else {
+        Button {
+          eastID = id
+        } label: {
+          Text("Make East")
+            .font(Typography.small.weight(.semibold))
+            .foregroundStyle(theme.primary)
+            .frame(minHeight: 44, alignment: .leading)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("setup.east.\(name)")
+      }
+    }
+    let moves = HStack(spacing: 0) {
+      moveButton("arrow.up", label: "Move \(name) up", enabled: index > 0) { move(index, by: -1) }
+      moveButton("arrow.down", label: "Move \(name) down", enabled: index < selected.count - 1) {
+        move(index, by: 1)
+      }
+    }
     return HStack(spacing: Spacing.md) {
       Text("\(index + 1)")
         .font(Typography.small.weight(.semibold))
         .foregroundStyle(theme.textMuted)
-        .frame(width: 16)
+        .frame(minWidth: 16)
+        .fixedSize()
         .accessibilityHidden(true)
       AvatarView(name: name, colorIndex: players.colorIndex(of: id), size: 36)
-      VStack(alignment: .leading, spacing: 0) {
-        Text(name)
-          .font(Typography.body.weight(.semibold))
-          .foregroundStyle(theme.text)
-          .lineLimit(1)
-        if id == effectiveEastID {
-          BadgeView(.east)
-        } else {
-          Button {
-            eastID = id
-          } label: {
-            Text("Make East")
-              .font(Typography.small.weight(.semibold))
-              .foregroundStyle(theme.primary)
-              .frame(minHeight: 44, alignment: .leading)
-              .contentShape(Rectangle())
-          }
-          .buttonStyle(.plain)
-          .accessibilityIdentifier("setup.east.\(name)")
+      if typeSize.isAccessibilitySize {
+        VStack(alignment: .leading, spacing: 0) {
+          nameBlock
+          moves
         }
-      }
-      Spacer(minLength: Spacing.sm)
-      moveButton("arrow.up", label: "Move \(name) up", enabled: index > 0) { move(index, by: -1) }
-      moveButton("arrow.down", label: "Move \(name) down", enabled: index < selected.count - 1) {
-        move(index, by: 1)
+        Spacer(minLength: 0)
+      } else {
+        nameBlock
+        Spacer(minLength: Spacing.sm)
+        moves
       }
     }
     .frame(minHeight: 56)

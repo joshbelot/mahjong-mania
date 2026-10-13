@@ -77,6 +77,7 @@ struct LearnHomeView: View {
 
 private struct LearnRow: View {
   @Environment(\.theme) private var theme
+  @Environment(\.dynamicTypeSize) private var typeSize
   let symbol: String
   let title: String
   let subtitle: String
@@ -84,11 +85,13 @@ private struct LearnRow: View {
 
   var body: some View {
     HStack(alignment: .top, spacing: Spacing.md) {
-      Image(systemName: symbol)
-        .font(.title3)
-        .foregroundStyle(theme.primary)
-        .frame(width: 32, height: 32)
-        .accessibilityHidden(true)
+      if !typeSize.isAccessibilitySize {
+        Image(systemName: symbol)
+          .font(.title3)
+          .foregroundStyle(theme.primary)
+          .frame(width: 32, height: 32)
+          .accessibilityHidden(true)
+      }
       VStack(alignment: .leading, spacing: 2) {
         Text(title)
           .font(Typography.body.weight(.semibold))

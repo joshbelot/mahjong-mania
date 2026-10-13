@@ -4,6 +4,7 @@ import SwiftUI
 /// The Card chip (opens the card picker) and the Assist chip (a menu that changes the global setting).
 struct HelperHeader: View {
   @Environment(SettingsStore.self) private var settings
+  @Environment(\.dynamicTypeSize) private var typeSize
 
   let cardName: String
   let onPickCard: () -> Void
@@ -12,7 +13,7 @@ struct HelperHeader: View {
   private static let levels: [AssistLevel] = [.peek, .coach]
 
   var body: some View {
-    HStack(spacing: Spacing.sm) {
+    AdaptiveStack(horizontalAlignment: .leading, spacing: Spacing.sm) {
       Button(action: onPickCard) {
         HeaderChipLabel(title: cardName, systemImage: "rectangle.stack")
       }
@@ -20,7 +21,7 @@ struct HelperHeader: View {
       .accessibilityLabel("Card: \(cardName)")
       .accessibilityHint("Choose a different card")
       .accessibilityIdentifier("helper.card")
-      Spacer(minLength: Spacing.sm)
+      if !typeSize.isAccessibilitySize { Spacer(minLength: Spacing.sm) }
       Menu {
         ForEach(Self.levels, id: \.self) { level in
           Button {
@@ -58,7 +59,7 @@ private struct HeaderChipLabel: View {
       Text(title)
         .font(Typography.body.weight(.medium))
         .foregroundStyle(theme.text)
-        .lineLimit(1)
+        .lineLimit(2)
       Image(systemName: "chevron.down")
         .font(.caption2.weight(.bold))
         .foregroundStyle(theme.textMuted)

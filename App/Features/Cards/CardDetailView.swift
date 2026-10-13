@@ -52,6 +52,7 @@ struct CardDetailView: View {
   let cardID: String
 
   @Environment(\.theme) private var theme
+  @Environment(\.dynamicTypeSize) private var typeSize
   @Environment(\.dismiss) private var dismiss
   @Environment(CardsStore.self) private var cards
   @Environment(SettingsStore.self) private var settings
@@ -177,7 +178,7 @@ struct CardDetailView: View {
   }
 
   private func builtInBanner(_ card: Card) -> some View {
-    HStack(spacing: Spacing.md) {
+    AdaptiveStack(spacing: Spacing.md) {
       Image(systemName: "lock.fill")
         .foregroundStyle(theme.primary)
         .accessibilityHidden(true)
@@ -241,16 +242,19 @@ struct CardDetailView: View {
   private func lineRow(card: Card, line: CardLine, index: Int) -> some View {
     NavigationLink(value: CardsRoute.line(cardID: card.id, lineID: line.id)) {
       VStack(alignment: .leading, spacing: Spacing.xs) {
-        HStack(spacing: Spacing.sm) {
+        AdaptiveStack(spacing: Spacing.sm) {
           Text(line.displayName)
             .font(Typography.body.weight(.semibold))
             .foregroundStyle(theme.text)
-          Spacer(minLength: Spacing.sm)
-          Text("\(line.points) pts")
-            .font(Typography.small.weight(.semibold))
-            .monospacedDigit()
-            .foregroundStyle(theme.textMuted)
-          BadgeView(line.concealed ? .concealed : .exposed)
+          if !typeSize.isAccessibilitySize { Spacer(minLength: Spacing.sm) }
+          HStack(spacing: Spacing.sm) {
+            Text("\(line.points) pts")
+              .font(Typography.small.weight(.semibold))
+              .monospacedDigit()
+              .fixedSize()
+              .foregroundStyle(theme.textMuted)
+            BadgeView(line.concealed ? .concealed : .exposed)
+          }
         }
         if let variant = line.variants.first {
           HandPatternView(variant: variant, line: line)

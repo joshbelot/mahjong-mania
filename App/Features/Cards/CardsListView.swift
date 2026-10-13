@@ -86,7 +86,7 @@ struct CardsListView: View {
   // MARK: Pieces
 
   private var actionBar: some View {
-    HStack(spacing: Spacing.md) {
+    AdaptiveStack(spacing: Spacing.md) {
       Button {
         newName = ""
         showNew = true
