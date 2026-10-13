@@ -220,7 +220,7 @@ struct CardDetailView: View {
           Label("Rename", systemImage: "pencil")
         }
       }
-      ShareLink(item: Notation.serialize(card), subject: Text(card.name)) {
+      ShareLink(item: CardFileExport(card: card), subject: Text(card.name), preview: SharePreview(card.name)) {
         Label("Share card", systemImage: "square.and.arrow.up")
       }
       if !card.builtIn {

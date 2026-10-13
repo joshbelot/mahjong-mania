@@ -163,6 +163,7 @@ struct ScoreboardView: View {
     .onAppear { setAwake(!readOnly) }
     .onDisappear { setAwake(false) }
     .onChange(of: readOnly) { _, isReadOnly in setAwake(!isReadOnly) }
+    .onChange(of: settings.settings.keepAwake) { setAwake(!readOnly) }
   }
 
   // MARK: Rows

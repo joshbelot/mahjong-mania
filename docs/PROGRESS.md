@@ -48,10 +48,8 @@ Item 6 result (2026-10-13): `zsh -ic 'tools/upload_testflight.sh --dry-run'` on 
 
 ### Open questions for the owner
 
-1. **Duplicate player names.** "Alex" and "alex" can both be added and sit at the same table. Allow it, or reject names that match ignoring case?
-2. **Line identity across card edits.** Line IDs are `L<index>_<hash>` (SPEC §9.5), so adding or deleting a hand renumbers the IDs of the hands after it, and editing a hand's text changes its own ID. Win counts per hand ("You've won this 3 times") and a pinned hand can then point at the wrong hand or lose their history. Persisting a stable ID per line would fix it but changes the card file format. Worth doing before real data exists?
-3. **Share card → Save to Files** names the file "text". Share it as `<card name>.txt` instead?
-4. **Keep screen awake** toggled while on the scoreboard takes effect only after leaving and re-entering the screen.
-5. **Import** skips lines that do not parse (the user is told which, before importing). Keep that, or import them as comments?
+Answered by the owner ("choose by best practice and consistency") and done in the follow-up PR: unique player names (typing an existing name picks that person), Share card as `<name>.txt`, keep-awake takes effect immediately, Import keeps skipping invalid lines (the user is told first).
+
+Still open: **line identity across card edits.** Line IDs are `L<index>_<hash>` (SPEC §9.5), so adding or deleting a hand renumbers the IDs of the hands after it, and editing a hand changes its own ID. Per-hand win counts ("You've won this 3 times") and a pinned hand can then point at the wrong hand. A persisted per-line ID would fix it but changes the card file format. Best done before real data exists.
 
 **Environment notes:** phases 0–12 were written in a sandbox with no Swift toolchain and verified only by CI (see DECISIONS.md). CI has been disabled by the owner since 2026-10-13; everything is now verified locally on the owner's Mac, see `AGENTS.md`. The last green CI run on `main` was on `57d6397` (2026-10-09); screenshots from that period are on the `ci-screenshots` branch.

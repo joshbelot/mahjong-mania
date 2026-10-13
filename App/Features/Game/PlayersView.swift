@@ -69,7 +69,7 @@ struct PlayersView: View {
       TextField("Name", text: $newName)
       Button("Add") {
         let trimmed = newName.trimmingCharacters(in: .whitespacesAndNewlines)
-        if !trimmed.isEmpty { players.add(name: trimmed) }
+        if !trimmed.isEmpty, players.activePlayer(named: trimmed) == nil { players.add(name: trimmed) }
         newName = ""
       }
       Button("Cancel", role: .cancel) { newName = "" }

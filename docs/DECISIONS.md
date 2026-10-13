@@ -95,3 +95,10 @@ The GitHub Actions workflow is disabled (the `ios` job took 25–90 minutes per 
 ## 2026-10-13, §11.2 Large text (stabilisation item 3)
 
 Custom rows no longer squeeze at accessibility text sizes: `AdaptiveStack` turns a row into a column and `AdaptiveLabelStyle` drops the icon in buttons, so names, scores and labels wrap by word instead of truncating. Applied to the scoreboard, hand log, summary, players, seat setup, card rows, Helper header, rack header and result cards. `LargeTextTests` runs the Cards and Game flows at AX5 in light and dark. The system segmented picker for the Helper mode does not scale with text size; left as is.
+
+## 2026-10-13, §4.1 / §4.3 small decisions (owner: choose by best practice and consistency)
+
+- Active players have unique names, ignoring case. Typing an existing name in the game setup selects that player instead of adding a twin; the Players list ignores a duplicate add; rename to a taken name is ignored. Archived players do not count.
+- Share card shares a text file named after the card (`CardFileExport`, "Club Card.txt"); copy and message targets still receive the plain text.
+- Toggling "Keep screen awake" applies at once on the scoreboard.
+- Import keeps skipping lines that do not parse; the Check step lists them before anything is imported.

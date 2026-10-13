@@ -89,6 +89,20 @@ struct PlayersStoreTests {
     #expect(reloaded.player(id: c.id)?.colorIndex == 7)
   }
 
+  @Test func namesAreUniqueAmongActivePlayersIgnoringCase() {
+    let store = PlayersStore(directory: makeTempDirectory(), persistDelay: .milliseconds(10))
+    let alex = store.add(name: "Alex", id: "a")
+    let bea = store.add(name: "Bea", id: "b")
+    #expect(store.activePlayer(named: "  alex ")?.id == "a")
+    #expect(store.activePlayer(named: "alex", excluding: "a") == nil)
+    store.rename(id: bea.id, to: "ALEX")
+    #expect(store.player(id: "b")?.name == "Bea")
+    store.rename(id: alex.id, to: "alex")
+    #expect(store.player(id: "a")?.name == "alex")
+    store.setArchived(id: "a", true)
+    #expect(store.activePlayer(named: "Alex") == nil)
+  }
+
   @Test func archivedPlayersFreeTheirColour() {
     let store = PlayersStore(directory: makeTempDirectory(), persistDelay: fast)
     let a = store.add(name: "A")
