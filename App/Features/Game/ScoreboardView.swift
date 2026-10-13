@@ -11,6 +11,7 @@ struct RecordTarget: Identifiable, Hashable {
 /// The live scoreboard of a game night (read-only once it has ended).
 struct ScoreboardView: View {
   @Environment(\.theme) private var theme
+  @Environment(\.dynamicTypeSize) private var typeSize
   @Environment(SettingsStore.self) private var settings
   @Environment(PlayersStore.self) private var players
   @Environment(SessionsStore.self) private var sessions
@@ -170,33 +171,48 @@ struct ScoreboardView: View {
     -> some View
   {
     let name = players.name(of: id)
-    return HStack(spacing: Spacing.md) {
-      AvatarView(name: name, colorIndex: players.colorIndex(of: id), size: 48)
-      VStack(alignment: .leading, spacing: Spacing.xs) {
-        HStack(spacing: Spacing.xs) {
-          Text(name)
-            .font(Typography.h2)
-            .foregroundStyle(theme.text)
-            .lineLimit(1)
-          if isLeader {
-            Image(systemName: "crown.fill")
-              .font(.footnote)
-              .foregroundStyle(theme.gold)
-              .accessibilityLabel("Leader")
-          }
-        }
-        if isDealer {
-          BadgeView(.east)
-            .accessibilityIdentifier("dealer.\(name)")
+    let nameBlock = VStack(alignment: .leading, spacing: Spacing.xs) {
+      HStack(spacing: Spacing.xs) {
+        Text(name)
+          .font(Typography.h2)
+          .foregroundStyle(theme.text)
+          .lineLimit(typeSize.isAccessibilitySize ? nil : 1)
+        if isLeader {
+          Image(systemName: "crown.fill")
+            .font(.footnote)
+            .foregroundStyle(theme.gold)
+            .accessibilityLabel("Leader")
         }
       }
-      Spacer(minLength: Spacing.sm)
-      VStack(alignment: .trailing, spacing: 2) {
-        ScorePointsText(points: points)
-          .accessibilityIdentifier("score.\(name)")
-        if session.rules.money.enabled {
-          MoneyText(cents: cents, symbol: session.rules.money.currencySymbol)
-            .accessibilityIdentifier("money.\(name)")
+      if isDealer {
+        BadgeView(.east)
+          .accessibilityIdentifier("dealer.\(name)")
+      }
+    }
+    let scores = VStack(alignment: typeSize.isAccessibilitySize ? .leading : .trailing, spacing: 2) {
+      ScorePointsText(points: points)
+        .accessibilityIdentifier("score.\(name)")
+      if session.rules.money.enabled {
+        MoneyText(cents: cents, symbol: session.rules.money.currencySymbol)
+          .accessibilityIdentifier("money.\(name)")
+      }
+    }
+    return Group {
+      if typeSize.isAccessibilitySize {
+        VStack(alignment: .leading, spacing: Spacing.sm) {
+          HStack(spacing: Spacing.md) {
+            AvatarView(name: name, colorIndex: players.colorIndex(of: id), size: 48)
+            nameBlock
+          }
+          scores
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+      } else {
+        HStack(spacing: Spacing.md) {
+          AvatarView(name: name, colorIndex: players.colorIndex(of: id), size: 48)
+          nameBlock
+          Spacer(minLength: Spacing.sm)
+          scores
         }
       }
     }
@@ -214,27 +230,42 @@ struct ScoreboardView: View {
     -> some View
   {
     let entry = HandLogText.entry(for: hand, rules: session.rules, names: names)
-    let label = HStack(spacing: Spacing.md) {
-      Text("#\(number)")
-        .font(Typography.small.weight(.semibold))
-        .monospacedDigit()
-        .foregroundStyle(theme.textMuted)
-        .frame(width: 30, alignment: .leading)
-      leadingIcon(for: hand)
-      VStack(alignment: .leading, spacing: 2) {
-        Text(entry.title)
-          .font(Typography.body.weight(.semibold))
-          .foregroundStyle(theme.text)
+    let numberText = Text("#\(number)")
+      .font(Typography.small.weight(.semibold))
+      .monospacedDigit()
+      .foregroundStyle(theme.textMuted)
+    let details = VStack(alignment: .leading, spacing: 2) {
+      Text(entry.title)
+        .font(Typography.body.weight(.semibold))
+        .foregroundStyle(theme.text)
+        .multilineTextAlignment(.leading)
+      if !entry.meta.isEmpty {
+        Text(entry.meta)
+          .font(Typography.small)
+          .foregroundStyle(theme.textMuted)
           .multilineTextAlignment(.leading)
-        if !entry.meta.isEmpty {
-          Text(entry.meta)
-            .font(Typography.small)
-            .foregroundStyle(theme.textMuted)
-            .multilineTextAlignment(.leading)
+      }
+    }
+    let label = Group {
+      if typeSize.isAccessibilitySize {
+        VStack(alignment: .leading, spacing: Spacing.xs) {
+          HStack(spacing: Spacing.sm) {
+            numberText
+            leadingIcon(for: hand)
+          }
+          details
+          trailingPoints(for: hand, entry: entry)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+      } else {
+        HStack(spacing: Spacing.md) {
+          numberText.frame(width: 30, alignment: .leading)
+          leadingIcon(for: hand)
+          details
+          Spacer(minLength: Spacing.sm)
+          trailingPoints(for: hand, entry: entry)
         }
       }
-      Spacer(minLength: Spacing.sm)
-      trailingPoints(for: hand, entry: entry)
     }
     .frame(minHeight: 56)
     .contentShape(Rectangle())

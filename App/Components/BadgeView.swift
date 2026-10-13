@@ -42,6 +42,7 @@ struct BadgeView: View {
       Text(kind.title)
         .tinyStyle()
     }
+    .fixedSize()
     .foregroundStyle(foreground)
     .padding(.horizontal, Spacing.sm)
     .padding(.vertical, 3)

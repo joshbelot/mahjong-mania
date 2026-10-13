@@ -87,6 +87,7 @@ struct ScorePointsText: View {
     Text(PointsText.format(points))
       .font(.system(.title, design: .rounded, weight: .bold))
       .monospacedDigit()
+      .fixedSize()
       .foregroundStyle(color)
       .accessibilityLabel(spoken)
   }

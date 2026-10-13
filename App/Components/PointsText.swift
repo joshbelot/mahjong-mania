@@ -21,6 +21,7 @@ struct PointsText: View {
     Text(Self.format(points) + (showUnit ? " pts" : ""))
       .font(Typography.body.weight(.semibold))
       .monospacedDigit()
+      .fixedSize()
       .foregroundStyle(color)
       .accessibilityLabel(spoken)
   }

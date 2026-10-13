@@ -63,6 +63,7 @@ struct PillLabel: View {
   var body: some View {
     Text(text)
       .tinyStyle()
+      .fixedSize()
       .foregroundStyle(theme.primary)
       .padding(.horizontal, Spacing.sm)
       .padding(.vertical, 3)

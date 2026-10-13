@@ -3,6 +3,7 @@ import SwiftUI
 /// A row with a title, optional subtitle and a trailing accessory.
 struct ListRowView<Trailing: View>: View {
   @Environment(\.theme) private var theme
+  @Environment(\.dynamicTypeSize) private var typeSize
   private let title: String
   private let subtitle: String?
   private let trailing: Trailing
@@ -14,7 +15,7 @@ struct ListRowView<Trailing: View>: View {
   }
 
   var body: some View {
-    HStack(spacing: Spacing.md) {
+    AdaptiveStack(horizontalAlignment: .leading, spacing: Spacing.md) {
       VStack(alignment: .leading, spacing: 2) {
         Text(title)
           .font(Typography.body)
@@ -25,7 +26,7 @@ struct ListRowView<Trailing: View>: View {
             .foregroundStyle(theme.textMuted)
         }
       }
-      Spacer(minLength: Spacing.sm)
+      if !typeSize.isAccessibilitySize { Spacer(minLength: Spacing.sm) }
       trailing
     }
     .frame(minHeight: 44)
