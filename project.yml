@@ -38,6 +38,7 @@ targets:
         ITSAppUsesNonExemptEncryption: false
         UILaunchScreen: { UIColorName: LaunchBackground }
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        UIRequiresFullScreen: true          # portrait only: App Store validation otherwise demands all four orientations for iPad multitasking
         UIApplicationSceneManifest: { UIApplicationSupportsMultipleScenes: false }
   MahjongManiaTests:
     type: bundle.unit-test
