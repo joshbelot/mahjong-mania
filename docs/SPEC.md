@@ -1484,8 +1484,8 @@ Same rules as §13 and AGENTS.md (local `tools/test.sh` is the gate; no CI). Eac
 - [x] UI test: turn blanks on, add a blank to the rack, see it never suggested and the swap advice appear.
 
 #### Phase 18: Tile styles (17.6)
-- [ ] Four styles in `TileView`, Settings → Appearance with preview, persisted.
-- [ ] UI test screenshots of every style in light and dark.
+- [x] Four styles in `TileView`, Settings → Appearance with preview, persisted.
+- [x] UI test screenshots of every style in light and dark.
 
 #### Phase 19: QR card sharing (17.7)
 - [ ] QR sheet, image share, URL scheme, `.onOpenURL` import, import from a picture.

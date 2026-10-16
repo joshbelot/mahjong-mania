@@ -44,6 +44,7 @@ struct MahjongManiaApp: App {
         .environment(stores.helper)
         .environment(stores)
         .environment(\.hapticsEnabled, stores.settings.settings.haptics)
+        .environment(\.tileStyle, stores.settings.settings.tileStyle)
         .preferredColorScheme(
           LaunchOptions.forcedColorScheme ?? stores.settings.settings.theme.colorScheme
         )

@@ -6,6 +6,7 @@ import MahjongCore
 /// - `-UITestHelperRack "<comma-separated tile codes>"`: start with this concealed rack.
 /// - `-UITestHelperMode charleston|playing|scout`: start in this Helper mode.
 /// - `-UITestAssist off|peek|coach`: start at this assist level.
+/// - `-UITestTileStyle classic|traditional|largePrint|modern`: start with this tile style.
 /// - `-UITestBlanks <n>`: switch the blanks rule on with n blanks.
 /// - `-UITestTab game|helper|cards|learn`: start on this tab.
 extension LaunchOptions {
@@ -68,6 +69,11 @@ extension AppStores {
   func applyHelperLaunchOptions(arguments: [String] = ProcessInfo.processInfo.arguments) {
     if let level = LaunchOptions.assistLevel(arguments: arguments) {
       settings.update { $0.assistLevel = level }
+    }
+    if let text = LaunchOptions.value(after: "-UITestTileStyle", in: arguments),
+      arguments.contains("-UITestResetData"), let style = TileStyle(rawValue: text)
+    {
+      settings.update { $0.tileStyle = style }
     }
     if let count = LaunchOptions.blankCount(arguments: arguments) {
       settings.update {
