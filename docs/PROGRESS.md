@@ -18,7 +18,26 @@ Source of truth for where the build is. Updated by the lead on `main`.
 | 11 Learn | merged (11a content PR 10, 11b screens PR 13) | |
 | 12 Settings, polish, release | merged (12a PR 12, 12b PR 15, 12c PR 17); owner steps and QA remain, see backlog below | |
 
-## Stabilisation backlog (current work)
+## Version 1.1 (current work)
+
+Plan: `docs/SPEC.md` §17. v1.0 build 2 is on TestFlight (2026-10-13). One PR per phase, in order.
+
+| Phase | Status | PR |
+|---|---|---|
+| 13 Plain words (Show/Hide tiles, exposed sets explained) | not started | |
+| 14 Charleston seat, pass tracker, locked suggestion | not started | |
+| 15 Rule book core (MahjongCore) | not started | |
+| 16 House rules screens and Learn | not started | |
+| 17 Blanks | not started | |
+| 18 Tile styles | not started | |
+| 19 QR card sharing | not started | |
+| 20 1.1 QA and TestFlight upload | not started | |
+
+### Open questions for the owner (1.1)
+
+_None yet._
+
+## Stabilisation backlog (v1.0, done)
 
 All phases are merged. A person has not yet used the app on a device. Work these in order, one PR each; tick the box in the same PR.
 

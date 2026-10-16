@@ -24,3 +24,6 @@ App/Info.plist
 
 # Agent worktrees
 .claude/worktrees/
+
+# Owner-only files (personal cards etc.): never commit
+private/

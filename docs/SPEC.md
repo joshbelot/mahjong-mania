@@ -17,7 +17,8 @@
 6. When the spec gives an exact algorithm, signature, string, or number, use it exactly. When it says "suggested", you may adjust as long as the acceptance criteria still hold. Algorithms in §9–§10 are written as language-neutral pseudocode. The Swift API they must have is fixed in §7.
 7. Do not ship the official NMJL card's hands or branding anywhere in the app (see §2.4). The built-in card is the **original Practice Card** in §9.6.
 8. Keep a running checklist: tick the boxes in §13 in the same PR that completes them.
-9. The app ships through **TestFlight**. §16 is the release process. Phase 0 sets up the project so a TestFlight build is possible from day one, and Phase 12 adds the upload script.
+9. **Version 1.1** is planned in §17 (phases 13–20). It builds on everything above.
+10. The app ships through **TestFlight**. §16 is the release process. Phase 0 sets up the project so a TestFlight build is possible from day one, and Phase 12 adds the upload script.
 
 ---
 
@@ -1192,7 +1193,6 @@ The phase acceptance is ticked; both CI jobs are green; there are no new compile
 - **Camera rack scan** (on-device tile recognition) to skip manual entry.
 - **5-player tables** with a rotating sitter and optional betting.
 - **Shared game night**: one phone keeps score while others view live (needs a backend; later).
-- **Card QR sharing** (`react-native-qrcode-svg`) for a club organiser to share a custom practice card.
 - **Year rollover**: "New card season" flow that archives last year's card while keeping stats.
 - **Discard tracker by voice**: "five dot" → seen counter.
 - **Probability of completion** (Monte Carlo over the live wall) to replace the simple liveOuts heuristic.
@@ -1285,3 +1285,213 @@ It contains: the one-time setup (§16.1 as a checklist), "How to ship a build" (
 - Never reuse a build number. Always commit and push the bump.
 - Never upload from a dirty tree or a non-`main` checkout. The script enforces this.
 - Sideloading tools (AltStore/SideStore, free-account provisioning) are not needed and must not be added.
+
+---
+
+## 17. Version 1.1 (second round)
+
+v1.0 shipped to TestFlight on 2026-10-13 (build 2). This section is the plan for **v1.1**, written from the owner's first round of feedback. Everything in §0–§16 still applies unless this section says otherwise; where they conflict, §17 wins. Work the phases in §17.9 **in order, one PR each**, as before.
+
+Principles for this round:
+- **Plain words over game jargon.** Wherever the app uses a term a casual player may not know (exposure, pung, Charleston pass, jokerless), the screen itself says what it means, or has an ⓘ that does. The owner did not understand "Exposures" or the number next to "Jokerless"; treat that as a bug class, not a one-off.
+- **No new permissions.** No camera, photo-library-write, network or tracking. (QR import uses the system Camera app and the Photos *picker*, which need no permission.)
+- `MahjongCore` stays Foundation-only. Any persisted format change must read every older file without data loss (decode with `decodeIfPresent`, migrate, then save in the new shape).
+
+### 17.1 Wording: "Show tiles" / "Hide tiles"
+
+- The Helper's toggle under the rack reads **"Hide tiles"** / **"Show tiles"** (not "keyboard"). VoiceOver labels: "Hide the tile picker" / "Show the tile picker". The accessibility identifier stays `helper.keyboard.toggle`.
+- No user-facing text anywhere says "keyboard" when it means the tile picker. (The line editor's hint about the system keyboard is fine.)
+
+### 17.2 Exposures, explained
+
+The word "exposure" stays in Learn/Glossary (players hear it at the table), but every screen that asks for one explains it in place.
+
+- Helper, Playing mode: the section title becomes **"Your exposed sets"** with the subtitle **"Sets you called from a discard and placed face up (3 or more of a kind). Leave this empty if you haven't called anything."** The add button reads **"+ Add a set"**. An ⓘ button next to the title opens a short sheet: what an exposed set is, a drawn example (three 6 Dots face up, one of them a joker), why the Helper needs it ("It tells the Helper which tiles you've already committed, and rules out concealed hands").
+- The add sheet is titled **"Add an exposed set"**, with labelled steps: **"Which tile?"**, **"How many in the set?"** (chips read "3 · Pung", "4 · Kong", "5 · Quint", "6 · Sextet"), **"How many of them are jokers?"**, and a live preview.
+- Scout: each opponent's row is titled **"<Right>'s exposed sets"**; the empty text is **"When a player calls a discard, they lay the set face up. Add those sets to see which hands they might be going for."**
+- Seen tiles: title **"Tiles already played"**, subtitle **"Tap every tile you see thrown or laid face up by someone else. This spots hands that can no longer be finished."**
+- Glossary: update "Exposed (X)" and add "Exposed set": plain definitions, each with a one-line example.
+- A Coach tip (§12.3): "Called a discard? Add the set under *Your exposed sets* so suggestions stay right."
+
+### 17.3 Charleston: East's 14 tiles, and pass suggestions that hold still
+
+Today the Charleston suggestion recomputes on every tile change from 3 tiles up, so it jumps around while the user is physically swapping tiles. New behaviour:
+
+**Seat.** The Charleston header has a toggle **"I'm East (dealer) · 14 tiles"**. Off: a full hand is 13 tiles. On: 14. Persisted in `helper.json` as `isEast` (default off). The tile picker caps the rack at the full size and folds away when it is reached. (Playing mode is unchanged: up to 14 counting exposed sets.)
+
+**Pass tracker.** The header shows where the table is: **"Pass 1 of 7 · Right"**. The sequence comes from the house rules (§17.4): first Charleston Right, Across, Left; then, if the second Charleston is on, Left, Across, Right; then, if the courtesy pass is on, **Courtesy · Across · 0–3 tiles**. Buttons under the tracker: **"Stop after this Charleston"** (shown during the first three passes; jumps to the courtesy pass, or to the end), and **"Start over"** (back to pass 1, clears the locked suggestion, keeps the rack). After the last pass: **"Charleston done"** and a button **"Switch to Playing"**.
+
+**Locked suggestion.** Model in `HelperStore` (persisted):
+```swift
+struct CharlestonState: Codable, Hashable { var passIndex = 0; var locked: LockedPass? }
+struct LockedPass: Codable, Hashable {
+  var tiles: [Tile]            // the 3 suggested tiles (instances; may repeat a tile)
+  var removedSinceLock: [Tile] // tiles taken out of the rack since the lock, in order
+  var addedSinceLock: Int      // tiles put into the rack since the lock
+}
+```
+1. While the rack holds fewer than the full size (13, or 14 for East) and nothing is locked, there is no suggestion. The panel says **"Add all 13 of your tiles (14 if you're East) to get a suggestion."**
+2. When the rack reaches the full size and nothing is locked: in **Coach** compute `suggestPasses` once and lock it; in **Peek** show "Suggest a pass" and lock on tap. Never recompute while locked.
+3. While locked, the "Pass these" list keeps showing the same 3 tiles and reasons whatever the user does to the rack. A suggested tile that has been taken out of the rack shows **"✓ Passed"** (match by tile: if the lock has two 7 Bams and one 7 Bam has been removed, one row is ticked). Removing a tile that was not suggested is fine; it is the user's choice.
+4. The lock ends, the tracker moves to the next pass, and (Coach) a new suggestion is computed, only when **the rack is back at the full size and at least one tile was removed and at least one added since the lock**. Re-adding a tile and removing it again does not unlock early unless both conditions hold with the rack full.
+5. "Suggest again" (small text button under the list) recomputes for the current rack and re-locks; it is the escape hatch if the user disagrees.
+6. Courtesy pass: the list still shows 3 and the header reads "Pass up to 3".
+7. Jokers are never suggested (as today). Blanks follow §17.5.
+
+Tests: `HelperStore` unit tests for the lock life cycle (fill → lock → remove 3 → add 3 → new lock and pass index +1; remove 1 + add 1 → unlocks; partial changes keep the lock; East at 14; tracker with second Charleston off; courtesy). One UI test: fill 13, note the 3 suggested, remove them, add 3 others, see a new suggestion and "Pass 2 of 7 · Across".
+
+### 17.4 House rules: every rule named, explained, and editable
+
+Replace the current rules editor (bare multiplier steppers and an unexplained "Jokerless ×2" number) with a **rule book**: a list of rules, each a plain sentence the user can read, switch on or off, adjust with named choices (never a bare number), remove (custom rules), or add.
+
+**Model (MahjongCore, `Scoring/HouseRules.swift`).** `RuleSet` keeps its `id`, `name` and `money`, and replaces the multiplier fields with `rules: [HouseRule]`:
+```swift
+public struct HouseRule: Identifiable, Hashable, Codable, Sendable {
+  public var id: String                 // built-in id from RuleCatalog, or "custom.<uuid>"
+  public var isEnabled: Bool
+  public var multiple: Int?             // for rules with a "pays N×" choice
+  public var includeNoJokerHands: Bool? // pay.jokerless only
+  public var blanks: BlankOptions?      // table.blanks only
+  public var custom: CustomRule?        // custom rules only
+}
+public struct BlankOptions: Hashable, Codable, Sendable { public var count = 6; public var swapForJoker = false; public var passInCharleston = true }
+public struct CustomRule: Hashable, Codable, Sendable {
+  public var title: String; public var text: String
+  public var effect: CustomEffect?      // nil = a written note for the table, no effect on payments
+}
+public struct CustomEffect: Hashable, Codable, Sendable {
+  public var condition: RuleCondition; public var payers: PayerScope; public var action: RuleAction
+}
+public enum RuleCondition: Hashable, Codable, Sendable { case always, selfPick, discard, jokerless, concealedHand, eastWins, section(String), line(id: String, label: String) }
+public enum PayerScope: String, Hashable, Codable, Sendable { case everyone, discarderOnly, everyoneButDiscarder }
+public enum RuleAction: Hashable, Codable, Sendable { case multiply(Int), addPoints(Int) }
+public enum RuleCatalog { public static let builtIns: [RuleDefinition] }  // id, category, locked, default enabled, default multiple
+```
+- `RuleSet.standard` contains every built-in with its default. Loading any `RuleSet` (settings, saved books, session snapshots) adds missing built-ins with their defaults, so new built-ins appear in old files.
+- **Migration:** a `RuleSet` stored with the v1 fields decodes into the equivalent rules (`discarderMultiplier` → `pay.discarder.multiple`, `othersOnDiscardMultiplier` → `pay.others`, `selfPickMultiplier` → `pay.selfPick`, `jokerlessMultiplier` → `pay.jokerless`, `jokerlessBonusForNoJokerLines` → `includeNoJokerHands`). Required test: for 200 random v1 rule sets and random hands, v1 payments equal v2 payments.
+- The user-facing **text** (title, "What it means", example) lives in the app (`App/Content/RuleTexts.swift`), keyed by rule id; core holds behaviour only.
+
+**Built-in rules.** Titles and meanings below are the source; write the final wording in the same plain style. "Locked" rules are part of how the game works and how the engine plays; they are listed and explained but cannot be switched off (the row shows "Always on" and the detail says why).
+
+| id | Category | Title (default) | What it means | App effect | Choices |
+|---|---|---|---|---|---|
+| `pay.discarder` | Scoring | The player who threw the winning tile pays double | On a win from a discard, the thrower pays 2× the hand's points. | payments | Single / Double / Triple / Quadruple |
+| `pay.others` | Scoring | Everyone else pays the hand's value | On a win from a discard, the other losers pay 1× the points. | payments | Nothing / Single / Double |
+| `pay.selfPick` | Scoring | Self-pick: everyone pays double | If the winner drew the winning tile from the wall, every other player pays 2×. | payments | Single / Double / Triple |
+| `pay.jokerless` | Scoring | A jokerless hand pays double | If the winning hand uses no jokers, every payment is doubled again. Hands made only of singles and pairs can't use jokers anyway, so they don't get this bonus unless you switch it on below. | payments | Double / Triple / Quadruple; toggle "Also for singles-and-pairs hands" |
+| `pay.discarderPaysAll` | Scoring (off) | The thrower pays for everyone | On a win from a discard, the thrower pays what all the losers would have paid; nobody else pays. | payments | — |
+| `pay.wall` | Scoring, locked | Wall game: nobody pays | If the wall runs out with no winner, no points change hands and the deal moves on. | scoring | — |
+| `deal.east` | Dealing & turns, locked | East starts with 14 tiles and goes first | The dealer (East) is dealt 14 tiles and starts by discarding; everyone else gets 13. | Helper seat | — |
+| `deal.rotate` | Dealing & turns, locked | The deal moves to the next player after every hand | After a win or a wall game, East passes to the next seat in play order. | scoreboard | — |
+| `charleston.first` | Charleston, locked | First Charleston: pass 3 right, 3 across, 3 left | Before play, everyone passes three tiles three times. Required. | tracker | — |
+| `charleston.second` | Charleston | Second Charleston: left, across, right | A second round of three passes. Any player may stop it before it starts. | tracker | on/off |
+| `charleston.courtesy` | Charleston | Courtesy pass across: 0 to 3 tiles | After the Charleston, you and the player opposite may swap up to 3 tiles; if you disagree on how many, the smaller number wins. | tracker | on/off |
+| `charleston.blind` | Charleston | Blind pass on the last pass | On the last pass of a Charleston you may pass on tiles you just received without looking at them. | Learn only | on/off |
+| `charleston.noJokers` | Charleston, locked | Jokers can't be passed | You may never pass a joker in any Charleston pass. | suggestions | — |
+| `jokers.groups` | Jokers & calling, locked | Jokers only in sets of 3 or more | A joker can stand in for any tile in a pung, kong, quint or sextet, never in a single or a pair. | engine | — |
+| `jokers.exchange` | Jokers & calling | Joker exchange | On your turn you may take a joker from any exposed set by putting down the real tile it stands for. | Learn only | on/off |
+| `calling` | Jokers & calling, locked | Calling a discard | You may take the last discard to complete an exposed set of 3+; you may take it for a single or pair only if it wins the game. | engine | — |
+| `concealed` | Jokers & calling, locked | Concealed hands (C) | A hand marked C can't have exposed sets; you may only call the tile that wins. | engine | — |
+| `deadHand` | Penalties | A dead hand still pays | A player whose hand can no longer be made legally stops playing but still pays the winner. | Learn only | on/off |
+| `table.blanks` | Blanks (off) | We play with blanks | §17.5. | tiles, Helper | number of blanks 2/4/6; "A blank can be swapped for a discarded joker"; "Blanks may be passed in the Charleston" |
+
+**Payments v2** (`Scoring.payments(for:seats:dealerID:rules:)`; `dealerID` is new and comes from the hand record). `P` = base points. For each loser `p`:
+1. Role multiple: self-pick → `pay.selfPick`; the thrower → `pay.discarder`; another loser on a discard → `pay.others`. A switched-off role rule counts as 1 (or 0 for `pay.others` set to "Nothing").
+2. Multiply by `pay.jokerless` if it is on, the hand is jokerless, and (the line has joker-able groups or `includeNoJokerHands`).
+3. Multiply by every enabled custom `multiply` rule whose condition holds and whose payer scope includes `p`.
+4. `amount = P × product`, then add every enabled custom `addPoints` rule that applies to `p`.
+5. If `pay.discarderPaysAll` is on and there is a thrower, the thrower pays the sum of all amounts and the others pay 0.
+6. The winner receives the total. Zero-sum always holds.
+The §10.7 table must still pass unchanged with `RuleSet.standard`. Add tests for each built-in switched off, `discarderPaysAll`, each condition, scopes, and multiply+add together.
+
+**Screens.**
+- **Settings → House rules** (replaces "Default rules"): the rule book used for new game nights and by the Helper. Grouped by category with section headers. Each row: the title, then either a toggle or an "Always on" badge, and a chevron. A scoring row also shows its current choice in words ("Pays double").
+- **Rule detail:** title; **What it means** (paragraph); **Example** (scoring rules: computed live from the current rule book, e.g. "Bea wins a 25-point hand from Cy's discard: Cy pays 50, Dee and Al pay 25 each. Bea collects 100."); choices as a segmented control or list of named options; for locked rules a line "This is part of how the game is played, so it can't be switched off."; for custom rules **Edit** and **Delete rule** (confirm).
+- **Add a rule:** two kinds. **"A note for our table"**: title + text, shown in the rule book and in Learn under "Our house rules". **"A scoring rule"**: three plain pickers that read as a sentence: *When* [any win / a self-pick / a win from a discard / a jokerless hand / a concealed hand / East wins / a hand from section … / this hand …] *then* [everyone / the thrower / everyone except the thrower] *pays* [double / triple / quadruple / N extra points]; title auto-filled from the sentence and editable; live example underneath.
+- **Rule books:** the existing save/load/"use as default" behaviour stays, renamed: "Save as a rule book", "Load a rule book", "Use for new game nights". Session setup's rules row shows the book's name and opens the same screen for that session (changes apply to that game night only and recompute its hands, as today).
+- **Learn → Rules:** a new topic **"House rules explained"** generated from the same rule book (titles and meanings, grouped), followed by the user's own notes under "Our house rules". It replaces nothing in the existing quick reference; link each relevant quick-reference section to it.
+- Record hand's payment explanation (§11.3) names the rules that applied ("jokerless: doubled").
+
+### 17.5 Blanks
+
+Some tables add blank tiles to the set. With **`table.blanks`** on:
+- **Tile:** add `Tile.blank` (code `"BL"`, name `"Blank"`, copies = the rule's count). `Tile.allCases` stays the 152 standard tiles (so the engine, card coverage and existing tests are unchanged); add `Tile.allWithBlank` for screens that need it. Notation rejects `BL` in a card line with the error "Blanks can't be part of a hand". `Wall` takes `blanks: Int = 0`.
+- **Tile picker:** a Blank key after the Joker, capped at the rule's count. Hidden when the rule is off. Blank tile art: an empty face in every tile style (§17.6).
+- **Engine:** a blank never fills a group. In Playing, blanks count toward the 14 tiles. `evaluate` is unchanged; in addition, when the rack holds ≥ 1 blank, a missing tile whose live count is 0 is **not** dead if `seen[tile] > 0` (it may still be in the discards) and (`tile != .joker` or `swapForJoker`).
+- **Suggestions:** never suggest passing or discarding a blank (reason, if asked why: "Keep blanks: swap one for a discard later"). If `passInCharleston` is off, a blank also can't be selected in the Charleston drill.
+- **Blank swap (Coach, Playing, holding a blank):** for each tile with `seen > 0`, compute the best distance with one blank replaced by that tile; show up to 3 that improve on the current best as **"Swap a blank for the 5 Dot (if it's still in the discards): 1 away on Like Numbers #2"**.
+- Learn: a "Blanks" section in House rules explained, and a Glossary entry.
+- Tests: core tests for `BL` parsing, `allCases` unchanged, wall with blanks, dead-line logic with and without a blank and with `swapForJoker`, suggestions never returning a blank, and the swap advice.
+
+### 17.6 Tile styles
+
+Settings → **Appearance → Tile style**, four styles, with a live preview row (1 Crack, 5 Bam, 9 Dot, East, Red Dragon, Soap, Flower, Joker, and Blank when blanks are on). Persisted as `tileStyle` in `settings.json` (default `classic`). `TileView` reads it from the environment; every place a tile is drawn follows it. All styles: original artwork drawn in SwiftUI (no fonts or images copied from commercial sets), legible at `small` size, correct in light and dark mode, the same VoiceOver labels.
+
+| Style | Look |
+|---|---|
+| **Classic** (default) | Today's tiles. |
+| **Traditional** | Like a real set: cracks show the Chinese numerals 一 … 九 over 萬 in red; dots and bams show the pips/sticks arranged as on physical tiles (1–9); winds show 東 南 西 北 with a small Latin letter; dragons 中 (red), 發 (green) and a framed white dragon; flower a simple drawn blossom; joker the word JOKER. |
+| **Large print** | High contrast for low vision: a big numeral or letter filling most of the face, the suit as a bold word or letter (CRAK / BAM / DOT) in the suit colour, no fine detail. |
+| **Modern** | Flat, colour-blocked faces: each suit has a tinted face (red, green, blue), a white numeral, and a simple geometric suit mark; honours on a neutral face. |
+
+Tests: a UI test opens Appearance, picks each style, and screenshots the preview and the Helper rack (light and dark). Snapshot comparisons are still out of scope.
+
+### 17.7 Share a card with a QR code
+
+- **Share:** on a user card (Card detail → Share menu, and the card row's swipe/context menu), **"Show QR code"** opens a sheet with: the card name, a large QR code (always black on white with a quiet zone, so it scans in dark mode), the text **"Scan with your iPhone Camera to add this card"**, a **Share image** button (PNG via `ShareLink`, named `<card name>.png`), and Done. The built-in Practice Card has no QR option (everyone already has it).
+- **Payload:** the URL `mahjongmania://card?v=1&d=<base64url(zlib(card file text, UTF-8))>` (card file per §9.5, including `! name`). QR error correction M, generated with `CIFilter.qrCodeGenerator`. If the URL is longer than 2,000 characters the sheet says **"This card is too big for a QR code. Share it as a file instead."** with the existing share action. (The 37-line Practice Card is about 1,100 characters, so normal cards fit.)
+- **Receive:** register the URL scheme `mahjongmania` in `project.yml` (`CFBundleURLTypes`). Scanning the code with the system Camera offers to open the app; `.onOpenURL` decodes it and opens the existing **Import** screen pre-filled (per-line results, "Import as a new card" selected, name from the file). Bad or unknown payloads show an alert: "This QR code isn't a Mahjong Mania card, or it's damaged." `v` greater than 1: "This card was shared from a newer version of Mahjong Mania. Update the app to import it."
+- **From a photo:** Cards → Import gains **"From a QR code picture"**, using `PhotosPicker` (no permission) and `CIDetector` QR detection, then the same import flow.
+- Encoding/decoding lives in the app target (`App/Features/Cards/CardQRCode.swift`; zlib comes from Foundation on Apple platforms only). Tests (AppTests): round trip of the Practice Card text and a user card with comments and unicode names; too long; not base64; wrong scheme; `v=2`; detection from a rendered QR image. UI test: open the QR sheet for a user card and screenshot it; launch with a `-UITestOpenURL <url>` argument and land on the pre-filled import.
+
+### 17.8 Release 1.1
+
+- `MARKETING_VERSION` → `"1.1"` in `project.yml`.
+- `TestFlight/WhatToTest.txt` rewritten for 1.1: what changed (sections 17.1–17.7 in a few bullets) and what to try.
+- `docs/RELEASE_HANDOFF.md` gets a short "1.1" section.
+- The agent runs the real upload (`zsh -ic 'tools/upload_testflight.sh'`) from a clean, up-to-date `main` after every 1.1 phase is merged, then confirms the build in App Store Connect has processed. The owner has authorised this upload for 1.1.
+
+### 17.9 Implementation plan for 1.1 (one PR per phase)
+
+Same rules as §13 and AGENTS.md (local `tools/test.sh` is the gate; no CI). Each phase: look at the changed screens in the simulator in light, dark and the largest accessibility size, attach or describe screenshots in the PR, record deviations in DECISIONS.md, tick the boxes here in the same PR.
+
+#### Phase 13: Plain words (17.1, 17.2)
+- [ ] "Show tiles"/"Hide tiles" and no user-facing "keyboard" for the tile picker.
+- [ ] Exposed-set wording, ⓘ explainer sheet, add-sheet labels, Scout and seen-tiles wording, Glossary entries, Coach tip.
+- [ ] Existing UI tests updated (identifiers unchanged); one new UI test opens the ⓘ sheet.
+
+#### Phase 14: Charleston seat, tracker and locked suggestion (17.3)
+- [ ] East toggle; picker cap and auto-fold at 13/14.
+- [ ] Pass tracker from the rule book (until Phase 15 lands, use the standard sequence: 3 + 3 + courtesy).
+- [ ] Locked suggestion life cycle with ✓ Passed, "Suggest again", Peek/Coach behaviour.
+- [ ] Unit tests for the life cycle and the UI test in 17.3.
+
+#### Phase 15: Rule book core (17.4, MahjongCore)
+- [ ] `HouseRule`, `RuleCatalog`, `RuleSet.rules`, migration from v1 fields, missing built-ins filled on load.
+- [ ] Payments v2 with `dealerID`; §10.7 table unchanged; new tests; the v1 = v2 property test.
+- [ ] Persisted sessions and settings from v1.0 load with identical totals (AppTests with a v1.0 fixture file).
+
+#### Phase 16: House rules screens and Learn (17.4, app)
+- [ ] Settings → House rules list, rule detail with live examples, add/edit/delete custom rules (note and scoring).
+- [ ] Rule books save/load/default; session rules use the same screens.
+- [ ] `RuleTexts.swift` for every built-in; Learn "House rules explained" with "Our house rules".
+- [ ] Charleston tracker reads `charleston.second`/`courtesy` from the rule book.
+- [ ] UI tests: switch jokerless to Triple and see the example change; add a custom scoring rule and see it applied in Record hand.
+
+#### Phase 17: Blanks (17.5)
+- [ ] Core: `Tile.blank`, notation error, wall, dead-line change, suggestions skip blanks, swap advice, tests.
+- [ ] App: rule options, Blank key, blank art, swap advice in the Coach panel, Learn and Glossary.
+- [ ] UI test: turn blanks on, add a blank to the rack, see it never suggested and the swap advice appear.
+
+#### Phase 18: Tile styles (17.6)
+- [ ] Four styles in `TileView`, Settings → Appearance with preview, persisted.
+- [ ] UI test screenshots of every style in light and dark.
+
+#### Phase 19: QR card sharing (17.7)
+- [ ] QR sheet, image share, URL scheme, `.onOpenURL` import, import from a picture.
+- [ ] AppTests for the codec and detection; UI tests for the sheet and URL import.
+
+#### Phase 20: 1.1 QA and release (17.8)
+- [ ] Simulator QA: the §13 checklist plus every 1.1 feature, light/dark/AX5.
+- [ ] Version 1.1, What to Test, handoff notes.
+- [ ] `--dry-run` passes, then the real upload; the build shows as processed in App Store Connect.
