@@ -6,6 +6,7 @@ import MahjongCore
 /// - `-UITestHelperRack "<comma-separated tile codes>"`: start with this concealed rack.
 /// - `-UITestHelperMode charleston|playing|scout`: start in this Helper mode.
 /// - `-UITestAssist off|peek|coach`: start at this assist level.
+/// - `-UITestTab game|helper|cards|learn`: start on this tab.
 extension LaunchOptions {
   static func value(after flag: String, in arguments: [String]) -> String? {
     guard let index = arguments.firstIndex(of: flag), arguments.indices.contains(index + 1) else {
@@ -31,6 +32,19 @@ extension LaunchOptions {
       let text = value(after: "-UITestHelperMode", in: arguments)
     else { return nil }
     return HelperMode(rawValue: text)
+  }
+
+  static func initialTab(arguments: [String] = ProcessInfo.processInfo.arguments) -> AppTab? {
+    guard arguments.contains("-UITestResetData"),
+      let text = value(after: "-UITestTab", in: arguments)
+    else { return nil }
+    switch text {
+    case "game": return .game
+    case "helper": return .helper
+    case "cards": return .cards
+    case "learn": return .learn
+    default: return nil
+    }
   }
 
   static func assistLevel(arguments: [String] = ProcessInfo.processInfo.arguments) -> AssistLevel? {

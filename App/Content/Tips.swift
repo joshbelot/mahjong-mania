@@ -25,7 +25,10 @@ enum Tips {
       text: "A tile that three people have already discarded is probably safe to throw."),
     CoachTip(
       id: "watch-exposures",
-      text: "Watch exposures. If someone shows a kong of 6 Dots, don't hand them a 6 Dot."),
+      text: "Watch exposed sets. If someone shows a kong of 6 Dots, don't hand them a 6 Dot."),
+    CoachTip(
+      id: "add-called-sets",
+      text: "Called a discard? Add the set under Your exposed sets so suggestions stay right."),
     CoachTip(
       id: "jokers-gold",
       text:

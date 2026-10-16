@@ -5,7 +5,7 @@ import SwiftUI
 struct RootView: View {
   @Environment(\.theme) private var theme
   @Environment(SettingsStore.self) private var settings
-  @State private var selectedTab: AppTab = .game
+  @State private var selectedTab: AppTab = LaunchOptions.initialTab() ?? .game
   @State private var cardsPath: [CardsRoute] = []
 
   var body: some View {

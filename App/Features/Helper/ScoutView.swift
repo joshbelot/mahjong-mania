@@ -44,7 +44,7 @@ struct ScoutView: View {
 
   private func opponentCard(_ opponent: OpponentInput, index: Int, report: ScoutReport) -> some View {
     SectionCard {
-      Text(opponent.label)
+      Text("\(opponent.label) player's exposed sets")
         .font(Typography.h2)
         .foregroundStyle(theme.text)
         .accessibilityAddTraits(.isHeader)
@@ -99,7 +99,7 @@ struct ScoutView: View {
         .font(.largeTitle)
         .foregroundStyle(theme.textFaint)
         .accessibilityHidden(true)
-      Text("Add what they've exposed to see what they might be going for.")
+      Text("When a player calls a discard, they lay the set face up. Add those sets to see which hands they might be going for.")
         .font(Typography.body)
         .foregroundStyle(theme.textMuted)
         .multilineTextAlignment(.center)

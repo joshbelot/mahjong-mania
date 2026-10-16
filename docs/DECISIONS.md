@@ -110,3 +110,7 @@ Custom rows no longer squeeze at accessibility text sizes: `AdaptiveStack` turns
 ## 2026-10-13, §6.4 / §8: `UIRequiresFullScreen` added
 
 The first real upload was rejected by App Store Connect ("Invalid bundle … you need to include all of the … orientations to support iPad multitasking") even with `TARGETED_DEVICE_FAMILY = 1`; the dry run cannot catch this because the check runs on Apple's side. `UIRequiresFullScreen: true` in `project.yml` keeps the app portrait-only and passes validation (checked with `xcrun altool --validate-app` on a signed export before uploading).
+
+## 2026-10-16, §17.2 (Phase 13): opponent titles read "<Right> player's exposed sets"
+
+The spec title "<Right>'s exposed sets" gives "Across's exposed sets", which reads badly aloud. The Scout card title is "<Seat> player's exposed sets" ("Right player's", "Across player's", "Left player's"). The sheet title when adding for an opponent uses the same words. The set-size choice in the add sheet is a row of chips instead of a segmented control so "6 · Sextet" never truncates at large text sizes (identifiers `exposure.size.3`…`6`). A `-UITestTab game|helper|cards|learn` launch argument (with `-UITestResetData`) was added so screens can be opened directly for simulator checks.

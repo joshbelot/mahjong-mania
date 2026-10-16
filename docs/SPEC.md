@@ -1456,9 +1456,9 @@ Tests: a UI test opens Appearance, picks each style, and screenshots the preview
 Same rules as §13 and AGENTS.md (local `tools/test.sh` is the gate; no CI). Each phase: look at the changed screens in the simulator in light, dark and the largest accessibility size, attach or describe screenshots in the PR, record deviations in DECISIONS.md, tick the boxes here in the same PR.
 
 #### Phase 13: Plain words (17.1, 17.2)
-- [ ] "Show tiles"/"Hide tiles" and no user-facing "keyboard" for the tile picker.
-- [ ] Exposed-set wording, ⓘ explainer sheet, add-sheet labels, Scout and seen-tiles wording, Glossary entries, Coach tip.
-- [ ] Existing UI tests updated (identifiers unchanged); one new UI test opens the ⓘ sheet.
+- [x] "Show tiles"/"Hide tiles" and no user-facing "keyboard" for the tile picker.
+- [x] Exposed-set wording, ⓘ explainer sheet, add-sheet labels, Scout and seen-tiles wording, Glossary entries, Coach tip.
+- [x] Existing UI tests updated (identifiers unchanged); one new UI test opens the ⓘ sheet.
 
 #### Phase 14: Charleston seat, tracker and locked suggestion (17.3)
 - [ ] East toggle; picker cap and auto-fold at 13/14.

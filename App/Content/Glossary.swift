@@ -76,12 +76,17 @@ enum Glossary {
     GlossaryEntry(
       term: "Exposed (X)",
       definition:
-        "A hand marked X lets you call discards for groups of three or more and show them on the table."
+        "A hand marked X lets you call discards to make sets of three or more and lay them face up. Example: a hand with a pung of 6 Dots you called is an X hand."
+    ),
+    GlossaryEntry(
+      term: "Exposed set",
+      definition:
+        "A set of 3 or more tiles you called from a discard and laid face up in front of your rack. Example: three 6 Dots on the table, one of them a joker."
     ),
     GlossaryEntry(
       term: "Exposure",
       definition:
-        "A group of tiles placed face up in front of your rack after a call."
+        "Another word for an exposed set: tiles placed face up in front of your rack after a call. Example: \"Cy has two exposures\" means Cy has called two sets."
     ),
     GlossaryEntry(
       term: "Family (Section)",
