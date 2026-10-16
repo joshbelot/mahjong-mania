@@ -10,7 +10,7 @@ private let names = ["Bea": "Bea", "Cy": "Cy", "Alex": "Alex", "Dee": "Dee"]
 private func explain(
   _ input: MahjongInput, seats seatIDs: [String] = seats, rules: RuleSet = .standard, coach: Bool
 ) -> String {
-  let payments = Scoring.payments(for: .mahjong(input), seats: seatIDs, rules: rules)
+  let payments = Scoring.payments(for: .mahjong(input), seats: seatIDs, dealerID: nil, rules: rules)
   return PaymentExplanation.text(
     input: input, seats: seatIDs, payments: payments, rules: rules, names: names, coach: coach)
 }

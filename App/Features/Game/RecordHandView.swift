@@ -204,7 +204,10 @@ struct RecordHandView: View {
   private func previewCard(_ session: Session) -> some View {
     SectionCard("Payments") {
       if let input = draft.input(rules: session.rules) {
-        let payments = Scoring.payments(for: .mahjong(input), seats: session.seatIDs, rules: session.rules)
+        let dealerID =
+          session.hands.first { $0.id == handID }?.dealerID ?? Scoring.currentDealerID(session)
+        let payments = Scoring.payments(
+          for: .mahjong(input), seats: session.seatIDs, dealerID: dealerID, rules: session.rules)
         let names = players.nameMap(for: session.seatIDs)
         VStack(alignment: .leading, spacing: Spacing.sm) {
           ForEach(session.seatIDs, id: \.self) { id in

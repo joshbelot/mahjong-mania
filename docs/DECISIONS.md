@@ -124,3 +124,12 @@ The spec title "<Right>'s exposed sets" gives "Across's exposed sets", which rea
 - The Charleston card (East switch, tracker, buttons) sits under the rack, not above it: above the rack it pushed the tiles off the first screen when the picker was open. The "dealer starts with 14" explanation is the switch's VoiceOver hint rather than a second line of text.
 - Until Phase 16 reads the rule book, the sequence is `CharlestonSequence.standard` (first, second, courtesy = 7 passes).
 - `HelperDocument` now decodes every key with `decodeIfPresent`, so `helper.json` files from 1.0 still load.
+
+## 2026-10-16, §17.4 (Phase 15): rule book core
+
+- `RuleSet` keeps computed `discarderMultiplier`, `othersOnDiscardMultiplier`, `selfPickMultiplier`, `jokerlessMultiplier` and `jokerlessBonusForNoJokerLines` as views over `rules`, so v1 callers and tests still read naturally. Only `rules` is stored and encoded.
+- A v1.0 rule set migrates every multiplier to an **enabled** rule with that multiple (even a multiplier of 1 or 0), which makes v1 and v2 payments equal for any v1 value (the 200-random-sets test proves it). A switched-off role rule counts as ×1; `pay.others` set to "Nothing" is multiple 0 and stays enabled.
+- `MahjongInput` gained `lineSection` and `lineConcealed` (optional when decoding old hands) so "a hand from section …" and "a concealed hand" custom rules have something to test. Record hand fills them from the chosen card line.
+- `Scoring.payments(for:seats:dealerID:rules:)`: `dealerID` is East for that hand; session logic passes each hand's own dealer when it recomputes, so "East wins" rules follow the rotation.
+- Defaults for the optional built-ins (second Charleston, courtesy, blind pass, joker exchange, dead hand pays) are all on, as in the standard game; the thrower-pays-all rule and blanks start off.
+- Rule choices are stored as `multiple` with the allowed values in `RuleDefinition.multipleChoices` (discarder 1–4, others 0–2, self-pick 1–3, jokerless 2–4). Old files may hold other numbers (the v1 editor allowed 1–10); they are kept and paid as written.

@@ -28,32 +28,6 @@ public struct MoneySettings: Hashable, Codable, Sendable {
   }
 }
 
-public struct RuleSet: Identifiable, Hashable, Codable, Sendable {
-  public var id: String
-  public var name: String
-  public var discarderMultiplier: Int
-  public var othersOnDiscardMultiplier: Int
-  public var selfPickMultiplier: Int
-  public var jokerlessMultiplier: Int
-  public var jokerlessBonusForNoJokerLines: Bool
-  public var money: MoneySettings
-
-  public init(
-    id: String, name: String, discarderMultiplier: Int = 2, othersOnDiscardMultiplier: Int = 1,
-    selfPickMultiplier: Int = 2, jokerlessMultiplier: Int = 2,
-    jokerlessBonusForNoJokerLines: Bool = false, money: MoneySettings = MoneySettings()
-  ) {
-    self.id = id
-    self.name = name
-    self.discarderMultiplier = discarderMultiplier
-    self.othersOnDiscardMultiplier = othersOnDiscardMultiplier
-    self.selfPickMultiplier = selfPickMultiplier
-    self.jokerlessMultiplier = jokerlessMultiplier
-    self.jokerlessBonusForNoJokerLines = jokerlessBonusForNoJokerLines
-    self.money = money
-  }
-}
-
 public struct MahjongInput: Hashable, Codable, Sendable {
   public var winnerID: String
   /// nil = self-pick.
@@ -65,12 +39,19 @@ public struct MahjongInput: Hashable, Codable, Sendable {
   public var jokerless: Bool
   public var lineHasNoJokerGroups: Bool
   public var note: String?
+  /// The card section of the line (used by "a hand from section …" rules).
+  public var lineSection: String?
+  /// The line is marked C (used by "a concealed hand" rules).
+  public var lineConcealed: Bool
 
   public init(
     winnerID: String, discarderID: String? = nil, cardID: String? = nil, lineID: String? = nil,
     lineLabel: String? = nil, basePoints: Int, jokerless: Bool = false,
-    lineHasNoJokerGroups: Bool = false, note: String? = nil
+    lineHasNoJokerGroups: Bool = false, note: String? = nil, lineSection: String? = nil,
+    lineConcealed: Bool = false
   ) {
+    self.lineSection = lineSection
+    self.lineConcealed = lineConcealed
     self.winnerID = winnerID
     self.discarderID = discarderID
     self.cardID = cardID
@@ -80,6 +61,22 @@ public struct MahjongInput: Hashable, Codable, Sendable {
     self.jokerless = jokerless
     self.lineHasNoJokerGroups = lineHasNoJokerGroups
     self.note = note
+  }
+
+  /// Every key written by older versions stays readable; the new ones are optional.
+  public init(from decoder: Decoder) throws {
+    let c = try decoder.container(keyedBy: CodingKeys.self)
+    winnerID = try c.decode(String.self, forKey: .winnerID)
+    discarderID = try c.decodeIfPresent(String.self, forKey: .discarderID)
+    cardID = try c.decodeIfPresent(String.self, forKey: .cardID)
+    lineID = try c.decodeIfPresent(String.self, forKey: .lineID)
+    lineLabel = try c.decodeIfPresent(String.self, forKey: .lineLabel)
+    basePoints = try c.decode(Int.self, forKey: .basePoints)
+    jokerless = try c.decodeIfPresent(Bool.self, forKey: .jokerless) ?? false
+    lineHasNoJokerGroups = try c.decodeIfPresent(Bool.self, forKey: .lineHasNoJokerGroups) ?? false
+    note = try c.decodeIfPresent(String.self, forKey: .note)
+    lineSection = try c.decodeIfPresent(String.self, forKey: .lineSection)
+    lineConcealed = try c.decodeIfPresent(Bool.self, forKey: .lineConcealed) ?? false
   }
 }
 

@@ -16,7 +16,7 @@ private func win(
 }
 
 private func pay(_ kind: HandKind, seats: [String] = abcd, rules: RuleSet = .standard) -> [String: Int] {
-  Scoring.payments(for: kind, seats: seats, rules: rules)
+  Scoring.payments(for: kind, seats: seats, dealerID: nil, rules: rules)
 }
 
 private func session(

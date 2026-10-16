@@ -9,7 +9,7 @@ private let names = ["a": "Alex", "b": "Bea", "c": "Cy", "d": "Dee"]
 private func record(_ kind: HandKind, rules: RuleSet = .standard) -> HandRecord {
   HandRecord(
     id: "h", createdAt: Date(timeIntervalSince1970: 0), dealerID: "a", kind: kind,
-    payments: Scoring.payments(for: kind, seats: ["a", "b", "c", "d"], rules: rules))
+    payments: Scoring.payments(for: kind, seats: ["a", "b", "c", "d"], dealerID: nil, rules: rules))
 }
 
 struct GameModelsTests {
