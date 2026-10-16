@@ -92,7 +92,7 @@ struct PayoutTests {
     var rules = RuleSet.standard
     for seats in [["A", "B", "C"], abcd] {
       for winner in seats {
-        for thrower in [nil] + seats.map { Optional($0) } {
+        for thrower in [nil] + seats.map({ Optional($0) }) {
           for jokerless in [false, true] {
             for noJoker in [false, true] {
               for bonus in [false, true] {
