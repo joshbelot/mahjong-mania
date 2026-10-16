@@ -31,6 +31,24 @@ struct RuleTextsTests {
     #expect(RuleTexts.choiceText(for: rules.rule(RuleID.wall)!) == nil)
   }
 
+  @Test func everyChoiceReadsAsAGrammaticalSentence() {
+    for definition in RuleCatalog.builtIns where !definition.multipleChoices.isEmpty {
+      for choice in definition.multipleChoices {
+        var rule = definition.defaultRule
+        rule.multiple = choice
+        let text = RuleTexts.text(for: rule)
+        for sentence in [text.title, text.meaning] {
+          #expect(!sentence.contains("value the hand's"), "\(rule.id) x\(choice): \(sentence)")
+          #expect(!sentence.contains("double double") && !sentence.contains("  "), "\(sentence)")
+        }
+      }
+    }
+    let single = RuleSet.standard.rule(RuleID.others)!
+    #expect(
+      RuleTexts.text(for: single).meaning
+        == "When someone wins from a discard, the other two losers pay the hand's points. Choose Nothing if only the thrower should pay.")
+  }
+
   @Test func choiceNames() {
     #expect([0, 1, 2, 3, 4].map(RuleTexts.multipleName) == ["Nothing", "Single", "Double", "Triple", "Quadruple"])
   }

@@ -1,4 +1,32 @@
-# Release handoff — Mahjong Mania v1.0 (first TestFlight build)
+# Release handoff — Mahjong Mania v1.1
+
+_Status: all 1.1 phases (13–19) are merged and the 1.1 upload was made by the agent from a clean `main` with the owner's authorisation (SPEC §17.8). The build number and processing state are in `docs/PROGRESS.md`._
+
+## 1.1 in short
+
+Plan: `docs/SPEC.md` §17. Decisions: `docs/DECISIONS.md` (entries dated 2026-10-16). Open questions for the owner: `docs/PROGRESS.md`.
+
+- **Plain words** (13): "Hide tiles"/"Show tiles"; "Your exposed sets" with an explainer sheet; Scout and "Tiles already played" wording; Glossary and a Coach tip.
+- **Charleston** (14): East switch (14 tiles), pass tracker ("Pass 1 of 7 · Right"), a locked 3-tile suggestion with "✓ Passed", "Suggest again", "Stop after this Charleston", "Start over".
+- **Rule book** (15, 16): `RuleSet` holds `rules: [HouseRule]` (19 built-ins plus custom notes and scoring rules); 1.0 files migrate with identical totals; Settings → House rules with a detail screen and live example per rule; Learn → House rules explained; the Charleston tracker follows the book.
+- **Blanks** (17): optional blank tiles (rule `table.blanks`), a Blank key, never suggested, swap advice, a dead-line exception.
+- **Tile styles** (18): Classic, Traditional, Large print, Modern.
+- **QR cards** (19): `mahjongmania://card?v=1&d=…` links (raw DEFLATE + base64url), a QR sheet and PNG share, import from a link or a picture. URL scheme registered in `project.yml`.
+
+## Things only a person with an iPhone can check
+
+- Scan a card's QR code with the system Camera on a real device and confirm iOS offers to open Mahjong Mania. (The simulator tests open the same link directly, and the codec is tested by rendering and detecting its own image.)
+- Haptics, real-device speed, VoiceOver by hand on the new screens, and installing the TestFlight build.
+
+## Known limitations
+
+- A card whose text is too long for a QR code (over 2,000 characters as a link, after dropping its comments) is offered as a file instead.
+- The blanks rule's "may be passed in the Charleston" option is stored but changes nothing: the Helper never suggests passing a blank.
+- Everything under "Known limitations" and "Your one-time setup" below still applies.
+
+---
+
+# Earlier handoff: Mahjong Mania v1.0 (first TestFlight build)
 
 _Status: all phases 0–12 are merged. The final CI run on `main` after the last merge was still in progress when this was written; check that it is green before releasing._
 

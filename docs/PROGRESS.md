@@ -30,12 +30,21 @@ Plan: `docs/SPEC.md` §17. v1.0 build 2 is on TestFlight (2026-10-13). One PR pe
 | 16 House rules screens and Learn | merged | [#30](https://github.com/joshbelot/mahjong-mania/pull/30) |
 | 17 Blanks | merged | [#31](https://github.com/joshbelot/mahjong-mania/pull/31) |
 | 18 Tile styles | merged | [#32](https://github.com/joshbelot/mahjong-mania/pull/32) |
-| 19 QR card sharing | PR | [#33](https://github.com/joshbelot/mahjong-mania/pull/33) |
-| 20 1.1 QA and TestFlight upload | not started | |
+| 19 QR card sharing | merged | [#33](https://github.com/joshbelot/mahjong-mania/pull/33) |
+| 20 1.1 QA and TestFlight upload | PR | [#34](https://github.com/joshbelot/mahjong-mania/pull/34) |
 
 ### Open questions for the owner (1.1)
 
-_None yet._
+Each of these was a product judgement the spec did not settle. The choice made is the one most consistent with the rest of the app; the owner can change any of them. Details are in `docs/DECISIONS.md`.
+
+1. **What "Stop after this Charleston" does.** Chosen: it skips the *second* Charleston once the first three passes are done (the tracker then reads "Pass 1 of 4"), rather than jumping straight to the courtesy pass, because the first Charleston is required.
+2. **Where the Charleston card sits.** Chosen: under the rack (not above it), so the tiles stay on the first screen with the picker open.
+3. **Scout titles.** Chosen: "Right player's exposed sets" rather than "Right's exposed sets".
+4. **Scoring rows in the rule book.** Chosen: the second line (the choice in words) is shown only for custom rules, blanks and switched-off rules, because the built-in titles already say it ("A jokerless hand pays double").
+5. **Blanks.** Chosen: the Blank key sits on its own row with a caption; a blank is never suggested for a pass or discard, so the rule's "may be passed in the Charleston" option is stored and shown but changes nothing.
+6. **Comments in QR codes.** Chosen: a card's comments go into its QR code if they fit; if not, the code is made without them and the sheet says so. A card still too big is offered as a file.
+7. **Tile styles.** Chosen: Traditional dots and bams carry a tiny index numeral (real sets do not) so they stay readable at the small size.
+8. **Card QR link format.** Chosen: raw DEFLATE (what Foundation's `.zlib` writes) rather than a zlib-wrapped stream.
 
 ## Stabilisation backlog (v1.0, done)
 

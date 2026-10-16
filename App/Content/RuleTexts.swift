@@ -35,6 +35,18 @@ enum RuleTexts {
     }
   }
 
+  /// What someone pays, as it reads after "pays": "the hand's points", "double the hand's points".
+  static func payPhrase(_ multiple: Int) -> String {
+    switch multiple {
+    case 0: return "nothing"
+    case 1: return "the hand's points"
+    case 2: return "double the hand's points"
+    case 3: return "triple the hand's points"
+    case 4: return "quadruple the hand's points"
+    default: return "\(multiple) times the hand's points"
+    }
+  }
+
   static func multiple(of rule: HouseRule, default value: Int) -> Int { rule.multiple ?? value }
 
   /// The text of a rule given its current choice.
@@ -54,7 +66,7 @@ enum RuleTexts {
       return Text(
         title: "The player who threw the winning tile pays \(word)",
         meaning:
-          "When someone wins from a discard, the player who threw that tile pays \(word) the hand's points. "
+          "When someone wins from a discard, the player who threw that tile pays \(payPhrase(m ?? 2)). "
           + "Switch it off and the thrower pays the same as everyone else.",
         example: nil)
     case RuleID.others:
@@ -62,7 +74,7 @@ enum RuleTexts {
       return Text(
         title: "Everyone else pays \(word)",
         meaning:
-          "When someone wins from a discard, the other two losers pay \(word) the hand's points"
+          "When someone wins from a discard, the other two losers pay \(payPhrase(m ?? 1))"
           + (m == 0 ? "." : ". Choose Nothing if only the thrower should pay."),
         example: nil)
     case RuleID.selfPick:
@@ -70,7 +82,7 @@ enum RuleTexts {
       return Text(
         title: "Self-pick: everyone pays \(word)",
         meaning:
-          "If the winner drew the winning tile from the wall instead of taking a discard, every other player pays \(word) the hand's points.",
+          "If the winner drew the winning tile from the wall instead of taking a discard, every other player pays \(payPhrase(m ?? 2)).",
         example: nil)
     case RuleID.jokerless:
       let word = multipleWord(m ?? 2)
