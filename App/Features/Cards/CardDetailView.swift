@@ -64,6 +64,7 @@ struct CardDetailView: View {
   @State private var showRename = false
   @State private var renameText = ""
   @State private var showDeleteCard = false
+  @State private var showQR = false
   @State private var savedTick = 0
 
   var body: some View {
@@ -147,6 +148,7 @@ struct CardDetailView: View {
         optionsMenu(card)
       }
     }
+    .sheet(isPresented: $showQR) { CardQRSheet(card: card) }
     .alert("Rename card", isPresented: $showRename) {
       TextField("Card name", text: $renameText)
       Button("Save") { cards.rename(id: card.id, to: renameText) }
@@ -222,6 +224,14 @@ struct CardDetailView: View {
       }
       ShareLink(item: CardFileExport(card: card), subject: Text(card.name), preview: SharePreview(card.name)) {
         Label("Share card", systemImage: "square.and.arrow.up")
+      }
+      if !card.builtIn {
+        Button {
+          showQR = true
+        } label: {
+          Label("Show QR code", systemImage: "qrcode")
+        }
+        .accessibilityIdentifier("card.qr")
       }
       if !card.builtIn {
         Button(role: .destructive) {

@@ -18,6 +18,7 @@ struct CardsListView: View {
   @State private var showNew = false
   @State private var newName = ""
   @State private var renameID: String?
+  @State private var qrCard: Card?
   @State private var renameText = ""
   @State private var deleteTarget: Card?
   /// Set by the import sheet; opened once the sheet has gone.
@@ -58,6 +59,7 @@ struct CardsListView: View {
     } content: {
       ImportView { pendingOpenID = $0 }
     }
+    .sheet(item: $qrCard) { CardQRSheet(card: $0) }
     .alert("New card", isPresented: $showNew) {
       TextField("Card name", text: $newName)
       Button("Create") { createCard() }
@@ -143,6 +145,13 @@ struct CardsListView: View {
       }
       ShareLink(item: CardFileExport(card: card), subject: Text(card.name), preview: SharePreview(card.name)) {
         Label("Share", systemImage: "square.and.arrow.up")
+      }
+      if !card.builtIn {
+        Button {
+          qrCard = card
+        } label: {
+          Label("Show QR code", systemImage: "qrcode")
+        }
       }
       if !card.builtIn {
         Button(role: .destructive) {

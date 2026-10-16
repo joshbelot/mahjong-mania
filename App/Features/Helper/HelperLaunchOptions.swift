@@ -6,6 +6,7 @@ import MahjongCore
 /// - `-UITestHelperRack "<comma-separated tile codes>"`: start with this concealed rack.
 /// - `-UITestHelperMode charleston|playing|scout`: start in this Helper mode.
 /// - `-UITestAssist off|peek|coach`: start at this assist level.
+/// - `-UITestOpenURL <url>`: open this link as if it had launched the app (card QR import).
 /// - `-UITestTileStyle classic|traditional|largePrint|modern`: start with this tile style.
 /// - `-UITestBlanks <n>`: switch the blanks rule on with n blanks.
 /// - `-UITestTab game|helper|cards|learn`: start on this tab.
@@ -34,6 +35,15 @@ extension LaunchOptions {
       let text = value(after: "-UITestHelperMode", in: arguments)
     else { return nil }
     return HelperMode(rawValue: text)
+  }
+
+  /// `-UITestOpenURL <url>`: act as if this link had opened the app (with `-UITestResetData`).
+  static var openURL: URL? {
+    let arguments = ProcessInfo.processInfo.arguments
+    guard arguments.contains("-UITestResetData"),
+      let text = value(after: "-UITestOpenURL", in: arguments)
+    else { return nil }
+    return URL(string: text)
   }
 
   static func blankCount(arguments: [String] = ProcessInfo.processInfo.arguments) -> Int? {

@@ -161,3 +161,11 @@ The spec title "<Right>'s exposed sets" gives "Across's exposed sets", which rea
 - Modern puts number tiles on a suit-coloured face (red, green, blue) with a white numeral and a square (Cracks), triangle (Bams) or circle (Dots); honours reuse the Classic art on a neutral face. Blank is an empty ivory face in every style.
 - The style screen lists the four styles as large selectable cards, each with its own preview row (Crack 1, Bam 5, Dot 9, East, Red Dragon, Soap, Flower, Joker, Blank when the blanks rule is on), in Settings under Appearance and feel.
 - `-UITestTileStyle <style>` launch argument (with `-UITestResetData`) for UI tests and simulator checks.
+
+## 2026-10-16, §17.7 (Phase 19): QR card sharing
+
+- Compression is Foundation's `.zlib` algorithm, which writes **raw DEFLATE** (no zlib header or checksum). Anything that reads the link elsewhere must inflate with a raw-DEFLATE reader (Python: `zlib.decompress(data, -15)`). The same code reads and writes it on the phone, so nothing in the app is affected, and a link made with Python's raw DEFLATE is read by the app (the UI test uses one).
+- The code carries the card's stored file text (comments included). If that is longer than 2,000 characters as a link, the code is made from the compact form without comments and the sheet says "Notes and comments in the card file aren't included, to keep the code small." Only if that is still too long does the sheet say the card is too big and offer the file share. (The spec only had the too-big case; comments bloated real cards enough to matter.)
+- A link that arrives before onboarding finishes waits in `IncomingLinks` until the main screen is up. After a successful import from a link the new card opens in the Cards tab.
+- "From a QR code picture" shows a plain message when the picture has no code, has a code that is not a card, or cannot be opened. Detection uses `CIDetector`; the Photos picker needs no permission.
+- `-UITestOpenURL <url>` launch argument (with `-UITestResetData`) acts as if the link had opened the app.
