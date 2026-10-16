@@ -81,6 +81,11 @@ struct HelperView: View {
       }
     }
     .onChange(of: charlestonSequence, initial: true) { helper.sequence = charlestonSequence }
+    .onChange(of: settings.settings.defaultRules.blanks, initial: true) {
+      let blanks = settings.settings.defaultRules.blanks
+      helper.blankLimit = blanks?.count ?? 0
+      helper.blankPolicy = blanks.map { BlankPolicy(swapForJoker: $0.swapForJoker) }
+    }
     .onChange(of: lockTrigger, initial: true) {
       // Coach locks the three suggested tiles once, as soon as the rack is full.
       if gate.level == .coach, let analyzer { helper.lockSuggestionIfNeeded(using: analyzer) }
@@ -229,7 +234,7 @@ struct HelperView: View {
         .accessibilityLabel(keyboardCollapsed ? "Show the tile picker" : "Hide the tile picker")
         .accessibilityIdentifier("helper.keyboard.toggle")
         if !keyboardCollapsed {
-          TileKeyboardView(onAdd: add, usage: usage, limit: cap)
+          TileKeyboardView(onAdd: add, usage: usage, limit: cap, blankLimit: helper.blankLimit)
             .padding(.horizontal, Spacing.sm)
             .padding(.bottom, Spacing.sm)
             .transition(.move(edge: .bottom).combined(with: .opacity))

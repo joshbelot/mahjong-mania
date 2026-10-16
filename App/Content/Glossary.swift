@@ -19,6 +19,11 @@ enum Glossary {
         "A tile from the bamboo suit, numbered 1 to 9 and shown in green. The 1 Bam is often a bird."
     ),
     GlossaryEntry(
+      term: "Blank",
+      definition:
+        "A spare tile with nothing printed on it, added by some tables. It never becomes part of a hand. You may keep one to swap for a discarded tile, if your table allows it. Example: a table that plays with 4 blanks has 156 tiles."
+    ),
+    GlossaryEntry(
       term: "Blind pass",
       definition:
         "On the last pass of a Charleston, handing on 1 to 3 tiles you just received without looking at them."

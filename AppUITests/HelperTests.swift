@@ -28,7 +28,7 @@ final class HelperTests: XCTestCase {
 
   private func launch(
     assist: String = "peek", rack: String? = nil, mode: String? = nil, dark: Bool = false,
-    openHelper: Bool = true
+    openHelper: Bool = true, blanks: Int? = nil
   ) -> XCUIApplication {
     continueAfterFailure = false
     let app = XCUIApplication()
@@ -36,6 +36,7 @@ final class HelperTests: XCTestCase {
     if let rack { app.launchArguments += ["-UITestHelperRack", rack] }
     if let mode { app.launchArguments += ["-UITestHelperMode", mode] }
     if dark { app.launchArguments += ["-UITestDark"] }
+    if let blanks { app.launchArguments += ["-UITestBlanks", "\(blanks)"] }
     app.launch()
     if openHelper {
       let tab = app.tabBars.buttons["Helper"]
@@ -377,6 +378,44 @@ final class HelperTests: XCTestCase {
     attach("helper-exposed-set-info")
     tap(app, "exposureInfo.done")
     XCTAssertTrue(waitForGone(element(app, "exposureInfo.done")))
+  }
+
+  // MARK: Blanks
+
+  func testBlankKeyOnlyAppearsWhenTheRuleIsOn() {
+    let off = launch(assist: "coach")
+    expectExists(off, "key.1C")
+    XCTAssertFalse(element(off, "key.BL").exists, "No Blank key while the rule is off")
+    off.terminate()
+    let on = launch(assist: "coach", blanks: 4)
+    expectExists(on, "key.BL")
+    attach("helper-blank-key-light")
+  }
+
+  func testABlankIsNeverSuggestedForAPass() {
+    let app = launch(assist: "coach", rack: "1C,2C,3C,5D,5D,6D,6D,6D,N,R,0,F,BL", dark: true, blanks: 4)
+    assertNoJokerPassed(app)
+    for index in 0..<3 {
+      XCTAssertFalse(element(app, "pass.row.\(index)").label.hasPrefix("Blank"), "A blank was suggested")
+    }
+    collapseKeyboard(app)
+    attach("helper-blank-charleston-dark")
+  }
+
+  func testBlankSwapAdviceAppearsWhenAThrownTileWouldHelp() {
+    let app = launch(
+      assist: "coach", rack: "2B,2B,2B,4B,4B,4B,4B,6B,6B,8B,8B,8B,BL", mode: "playing", blanks: 4)
+    collapseKeyboard(app)
+    XCTAssertFalse(element(app, "blank.swap.0").exists, "Nothing has been thrown yet")
+    tap(app, "seen.toggle")
+    tap(app, "seen.key.6B")
+    let advice = element(app, "blank.swap.0")
+    XCTAssertTrue(advice.waitForExistence(timeout: 10), "Missing the swap advice")
+    XCTAssertTrue(advice.label.hasPrefix("Swap a blank for the 6 Bam (if it's still in the discards): 1 away on"), "Got '\(advice.label)'")
+    attach("helper-blank-swap-light")
+    for index in 0..<3 where element(app, "discard.row.\(index)").exists {
+      XCTAssertFalse(element(app, "discard.row.\(index)").label.hasPrefix("Blank"))
+    }
   }
 
   // MARK: Scout

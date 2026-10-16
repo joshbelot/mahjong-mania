@@ -6,6 +6,7 @@ import MahjongCore
 /// - `-UITestHelperRack "<comma-separated tile codes>"`: start with this concealed rack.
 /// - `-UITestHelperMode charleston|playing|scout`: start in this Helper mode.
 /// - `-UITestAssist off|peek|coach`: start at this assist level.
+/// - `-UITestBlanks <n>`: switch the blanks rule on with n blanks.
 /// - `-UITestTab game|helper|cards|learn`: start on this tab.
 extension LaunchOptions {
   static func value(after flag: String, in arguments: [String]) -> String? {
@@ -34,6 +35,13 @@ extension LaunchOptions {
     return HelperMode(rawValue: text)
   }
 
+  static func blankCount(arguments: [String] = ProcessInfo.processInfo.arguments) -> Int? {
+    guard arguments.contains("-UITestResetData"),
+      let text = value(after: "-UITestBlanks", in: arguments), let count = Int(text)
+    else { return nil }
+    return count
+  }
+
   static func initialTab(arguments: [String] = ProcessInfo.processInfo.arguments) -> AppTab? {
     guard arguments.contains("-UITestResetData"),
       let text = value(after: "-UITestTab", in: arguments)
@@ -60,6 +68,14 @@ extension AppStores {
   func applyHelperLaunchOptions(arguments: [String] = ProcessInfo.processInfo.arguments) {
     if let level = LaunchOptions.assistLevel(arguments: arguments) {
       settings.update { $0.assistLevel = level }
+    }
+    if let count = LaunchOptions.blankCount(arguments: arguments) {
+      settings.update {
+        $0.defaultRules.update(RuleID.blanks) {
+          $0.isEnabled = true
+          $0.blanks = BlankOptions(count: count)
+        }
+      }
     }
     if let rack = LaunchOptions.helperRack(arguments: arguments) {
       helper.setRack(rack)

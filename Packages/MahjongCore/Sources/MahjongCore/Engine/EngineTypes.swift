@@ -211,3 +211,33 @@ public struct ScoutReport: Sendable {
 
 /// Free functions behind `Analyzer`, exposed for tests.
 public enum Engine {}
+
+/// How a table that plays with blanks treats them (SPEC §17.5): whether a blank may be swapped for a
+/// discarded joker. Passed to the analysis so a hand that needs a thrown tile is not called dead while a
+/// blank in the rack could still get it back.
+public struct BlankPolicy: Hashable, Sendable {
+  public var swapForJoker: Bool
+
+  public init(swapForJoker: Bool = false) {
+    self.swapForJoker = swapForJoker
+  }
+}
+
+/// "Swap a blank for the 5 Dot (if it's still in the discards): 1 away on Like Numbers #2".
+public struct BlankSwap: Hashable, Sendable {
+  public var tile: Tile
+  public var newDistance: Int
+  public var currentDistance: Int
+  public var lineName: String
+
+  public init(tile: Tile, newDistance: Int, currentDistance: Int, lineName: String) {
+    self.tile = tile
+    self.newDistance = newDistance
+    self.currentDistance = currentDistance
+    self.lineName = lineName
+  }
+
+  public var text: String {
+    "Swap a blank for the \(tile.name) (if it's still in the discards): \(newDistance) away on \(lineName)"
+  }
+}

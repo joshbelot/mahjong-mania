@@ -44,6 +44,7 @@ struct RuleDetailView: View {
           }
           if let definition, !definition.multipleChoices.isEmpty { choicesCard(definition, rule) }
           if rule.id == RuleID.jokerless { jokerlessCard(rule) }
+          if rule.id == RuleID.blanks { blanksCard(rule) }
           if rule.isCustom { customCard }
         }
       }
@@ -133,6 +134,45 @@ struct RuleDetailView: View {
     }
   }
 
+  private func blanksCard(_ rule: HouseRule) -> some View {
+    let options = rule.blanks ?? BlankOptions()
+    return SectionCard("Blank options") {
+      VStack(alignment: .leading, spacing: Spacing.md) {
+        Text("How many blanks?")
+          .font(Typography.small.weight(.semibold))
+          .foregroundStyle(theme.textMuted)
+        FlowLayout(spacing: Spacing.sm, lineSpacing: Spacing.sm) {
+          ForEach([2, 4, 6], id: \.self) { count in
+            ChipView("\(count) blanks", isSelected: options.count == count) {
+              rules.update(ruleID) { $0.blanks = BlankOptions.with($0.blanks) { $0.count = count } }
+            }
+            .accessibilityIdentifier("rule.blanks.count.\(count)")
+          }
+        }
+        GameToggleRow(
+          title: "A blank can be swapped for a discarded joker",
+          subtitle: "Off by default. With it on, the Helper counts a thrown joker as one a blank could get back.",
+          isOn: Binding(
+            get: { options.swapForJoker },
+            set: { value in
+              rules.update(ruleID) { $0.blanks = BlankOptions.with($0.blanks) { $0.swapForJoker = value } }
+            }),
+          identifier: "rule.blanks.swapJoker")
+        GameToggleRow(
+          title: "Blanks may be passed in the Charleston",
+          subtitle: "Your table's choice. The Helper never suggests passing a blank, because you may want to swap it for a discard later.",
+          isOn: Binding(
+            get: { options.passInCharleston },
+            set: { value in
+              rules.update(ruleID) {
+                $0.blanks = BlankOptions.with($0.blanks) { $0.passInCharleston = value }
+              }
+            }),
+          identifier: "rule.blanks.pass")
+      }
+    }
+  }
+
   private var customCard: some View {
     SectionCard {
       AdaptiveStack(spacing: Spacing.md) {
@@ -144,5 +184,14 @@ struct RuleDetailView: View {
           .accessibilityIdentifier("rule.delete")
       }
     }
+  }
+}
+
+private extension BlankOptions {
+  /// A copy of `options` (or the defaults) after `change`.
+  static func with(_ options: BlankOptions?, _ change: (inout BlankOptions) -> Void) -> BlankOptions {
+    var copy = options ?? BlankOptions()
+    change(&copy)
+    return copy
   }
 }

@@ -143,3 +143,12 @@ The spec title "<Right>'s exposed sets" gives "Across's exposed sets", which rea
 - Custom scoring rules can target a card section or a single hand; those pickers use the active card, and are hidden if it has none. The title fills in from the sentence until the user edits it.
 - The payment explanation names applied custom rules ("House rule: …") and explains "the thrower pays for everyone".
 - `Scoring.appliedCustomRules` was added to the core for that explanation.
+
+## 2026-10-16, §17.5 (Phase 17): blanks
+
+- `Tile.blank` reports `copies == 6` (the most any rule book allows); the rule's own count (2, 4 or 6) caps it in the picker and the store (`HelperStore.blankLimit`). `Tile.allCases` stays the 36 standard tile types (152 tiles) so card coverage and every older test are unchanged.
+- The engine takes a `BlankPolicy` (only `swapForJoker`) instead of the whole rule book, so MahjongCore stays free of app settings. With a blank in the rack, a line is not called dead when the missing tile has been seen (it may still be in the discards); jokers count only if `swapForJoker`. Without the rule, or without a blank in the rack, nothing changes.
+- A blank is never suggested for a pass or a discard whatever `passInCharleston` says, so that option is stored and shown but changes nothing in the Helper. The Learn Charleston drill deals standard tiles only, so there is no blank to select there either.
+- The Blank key sits on its own row under the Joker row with a plain caption ("a spare tile with nothing on it"): a tenth key on the honours row would have shrunk the whole picker, and an empty tile with no words is not self-explanatory.
+- Swap advice (Coach, holding a blank) lists up to 3 thrown tiles whose swap would bring the best line closer, in the Discard panel.
+- `-UITestBlanks <n>` launch argument (with `-UITestResetData`) switches the rule on for UI tests.

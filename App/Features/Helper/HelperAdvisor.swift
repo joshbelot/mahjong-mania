@@ -28,6 +28,13 @@ final class HelperAdvisor {
     var hand: HandKey
     var seen: TileCounts
     var danger: [Tile: Double]
+    var blanks: BlankPolicy?
+  }
+
+  private struct SwapKey: Hashable {
+    var hand: HandKey
+    var seen: TileCounts
+    var blanks: BlankPolicy
   }
 
   private struct ScoutKey: Hashable {
@@ -40,6 +47,7 @@ final class HelperAdvisor {
   private var passMemo = Memo<HandKey, PassAdvice>()
   private var discardMemo = Memo<DiscardKey, [DiscardSuggestion]>()
   private var scoutMemo = Memo<ScoutKey, ScoutReport>()
+  private var swapMemo = Memo<SwapKey, [BlankSwap]>()
 
   /// How many times the engine actually ran (used by tests to prove memoisation).
   private(set) var computations = 0
@@ -59,12 +67,22 @@ final class HelperAdvisor {
   }
 
   func discards(
-    _ analyzer: Analyzer, view: PlayerView, seen: TileCounts, danger: [Tile: Double]
+    _ analyzer: Analyzer, view: PlayerView, seen: TileCounts, danger: [Tile: Double],
+    blanks: BlankPolicy? = nil
   ) -> [DiscardSuggestion] {
-    let key = DiscardKey(hand: handKey(analyzer, view), seen: seen, danger: danger)
+    let key = DiscardKey(hand: handKey(analyzer, view), seen: seen, danger: danger, blanks: blanks)
     let result = discardMemo.get(key) {
-      analyzer.suggestDiscards(view, seen: seen, danger: danger)
+      analyzer.suggestDiscards(view, seen: seen, danger: danger, blanks: blanks)
     }
+    if result.ran { computations += 1 }
+    return result.value
+  }
+
+  func blankSwaps(
+    _ analyzer: Analyzer, view: PlayerView, seen: TileCounts, policy: BlankPolicy
+  ) -> [BlankSwap] {
+    let key = SwapKey(hand: handKey(analyzer, view), seen: seen, blanks: policy)
+    let result = swapMemo.get(key) { analyzer.suggestBlankSwaps(view, seen: seen, policy: policy) }
     if result.ran { computations += 1 }
     return result.value
   }
