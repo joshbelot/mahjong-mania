@@ -5,6 +5,7 @@ private enum HelperSheet: Hashable, Identifiable {
   case card
   case call
   case exposure
+  case exposureInfo
   case opponent(Int)
 
   var id: Self { self }
@@ -127,10 +128,26 @@ struct HelperView: View {
 
   private var exposuresCard: some View {
     SectionCard {
-      Text("Exposures")
-        .font(Typography.h2)
-        .foregroundStyle(theme.text)
-        .accessibilityAddTraits(.isHeader)
+      HStack(spacing: Spacing.xs) {
+        Text("Your exposed sets")
+          .font(Typography.h2)
+          .foregroundStyle(theme.text)
+          .accessibilityAddTraits(.isHeader)
+        Button { sheet = .exposureInfo } label: {
+          Image(systemName: "info.circle")
+            .font(Typography.body)
+            .foregroundStyle(theme.primary)
+            .frame(width: 44, height: 44)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("What is an exposed set?")
+        .accessibilityIdentifier("helper.exposures.info")
+        Spacer(minLength: 0)
+      }
+      Text("Sets you called from a discard and placed face up (3 or more of a kind). Leave this empty if you haven't called anything.")
+        .font(Typography.small)
+        .foregroundStyle(theme.textMuted)
       ExposuresRow(
         exposures: helper.exposures, identifierPrefix: "helper.exposures",
         onRemove: { helper.removeExposure(at: $0) }, onAdd: { sheet = .exposure })
@@ -167,7 +184,7 @@ struct HelperView: View {
           HStack(spacing: Spacing.xs) {
             Image(systemName: keyboardCollapsed ? "chevron.up" : "chevron.down")
               .font(Typography.small.weight(.semibold))
-            Text(keyboardCollapsed ? "Show keyboard" : "Hide keyboard")
+            Text(keyboardCollapsed ? "Show tiles" : "Hide tiles")
               .font(Typography.small.weight(.semibold))
           }
           .foregroundStyle(theme.textMuted)
@@ -175,7 +192,7 @@ struct HelperView: View {
           .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(keyboardCollapsed ? "Show tile keyboard" : "Hide tile keyboard")
+        .accessibilityLabel(keyboardCollapsed ? "Show the tile picker" : "Hide the tile picker")
         .accessibilityIdentifier("helper.keyboard.toggle")
         if !keyboardCollapsed {
           TileKeyboardView(onAdd: add, usage: usage, limit: cap)
@@ -228,7 +245,9 @@ struct HelperView: View {
         CallCheckSheet(analyzer: analyzer, view: helper.view, usage: knownUsage, gate: gate)
       }
     case .exposure:
-      ExposureSheet(title: "Add exposure", usage: knownUsage) { helper.addExposure($0) }
+      ExposureSheet(title: "Add an exposed set", usage: knownUsage) { helper.addExposure($0) }
+    case .exposureInfo:
+      ExposedSetInfoSheet()
     case .opponent(let index):
       ExposureSheet(title: opponentTitle(index), usage: knownUsage) {
         helper.addOpponentExposure($0, at: index)
@@ -237,7 +256,7 @@ struct HelperView: View {
   }
 
   private func opponentTitle(_ index: Int) -> String {
-    helper.opponents.indices.contains(index) ? "\(helper.opponents[index].label) exposed" : "Add exposure"
+    helper.opponents.indices.contains(index) ? "\(helper.opponents[index].label) player's exposed sets" : "Add an exposed set"
   }
 }
 

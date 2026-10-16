@@ -288,6 +288,18 @@ final class HelperTests: XCTestCase {
   func testPlayingExposuresAndSeenTilesLight() { playing(dark: false) }
   func testPlayingExposuresAndSeenTilesDark() { playing(dark: true) }
 
+  func testExposedSetInfoSheetExplainsItself() {
+    let app = launch(assist: "coach", rack: "2B,2B,4B,4B,4B,6B,8B,8B,8B,N,E,R,0", mode: "playing")
+    collapseKeyboard(app)
+    XCTAssertTrue(element(app, "helper.keyboard.toggle").label == "Show the tile picker")
+    tap(app, "helper.exposures.info")
+    expectExists(app, "exposureInfo.done")
+    XCTAssertTrue(withLabel(app, containing: "face up").waitForExistence(timeout: 5))
+    attach("helper-exposed-set-info")
+    tap(app, "exposureInfo.done")
+    XCTAssertTrue(waitForGone(element(app, "exposureInfo.done")))
+  }
+
   // MARK: Scout
 
   private func scout(dark: Bool) {

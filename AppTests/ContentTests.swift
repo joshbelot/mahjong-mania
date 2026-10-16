@@ -75,7 +75,7 @@ struct ContentTests {
   @Test func glossaryCoversRequiredTerms() {
     let required = [
       "Bam", "Crak", "Dot", "Soap", "Flower", "Joker", "Wind", "Dragon", "Matching dragon",
-      "Single", "Pair", "Pung", "Kong", "Quint", "Sextet", "Exposure", "Concealed (C)",
+      "Single", "Pair", "Pung", "Kong", "Quint", "Sextet", "Exposure", "Exposed set", "Concealed (C)",
       "Exposed (X)", "Charleston", "Blind pass", "Courtesy pass", "Rack", "Wall",
       "East (Dealer)", "Self-pick", "Jokerless", "Dead hand", "Wall game", "Joker exchange",
       "Calling", "Mahjong", "Family (Section)", "Like numbers", "Consecutive run",

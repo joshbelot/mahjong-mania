@@ -23,7 +23,7 @@ struct SeenTilesSection: View {
         withAnimation(.smooth(duration: 0.2)) { expanded.toggle() }
       } label: {
         HStack(spacing: Spacing.sm) {
-          Text("Seen tiles")
+          Text("Tiles already played")
             .font(Typography.h2)
             .foregroundStyle(theme.text)
           Spacer(minLength: Spacing.sm)
@@ -42,12 +42,12 @@ struct SeenTilesSection: View {
         .contentShape(Rectangle())
       }
       .buttonStyle(.plain)
-      .accessibilityLabel("Seen tiles, \(seenTotal) seen")
+      .accessibilityLabel("Tiles already played, \(seenTotal) seen")
       .accessibilityHint(expanded ? "Double-tap to collapse" : "Double-tap to expand")
       .accessibilityIdentifier("seen.toggle")
 
       if expanded {
-        Text("Tap a tile each time you see another one discarded or exposed. Touch and hold to take one back.")
+        Text("Tap every tile you see thrown or laid face up by someone else. This spots hands that can no longer be finished. Touch and hold a tile to take one back.")
           .font(Typography.small)
           .foregroundStyle(theme.textMuted)
         keyboard
