@@ -2,7 +2,7 @@ import Foundation
 
 /// Rules quick reference. Original wording; table procedures are described as "the standard way".
 enum LearnRules {
-  static let topic = LearnTopic(
+  private static let base = LearnTopic(
     id: "rules",
     title: "Rules quick reference",
     summary: "The whole game on one page: the goal, the Charleston, your turn, calling and paying.",
@@ -175,4 +175,18 @@ enum LearnRules {
           )
         ]),
     ])
+
+  /// The quick reference, with a pointer to House rules explained where tables often differ.
+  static let topic = LearnTopic(
+    id: base.id, title: base.title, summary: base.summary, symbol: base.symbol,
+    sections: base.sections.map { section in
+      guard ["charleston", "jokers", "paying"].contains(section.id) else { return section }
+      return LearnSection(
+        id: section.id, heading: section.heading,
+        blocks: section.blocks + [
+          .note(
+            "Tables differ on some of this. House rules explained, in Learn, lists every rule in your rule book and says which are on."
+          )
+        ])
+    })
 }

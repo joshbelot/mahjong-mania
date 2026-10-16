@@ -239,7 +239,7 @@ struct SessionSetupView: View {
   private var rulesCard: some View {
     SectionCard("Rules") {
       NavigationLink {
-        RulesEditorView(rules: $rules)
+        HouseRulesView(rules: $rules)
       } label: {
         ListRowView(RulesSummary.title(rules), subtitle: RulesSummary.text(rules)) {
           Image(systemName: "chevron.right")

@@ -3,6 +3,7 @@ import SwiftUI
 /// Where a row of the Learn home goes.
 enum LearnRoute: Hashable {
   case topic(String)
+  case houseRules
   case glossary
   case pickAHand
   case charleston
@@ -26,6 +27,14 @@ struct LearnHomeView: View {
               .accessibilityIdentifier("learn.topic.\(topic.id)")
               Divider()
             }
+            NavigationLink(value: LearnRoute.houseRules) {
+              LearnRow(
+                symbol: "list.bullet.rectangle", title: "House rules explained",
+                subtitle: "Every rule in your rule book in plain words, and which ones are on.")
+            }
+            .buttonStyle(.plain)
+            .accessibilityIdentifier("learn.topic.houserules")
+            Divider()
             NavigationLink(value: LearnRoute.glossary) {
               LearnRow(
                 symbol: "character.book.closed", title: "Glossary",
@@ -64,6 +73,8 @@ struct LearnHomeView: View {
       switch route {
       case .topic(let id):
         if let topic = LearnContent.topic(id: id) { LearnTopicView(topic: topic) }
+      case .houseRules:
+        LearnTopicView(topic: LearnHouseRules.topic(for: settings.settings.defaultRules))
       case .glossary:
         GlossaryView()
       case .pickAHand:

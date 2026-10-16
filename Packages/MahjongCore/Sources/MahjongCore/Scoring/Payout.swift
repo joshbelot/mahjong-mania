@@ -77,6 +77,23 @@ extension Scoring {
     }
   }
 
+  /// The enabled custom scoring rules that changed what someone paid on this hand (for the
+  /// "why did it pay that?" explanation).
+  public static func appliedCustomRules(
+    for input: MahjongInput, seats: [String], dealerID: String?, rules: RuleSet
+  ) -> [HouseRule] {
+    guard seats.contains(input.winnerID) else { return [] }
+    var thrower: String?
+    if let id = input.discarderID, id != input.winnerID, seats.contains(id) { thrower = id }
+    return rules.rules.filter { rule in
+      guard rule.isEnabled, let effect = rule.custom?.effect else { return false }
+      return seats.contains { seat in
+        seat != input.winnerID
+          && applies(effect, to: seat, input: input, thrower: thrower, dealerID: dealerID)
+      }
+    }
+  }
+
   /// Whether a custom scoring rule changes what `seat` pays on this hand.
   static func applies(
     _ effect: CustomEffect, to seat: String, input: MahjongInput, thrower: String?, dealerID: String?

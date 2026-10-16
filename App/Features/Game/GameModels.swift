@@ -32,6 +32,23 @@ enum PaymentExplanation {
 
   static func text(
     input: MahjongInput, seats: [String], payments: [String: Int], rules: RuleSet,
+    names: [String: String], coach: Bool, dealerID: String? = nil
+  ) -> String {
+    let base = baseText(
+      input: input, seats: seats, payments: payments, rules: rules, names: names, coach: coach)
+    let applied = Scoring.appliedCustomRules(
+      for: input, seats: seats, dealerID: dealerID, rules: rules
+    ).compactMap { $0.custom?.title }
+    guard !applied.isEmpty else { return base }
+    if coach {
+      return base + " House rule" + (applied.count == 1 ? "" : "s") + ": " + applied.joined(separator: "; ")
+        + "."
+    }
+    return ([base] + applied).joined(separator: " \u{00B7} ")
+  }
+
+  private static func baseText(
+    input: MahjongInput, seats: [String], payments: [String: Int], rules: RuleSet,
     names: [String: String], coach: Bool
   ) -> String {
     let winnerName = names[input.winnerID] ?? "Winner"
@@ -46,6 +63,10 @@ enum PaymentExplanation {
     if let thrower {
       let throwerName = names[thrower] ?? "Thrower"
       let throwerPays = -(payments[thrower] ?? 0)
+      if rules.isOn(RuleID.discarderPaysAll) {
+        if !coach { return "\(throwerName) pays \(throwerPays) for everyone (house rule)" }
+        return "Base \(input.basePoints). \(throwerName) threw the winning tile and the thrower pays for everyone, so \(throwerName) pays \(throwerPays) and nobody else pays. \(winnerName) collects \(collected)."
+      }
       if !coach {
         var line = "\(throwerName) pays \(throwerPays) (threw it) \u{00B7} others pay \(othersPay)"
         if bonus { line += " \u{00B7} jokerless \u{00D7}\(rules.jokerlessMultiplier)" }
@@ -231,28 +252,33 @@ enum HandLogText {
 // MARK: - Rules summary
 
 enum RulesSummary {
-  /// "Discarder ×2 · Self-pick ×2 · Jokerless ×2", plus anything that differs from the usual.
+  /// "Thrower pays double · Self-pick double · Jokerless double", plus anything that differs from the usual.
   static func text(_ rules: RuleSet) -> String {
-    var parts = [
-      "Discarder \u{00D7}\(rules.discarderMultiplier)",
-      "Self-pick \u{00D7}\(rules.selfPickMultiplier)",
-      "Jokerless \u{00D7}\(rules.jokerlessMultiplier)",
-    ]
-    if rules.othersOnDiscardMultiplier != 1 {
-      parts.append("Others \u{00D7}\(rules.othersOnDiscardMultiplier)")
+    var parts: [String] = []
+    for id in [RuleID.discarder, RuleID.selfPick, RuleID.jokerless, RuleID.others] {
+      guard let rule = rules.rule(id), rule.isEnabled else { continue }
+      if id == RuleID.others, rule.multiple == RuleCatalog.definition(for: id)?.defaultMultiple { continue }
+      let word = RuleTexts.multipleWord(rule.multiple ?? 1)
+      switch id {
+      case RuleID.discarder: parts.append("Thrower pays \(word)")
+      case RuleID.selfPick: parts.append("Self-pick pays \(word)")
+      case RuleID.jokerless: parts.append("Jokerless pays \(word)")
+      default: parts.append("Others pay \(word)")
+      }
     }
-    if rules.jokerlessBonusForNoJokerLines { parts.append("Bonus on Singles & Pairs") }
+    if rules.jokerlessBonusForNoJokerLines { parts.append("Bonus on singles & pairs") }
+    if rules.isOn(RuleID.discarderPaysAll) { parts.append("Thrower pays all") }
+    let custom = rules.customRules.filter(\.isEnabled)
+    if !custom.isEmpty { parts.append("\(custom.count) house \(custom.count == 1 ? "rule" : "rules")") }
+    let off = RuleCatalog.builtIns.filter { !$0.locked && $0.defaultEnabled && !rules.isOn($0.id) }
+      .filter { ![RuleID.discarder, RuleID.selfPick, RuleID.jokerless, RuleID.others].contains($0.id) }
+    if !off.isEmpty { parts.append("\(off.count) switched off") }
     return parts.joined(separator: " \u{00B7} ")
   }
 
-  /// True when every payout rule equals the standard one (name, id and money are ignored).
+  /// True when every rule equals the standard book (name, id, money and custom rules are ignored).
   static func matchesStandard(_ rules: RuleSet) -> Bool {
-    let standard = RuleSet.standard
-    return rules.discarderMultiplier == standard.discarderMultiplier
-      && rules.othersOnDiscardMultiplier == standard.othersOnDiscardMultiplier
-      && rules.selfPickMultiplier == standard.selfPickMultiplier
-      && rules.jokerlessMultiplier == standard.jokerlessMultiplier
-      && rules.jokerlessBonusForNoJokerLines == standard.jokerlessBonusForNoJokerLines
+    rules.rules.filter { !$0.isCustom } == RuleSet.standard.rules
   }
 
   /// "Standard rules", or the ruleset's own name, or "Custom rules" when a standard set was edited.

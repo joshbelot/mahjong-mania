@@ -230,7 +230,7 @@ struct RecordHandView: View {
           Text(
             PaymentExplanation.text(
               input: input, seats: session.seatIDs, payments: payments, rules: session.rules,
-              names: names, coach: settings.settings.assistLevel == .coach)
+              names: names, coach: settings.settings.assistLevel == .coach, dealerID: dealerID)
           )
           .font(Typography.small)
           .foregroundStyle(theme.textMuted)
