@@ -133,3 +133,13 @@ The spec title "<Right>'s exposed sets" gives "Across's exposed sets", which rea
 - `Scoring.payments(for:seats:dealerID:rules:)`: `dealerID` is East for that hand; session logic passes each hand's own dealer when it recomputes, so "East wins" rules follow the rotation.
 - Defaults for the optional built-ins (second Charleston, courtesy, blind pass, joker exchange, dead hand pays) are all on, as in the standard game; the thrower-pays-all rule and blanks start off.
 - Rule choices are stored as `multiple` with the allowed values in `RuleDefinition.multipleChoices` (discarder 1–4, others 0–2, self-pick 1–3, jokerless 2–4). Old files may hold other numbers (the v1 editor allowed 1–10); they are kept and paid as written.
+
+## 2026-10-16, §17.4 (Phase 16): rule book screens
+
+- The old `RulesEditorView` is gone: `HouseRulesView` serves Settings, the new-game setup row and the scoreboard's rules sheet (same screen, same wording; the sheet still recomputes every hand).
+- A scoring row's second line (its choice in words) is shown for custom rules, blanks and switched-off rules only. For the built-in scoring rules the title is already a sentence that says the choice ("A jokerless hand pays double"), so repeating it read as clutter.
+- Rule titles follow the choice ("…pays triple"). The "How much" choices are offered as chips; a stored value outside the offered list (v1 allowed 1–10) is kept and shown as an extra chip.
+- The Helper's Charleston tracker and the Learn "House rules explained" topic read the **default** rule book (Settings → House rules), since the Helper is not tied to a game night.
+- Custom scoring rules can target a card section or a single hand; those pickers use the active card, and are hidden if it has none. The title fills in from the sentence until the user edits it.
+- The payment explanation names applied custom rules ("House rule: …") and explains "the thrower pays for everyone".
+- `Scoring.appliedCustomRules` was added to the core for that explanation.

@@ -436,7 +436,7 @@ struct SessionRulesSheet: View {
 
   var body: some View {
     NavigationStack {
-      RulesEditorView(rules: $rules, showsMoney: true)
+      HouseRulesView(rules: $rules, showsMoney: true)
         .safeAreaInset(edge: .bottom) {
           Text("Applying new rules recalculates every hand in this game night.")
             .font(Typography.small)

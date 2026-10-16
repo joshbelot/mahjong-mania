@@ -80,10 +80,18 @@ struct HelperView: View {
         withAnimation(.smooth(duration: 0.2)) { keyboardCollapsed = true }
       }
     }
+    .onChange(of: charlestonSequence, initial: true) { helper.sequence = charlestonSequence }
     .onChange(of: lockTrigger, initial: true) {
       // Coach locks the three suggested tiles once, as soon as the rack is full.
       if gate.level == .coach, let analyzer { helper.lockSuggestionIfNeeded(using: analyzer) }
     }
+  }
+
+  /// The pass order follows the rule book (second Charleston and courtesy pass can be switched off).
+  private var charlestonSequence: CharlestonSequence {
+    let rules = settings.settings.defaultRules
+    return CharlestonSequence(
+      second: rules.isOn(RuleID.charlestonSecond), courtesy: rules.isOn(RuleID.courtesy))
   }
 
   private struct LockTrigger: Hashable {

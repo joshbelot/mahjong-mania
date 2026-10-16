@@ -16,7 +16,7 @@ struct GameModelsTests {
   // MARK: Rules summary
 
   @Test func standardRulesSummary() {
-    #expect(RulesSummary.text(.standard) == "Discarder \u{00D7}2 \u{00B7} Self-pick \u{00D7}2 \u{00B7} Jokerless \u{00D7}2")
+    #expect(RulesSummary.text(.standard) == "Thrower pays double \u{00B7} Self-pick pays double \u{00B7} Jokerless pays double")
     #expect(RulesSummary.title(.standard) == "Standard rules")
   }
 
@@ -26,7 +26,7 @@ struct GameModelsTests {
     rules.jokerlessBonusForNoJokerLines = true
     #expect(
       RulesSummary.text(rules)
-        == "Discarder \u{00D7}2 \u{00B7} Self-pick \u{00D7}2 \u{00B7} Jokerless \u{00D7}2 \u{00B7} Others \u{00D7}2 \u{00B7} Bonus on Singles & Pairs"
+        == "Thrower pays double \u{00B7} Self-pick pays double \u{00B7} Jokerless pays double \u{00B7} Others pay double \u{00B7} Bonus on singles & pairs"
     )
   }
 

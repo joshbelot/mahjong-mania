@@ -103,25 +103,21 @@ struct SettingsView: View {
 
   private var rulesSection: some View {
     Section {
-      Stepper(
-        "Discarder pays ×\(store.settings.defaultRules.discarderMultiplier)",
-        value: store.binding(\.defaultRules.discarderMultiplier), in: 1...4)
-      Stepper(
-        "Others pay ×\(store.settings.defaultRules.othersOnDiscardMultiplier) on a discard",
-        value: store.binding(\.defaultRules.othersOnDiscardMultiplier), in: 0...4)
-      Stepper(
-        "Self-pick ×\(store.settings.defaultRules.selfPickMultiplier)",
-        value: store.binding(\.defaultRules.selfPickMultiplier), in: 1...4)
-      Stepper(
-        "Jokerless ×\(store.settings.defaultRules.jokerlessMultiplier)",
-        value: store.binding(\.defaultRules.jokerlessMultiplier), in: 1...4)
-      Toggle(
-        "Jokerless bonus on hands with no joker groups",
-        isOn: store.binding(\.defaultRules.jokerlessBonusForNoJokerLines))
+      NavigationLink {
+        HouseRulesView(rules: store.binding(\.defaultRules))
+      } label: {
+        VStack(alignment: .leading, spacing: 2) {
+          Text("House rules")
+          Text(RulesSummary.text(store.settings.defaultRules))
+            .font(Typography.small)
+            .foregroundStyle(theme.textMuted)
+        }
+      }
+      .accessibilityIdentifier("settings.houseRules")
     } header: {
-      Text("Default rules")
+      Text("Rules")
     } footer: {
-      Text("New game nights start with these payout rules. Each game night keeps its own copy.")
+      Text("The rule book new game nights start with, and the one the Helper follows. Each game night keeps its own copy.")
     }
     .listRowBackground(theme.surface)
   }

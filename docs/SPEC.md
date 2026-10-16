@@ -1472,11 +1472,11 @@ Same rules as §13 and AGENTS.md (local `tools/test.sh` is the gate; no CI). Eac
 - [x] Persisted sessions and settings from v1.0 load with identical totals (AppTests with a v1.0 fixture file).
 
 #### Phase 16: House rules screens and Learn (17.4, app)
-- [ ] Settings → House rules list, rule detail with live examples, add/edit/delete custom rules (note and scoring).
-- [ ] Rule books save/load/default; session rules use the same screens.
-- [ ] `RuleTexts.swift` for every built-in; Learn "House rules explained" with "Our house rules".
-- [ ] Charleston tracker reads `charleston.second`/`courtesy` from the rule book.
-- [ ] UI tests: switch jokerless to Triple and see the example change; add a custom scoring rule and see it applied in Record hand.
+- [x] Settings → House rules list, rule detail with live examples, add/edit/delete custom rules (note and scoring).
+- [x] Rule books save/load/default; session rules use the same screens.
+- [x] `RuleTexts.swift` for every built-in; Learn "House rules explained" with "Our house rules".
+- [x] Charleston tracker reads `charleston.second`/`courtesy` from the rule book.
+- [x] UI tests: switch jokerless to Triple and see the example change; add a custom scoring rule and see it applied in Record hand.
 
 #### Phase 17: Blanks (17.5)
 - [ ] Core: `Tile.blank`, notation error, wall, dead-line change, suggestions skip blanks, swap advice, tests.
