@@ -75,18 +75,21 @@ struct HelperGate: Equatable, Sendable {
 enum HelperRules {
   /// A full hand on your turn.
   static let handSize = 14
-  /// The usual size of a hand between turns, and when the keyboard folds away in the Charleston.
+  /// The usual size of a hand between turns, and the non-East Charleston hand.
   static let restingHandSize = 13
 
-  /// Most tiles the concealed rack may hold. Exposures count towards the 14 while playing; the
-  /// Charleston can start with 14 (the dealer) so it allows 14.
-  static func rackLimit(mode: HelperMode, exposedTiles: Int) -> Int {
-    mode == .playing ? max(0, handSize - exposedTiles) : handSize
+  /// A full Charleston hand: 13 tiles, or 14 for East (the dealer).
+  static func charlestonRackSize(isEast: Bool) -> Int { isEast ? handSize : restingHandSize }
+
+  /// Most tiles the concealed rack may hold. Exposures count towards the 14 while playing; in the
+  /// Charleston the cap is the full hand (13, or 14 for East).
+  static func rackLimit(mode: HelperMode, exposedTiles: Int, isEast: Bool = false) -> Int {
+    mode == .playing ? max(0, handSize - exposedTiles) : charlestonRackSize(isEast: isEast)
   }
 
-  /// The count at which the keyboard collapses on its own.
-  static func fullRackCount(mode: HelperMode, exposedTiles: Int) -> Int {
-    mode == .playing ? max(1, handSize - exposedTiles) : restingHandSize
+  /// The count at which the tile picker folds away on its own.
+  static func fullRackCount(mode: HelperMode, exposedTiles: Int, isEast: Bool = false) -> Int {
+    mode == .playing ? max(1, handSize - exposedTiles) : charlestonRackSize(isEast: isEast)
   }
 }
 

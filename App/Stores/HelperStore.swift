@@ -18,6 +18,25 @@ struct HelperDocument: VersionedDocument, Equatable {
   var seen: [String: Int] = [:]
   var opponents: [OpponentInput] = HelperDocument.defaultOpponents
   var pinnedLineID: String?
+  /// The Charleston header's "I'm East (dealer) · 14 tiles" switch.
+  var isEast = false
+  var charleston = CharlestonState()
+
+  init() {}
+
+  /// Every key is optional so files written by older versions keep loading when fields are added.
+  init(from decoder: Decoder) throws {
+    let c = try decoder.container(keyedBy: CodingKeys.self)
+    version = try c.decodeIfPresent(Int.self, forKey: .version) ?? Self.currentVersion
+    mode = try c.decodeIfPresent(HelperMode.self, forKey: .mode) ?? .charleston
+    rack = try c.decodeIfPresent([Tile].self, forKey: .rack) ?? []
+    exposures = try c.decodeIfPresent([Exposure].self, forKey: .exposures) ?? []
+    seen = try c.decodeIfPresent([String: Int].self, forKey: .seen) ?? [:]
+    opponents = try c.decodeIfPresent([OpponentInput].self, forKey: .opponents) ?? Self.defaultOpponents
+    pinnedLineID = try c.decodeIfPresent(String.self, forKey: .pinnedLineID)
+    isEast = try c.decodeIfPresent(Bool.self, forKey: .isEast) ?? false
+    charleston = try c.decodeIfPresent(CharlestonState.self, forKey: .charleston) ?? CharlestonState()
+  }
 
   static let defaultOpponents = ["Right", "Across", "Left"].map { OpponentInput(label: $0, exposures: []) }
 }
@@ -31,6 +50,10 @@ final class HelperStore {
   private(set) var seen: TileCounts
   private(set) var opponents: [OpponentInput]
   private(set) var pinnedLineID: String?
+  private(set) var isEast: Bool
+  private(set) var charleston: CharlestonState
+  /// The pass order; the app sets it from the rule book (Phase 16).
+  var sequence = CharlestonSequence.standard
 
   @ObservationIgnored private let persister: Persister<HelperDocument>
   @ObservationIgnored private var lastKey: AnalysisKey?
@@ -55,6 +78,8 @@ final class HelperStore {
     seen = Self.counts(from: doc.seen)
     opponents = doc.opponents
     pinnedLineID = doc.pinnedLineID
+    isEast = doc.isEast
+    charleston = doc.charleston
     persister = Persister(store: file, delay: persistDelay)
     persister.snapshot = { [weak self] in self?.document }
   }
@@ -75,6 +100,8 @@ final class HelperStore {
     doc.seen = Dictionary(uniqueKeysWithValues: seen.map { ($0.key.code, $0.value) })
     doc.opponents = opponents
     doc.pinnedLineID = pinnedLineID
+    doc.isEast = isEast
+    doc.charleston = charleston
     return doc
   }
 
@@ -96,23 +123,28 @@ final class HelperStore {
   func add(_ tile: Tile) -> Bool {
     guard canAdd(tile) else { return false }
     rack.append(tile)
+    noteAdded()
     changed()
     return true
   }
 
   func removeTile(at index: Int) {
     guard rack.indices.contains(index) else { return }
-    rack.remove(at: index)
+    let removed = rack.remove(at: index)
+    noteRemoved(removed)
     changed()
   }
 
+  /// Replacing the whole rack drops the locked suggestion; the pass number stays.
   func setRack(_ tiles: [Tile]) {
     rack = tiles
+    charleston.locked = nil
     changed()
   }
 
   func clearRack() {
     rack = []
+    charleston.locked = nil
     changed()
   }
 
@@ -173,6 +205,95 @@ final class HelperStore {
     changed()
   }
 
+  // MARK: Charleston (SPEC §17.3)
+
+  /// A full hand: 13 tiles, or 14 for East.
+  var fullRackSize: Int { HelperRules.charlestonRackSize(isEast: isEast) }
+
+  var steps: [CharlestonStep] { sequence.steps(skippingSecond: charleston.skipSecond) }
+
+  /// The pass the table is on, or nil once the Charleston is finished.
+  var currentStep: CharlestonStep? {
+    steps.indices.contains(charleston.passIndex) ? steps[charleston.passIndex] : nil
+  }
+
+  var isCharlestonDone: Bool { currentStep == nil }
+
+  /// "Pass 1 of 7 · Right"; the courtesy pass reads "Courtesy · Across · 0–3 tiles".
+  var trackerText: String {
+    guard let step = currentStep else { return "Charleston done" }
+    if step.isCourtesy { return "Pass \(charleston.passIndex + 1) of \(steps.count) \u{00B7} Courtesy \u{00B7} \(step.direction) \u{00B7} 0\u{2013}3 tiles" }
+    return "Pass \(charleston.passIndex + 1) of \(steps.count) \u{00B7} \(step.direction)"
+  }
+
+  /// "Stop after this Charleston" is offered during the first three passes, when there is
+  /// something after them to skip to.
+  var canStopAfterFirst: Bool {
+    guard let step = currentStep, step.round == .first else { return false }
+    return !charleston.skipSecond && (sequence.second || sequence.courtesy)
+  }
+
+  /// A suggestion can be locked once the rack is full and nothing is locked.
+  var canLockSuggestion: Bool {
+    mode == .charleston && !isCharlestonDone && charleston.locked == nil && rack.count >= fullRackSize
+  }
+
+  func setEast(_ east: Bool) {
+    isEast = east
+    changed()
+  }
+
+  /// Computes the 3 tiles to pass for the current rack and holds on to them.
+  func lockSuggestion(using analyzer: Analyzer) {
+    guard !isCharlestonDone, rack.count >= 3 else { return }
+    let advice = analyzer.suggestPasses(view)
+    charleston.locked = LockedPass(
+      tiles: advice.passes.map(\.tile), reasons: advice.passes.map(\.reason),
+      focus: advice.focusSections)
+    changed()
+  }
+
+  /// Coach: lock automatically once the rack is full. Safe to call at any time.
+  func lockSuggestionIfNeeded(using analyzer: Analyzer) {
+    if canLockSuggestion { lockSuggestion(using: analyzer) }
+  }
+
+  func stopAfterFirstCharleston() {
+    guard canStopAfterFirst else { return }
+    charleston.skipSecond = true
+    charleston.passIndex = min(charleston.passIndex, 2)
+    charleston.locked = nil
+    changed()
+  }
+
+  /// Back to pass 1; the rack stays.
+  func restartCharleston() {
+    charleston = CharlestonState()
+    changed()
+  }
+
+  private func noteRemoved(_ tile: Tile) {
+    guard mode == .charleston, charleston.locked != nil else { return }
+    charleston.locked?.removedSinceLock.append(tile)
+    advanceIfSwapped()
+  }
+
+  private func noteAdded() {
+    guard mode == .charleston, charleston.locked != nil else { return }
+    charleston.locked?.addedSinceLock += 1
+    advanceIfSwapped()
+  }
+
+  /// The lock ends and the tracker moves on only when the rack is full again and at least one tile
+  /// was taken out and at least one put in since the lock.
+  private func advanceIfSwapped() {
+    guard let locked = charleston.locked, rack.count >= fullRackSize,
+      !locked.removedSinceLock.isEmpty, locked.addedSinceLock > 0
+    else { return }
+    charleston.locked = nil
+    charleston.passIndex = min(charleston.passIndex + 1, steps.count)
+  }
+
   // MARK: Analysis (memoised on the last input)
 
   func results(using analyzer: Analyzer) -> [LineResult] {
@@ -201,6 +322,8 @@ final class HelperStore {
     seen = [:]
     opponents = HelperDocument.defaultOpponents
     pinnedLineID = nil
+    isEast = false
+    charleston = CharlestonState()
     lastKey = nil
     lastResults = []
   }

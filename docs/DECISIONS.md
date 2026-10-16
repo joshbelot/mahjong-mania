@@ -114,3 +114,13 @@ The first real upload was rejected by App Store Connect ("Invalid bundle … you
 ## 2026-10-16, §17.2 (Phase 13): opponent titles read "<Right> player's exposed sets"
 
 The spec title "<Right>'s exposed sets" gives "Across's exposed sets", which reads badly aloud. The Scout card title is "<Seat> player's exposed sets" ("Right player's", "Across player's", "Left player's"). The sheet title when adding for an opponent uses the same words. The set-size choice in the add sheet is a row of chips instead of a segmented control so "6 · Sextet" never truncates at large text sizes (identifiers `exposure.size.3`…`6`). A `-UITestTab game|helper|cards|learn` launch argument (with `-UITestResetData`) was added so screens can be opened directly for simulator checks.
+
+## 2026-10-16, §17.3 (Phase 14): Charleston details the spec left open
+
+- **"Stop after this Charleston"** sets a flag (`CharlestonState.skipSecond`) so the second Charleston is skipped when the first three passes finish, instead of jumping at once. The first Charleston is required, so skipping its remaining passes would be wrong. The tracker then reads "Pass 1 of 4" (3 + courtesy). The button is hidden when nothing follows the first Charleston.
+- `LockedPass` also stores each tile's `reasons` and the `focus` sections, so the list keeps the same wording while locked (the spec's struct had only the tiles).
+- `setRack` and `clearRack` (random deal, Clear) drop the lock without moving the pass number; only a real swap (rack back at full size with at least one tile out and one in) advances.
+- Lock tracking only runs in Charleston mode. In Peek the "Suggest a pass" button reappears for each new pass; in Coach the next suggestion is locked automatically.
+- The Charleston card (East switch, tracker, buttons) sits under the rack, not above it: above the rack it pushed the tiles off the first screen when the picker was open. The "dealer starts with 14" explanation is the switch's VoiceOver hint rather than a second line of text.
+- Until Phase 16 reads the rule book, the sequence is `CharlestonSequence.standard` (first, second, courtesy = 7 passes).
+- `HelperDocument` now decodes every key with `decodeIfPresent`, so `helper.json` files from 1.0 still load.
