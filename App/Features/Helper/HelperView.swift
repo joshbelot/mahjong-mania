@@ -74,11 +74,32 @@ struct HelperView: View {
       suggestionRevealed = false
     }
     .onChange(of: helper.rack.count) { old, new in
-      let full = HelperRules.fullRackCount(mode: helper.mode, exposedTiles: exposedTileCount)
+      let full = HelperRules.fullRackCount(
+        mode: helper.mode, exposedTiles: exposedTileCount, isEast: helper.isEast)
       if new > old && new >= full {
         withAnimation(.smooth(duration: 0.2)) { keyboardCollapsed = true }
       }
     }
+    .onChange(of: lockTrigger, initial: true) {
+      // Coach locks the three suggested tiles once, as soon as the rack is full.
+      if gate.level == .coach, let analyzer { helper.lockSuggestionIfNeeded(using: analyzer) }
+    }
+  }
+
+  private struct LockTrigger: Hashable {
+    var mode: HelperMode
+    var rackCount: Int
+    var passIndex: Int
+    var hasLock: Bool
+    var isEast: Bool
+    var level: AssistLevel
+  }
+
+  private var lockTrigger: LockTrigger {
+    LockTrigger(
+      mode: helper.mode, rackCount: helper.rack.count, passIndex: helper.charleston.passIndex,
+      hasLock: helper.charleston.locked != nil, isEast: helper.isEast,
+      level: settings.settings.assistLevel)
   }
 
   // MARK: Content
@@ -94,7 +115,8 @@ struct HelperView: View {
 
   @ViewBuilder
   private func tilesContent(_ analyzer: Analyzer) -> some View {
-    let limit = HelperRules.rackLimit(mode: helper.mode, exposedTiles: exposedTileCount)
+    let limit = HelperRules.rackLimit(
+      mode: helper.mode, exposedTiles: exposedTileCount, isEast: helper.isEast)
     let isEmpty = helper.rack.isEmpty && helper.exposures.isEmpty
     // The empty state comes first so it is never hidden behind the keyboard.
     if isEmpty {
@@ -105,6 +127,9 @@ struct HelperView: View {
       limit: limit,
       onRemove: remove,
       onClear: { helper.clearRack() })
+    if helper.mode == .charleston {
+      CharlestonHeader { helper.setMode(.playing) }
+    }
     if helper.mode == .playing {
       exposuresCard
       SeenTilesSection()
@@ -173,7 +198,8 @@ struct HelperView: View {
   @ViewBuilder
   private var dock: some View {
     if helper.mode != .scout && sheet == nil {
-      let limit = HelperRules.rackLimit(mode: helper.mode, exposedTiles: exposedTileCount)
+      let limit = HelperRules.rackLimit(
+        mode: helper.mode, exposedTiles: exposedTileCount, isEast: helper.isEast)
       let usage = helper.usage
       // The keyboard counts every tile in use; only the concealed rack is capped.
       let cap = limit + usage.values.reduce(0, +) - helper.rack.count
@@ -218,7 +244,9 @@ struct HelperView: View {
   }
 
   private func dealRandomHand() {
-    let dealt = Wall.deal(seed: UInt64.random(in: 1...UInt64.max), count: HelperRules.restingHandSize)
+    let dealt = Wall.deal(
+      seed: UInt64.random(in: 1...UInt64.max),
+      count: HelperRules.charlestonRackSize(isEast: helper.isEast))
     withAnimation(.snappy(duration: 0.12)) { helper.setRack(dealt.hand) }
   }
 

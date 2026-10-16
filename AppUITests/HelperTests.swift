@@ -92,6 +92,30 @@ final class HelperTests: XCTestCase {
     XCTAssertTrue(waitForGone(element(app, "key.1C")), "The keyboard should fold away")
   }
 
+  /// The tile code for a spoken tile name like "5 Dot" or "North", for rack identifiers.
+  private static func code(forName name: String) -> String {
+    let parts = name.split(separator: " ")
+    if parts.count == 2, let number = Int(parts[0]) {
+      switch parts[1] {
+      case "Crak": return "\(number)C"
+      case "Bam": return "\(number)B"
+      case "Dot": return "\(number)D"
+      default: break
+      }
+    }
+    switch name {
+    case "North": return "N"
+    case "East": return "E"
+    case "West": return "W"
+    case "South": return "S"
+    case "Red Dragon": return "R"
+    case "Green Dragon": return "G"
+    case _ where name.hasPrefix("Soap"): return "0"
+    case "Flower": return "F"
+    default: return name
+    }
+  }
+
   private func selectMode(_ app: XCUIApplication, _ title: String) {
     let button = app.segmentedControls.buttons[title].firstMatch
     XCTAssertTrue(button.waitForExistence(timeout: 5), "Missing mode \(title)")
@@ -199,9 +223,64 @@ final class HelperTests: XCTestCase {
     attach("helper-empty-light")
     tap(app, "helper.deal")
     expectExists(app, "rack.count")
-    XCTAssertEqual(element(app, "rack.count").label, "13 of 14 tiles")
+    XCTAssertEqual(element(app, "rack.count").label, "13 of 13 tiles")
     assertNoJokerPassed(app)
     attach("helper-charleston-dealt-light")
+  }
+
+  /// SPEC §17.3: the three suggested tiles hold still while tiles are swapped, then the next pass starts.
+  private func charlestonSwap(dark: Bool) {
+    let app = launch(assist: "coach", rack: Self.sampleRack, dark: dark)
+    expectExists(app, "charleston.tracker")
+    XCTAssertEqual(element(app, "charleston.tracker").label, "Pass 1 of 7 \u{00B7} Right")
+    var suggested: [String] = []
+    for index in 0..<3 {
+      let row = element(app, "pass.row.\(index)")
+      XCTAssertTrue(row.waitForExistence(timeout: 10), "Missing pass.row.\(index)")
+      suggested.append(row.label)
+    }
+    attach("helper-charleston-pass1-\(scheme(dark))")
+
+    // Take out the three suggested tiles (the rack taps remove one copy each).
+    for label in suggested {
+      let name = label.components(separatedBy: ". ").first ?? label
+      let code = Self.code(forName: name)
+      tap(app, "rack.tile.\(code)")
+    }
+    XCTAssertEqual(element(app, "rack.count").label, "10 of 13 tiles")
+    for (index, label) in suggested.enumerated() {
+      let row = element(app, "pass.row.\(index)")
+      XCTAssertTrue(row.label.hasPrefix(label.components(separatedBy: ". ").first ?? label))
+      XCTAssertTrue(row.label.contains("Passed"), "Row \(index) should be ticked, got '\(row.label)'")
+    }
+    XCTAssertEqual(element(app, "charleston.tracker").label, "Pass 1 of 7 \u{00B7} Right", "Still pass 1")
+    attach("helper-charleston-passed-\(scheme(dark))")
+
+    // Add three tiles that were not suggested: the table moves on and a new suggestion appears.
+    for code in ["9B", "9B", "8B"] { tap(app, "key.\(code)") }
+    let tracker = element(app, "charleston.tracker")
+    let moved = XCTNSPredicateExpectation(
+      predicate: NSPredicate(format: "label == %@", "Pass 2 of 7 \u{00B7} Across"), object: tracker)
+    XCTAssertEqual(XCTWaiter().wait(for: [moved], timeout: 10), .completed, "Got '\(tracker.label)'")
+    expectExists(app, "pass.row.0")
+    for index in 0..<3 {
+      XCTAssertFalse(element(app, "pass.row.\(index)").label.contains("Passed"))
+    }
+    attach("helper-charleston-pass2-\(scheme(dark))")
+  }
+
+  func testCharlestonSuggestionHoldsStillLight() { charlestonSwap(dark: false) }
+  func testCharlestonSuggestionHoldsStillDark() { charlestonSwap(dark: true) }
+
+  func testEastToggleRaisesTheRackToFourteen() {
+    let app = launch(assist: "coach", rack: Self.sampleRack)
+    XCTAssertTrue(element(app, "pass.row.0").waitForExistence(timeout: 10))
+    collapseKeyboard(app)
+    tap(app, "charleston.east")
+    XCTAssertEqual(element(app, "rack.count").label, "13 of 14 tiles")
+    attach("helper-charleston-east-light")
+    tap(app, "charleston.restart")
+    XCTAssertEqual(element(app, "charleston.tracker").label, "Pass 1 of 7 \u{00B7} Right")
   }
 
   func testPassSuggestionsSkipJokersInDark() {

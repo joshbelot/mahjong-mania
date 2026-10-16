@@ -5,6 +5,7 @@ import SwiftUI
 /// SPEC §11.3: Peek shows them behind a button, Coach shows them automatically.
 struct CoachPanel: View {
   @Environment(\.theme) private var theme
+  @Environment(HelperStore.self) private var helper
 
   let mode: HelperMode
   let analyzer: Analyzer
@@ -30,32 +31,62 @@ struct CoachPanel: View {
 
   private var passes: some View {
     SectionCard {
-      header("Pass these")
-      if view.rack.count < 3 {
-        hint("Add at least three tiles to see which to pass.")
-      } else if gate.showsSuggestions(revealed: revealed) {
-        let advice = advisor.passes(analyzer, view: view)
-        if advice.passes.isEmpty {
-          hint("There is nothing sensible to pass yet.")
-        } else {
-          VStack(alignment: .leading, spacing: Spacing.sm) {
-            ForEach(Array(advice.passes.enumerated()), id: \.offset) { entry in
-              suggestionRow(
-                tile: entry.element.tile, text: entry.element.reason,
-                identifier: "pass.row.\(entry.offset)")
-            }
-          }
-        }
-        if !advice.focus.isEmpty {
-          Text(focusSentence(advice.focus.map(\.section)))
-            .font(Typography.small)
-            .foregroundStyle(theme.textMuted)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .accessibilityIdentifier("pass.focus")
-        }
+      if helper.isCharlestonDone {
+        header("Charleston done")
+        hint("No more passes. Switch to Playing when the game starts.")
+      } else if let locked = helper.charleston.locked {
+        header(helper.currentStep?.isCourtesy == true ? "Pass up to 3" : "Pass these")
+        lockedList(locked)
+      } else if helper.rack.count < helper.fullRackSize {
+        header(helper.currentStep?.isCourtesy == true ? "Pass up to 3" : "Pass these")
+        hint("Add all 13 of your tiles (14 if you're East) to get a suggestion.")
       } else {
-        revealButton("Suggest a pass")
+        header(helper.currentStep?.isCourtesy == true ? "Pass up to 3" : "Pass these")
+        if gate.level == .coach {
+          // Coach locks on its own as soon as the rack is full (see HelperView).
+          hint("Working out what to pass\u{2026}")
+        } else {
+          Button {
+            withAnimation(.smooth(duration: 0.2)) { helper.lockSuggestion(using: analyzer) }
+          } label: {
+            Label("Suggest a pass", systemImage: "lightbulb")
+              .frame(maxWidth: .infinity)
+          }
+          .buttonStyle(PrimaryButton(.primary, size: .large))
+          .accessibilityIdentifier("helper.suggest")
+        }
       }
+    }
+  }
+
+  private func lockedList(_ locked: LockedPass) -> some View {
+    let passed = locked.passed
+    return VStack(alignment: .leading, spacing: Spacing.sm) {
+      if locked.tiles.isEmpty {
+        hint("There is nothing sensible to pass yet.")
+      }
+      ForEach(Array(locked.tiles.enumerated()), id: \.offset) { entry in
+        let done = passed[entry.offset]
+        let reason = locked.reasons.indices.contains(entry.offset) ? locked.reasons[entry.offset] : ""
+        suggestionRow(
+          tile: entry.element, text: done ? "\u{2713} Passed" : reason, dimmed: done,
+          identifier: "pass.row.\(entry.offset)")
+      }
+      if !locked.focus.isEmpty {
+        Text(focusSentence(locked.focus))
+          .font(Typography.small)
+          .foregroundStyle(theme.textMuted)
+          .frame(maxWidth: .infinity, alignment: .leading)
+          .accessibilityIdentifier("pass.focus")
+      }
+      Button("Suggest again") {
+        withAnimation(.smooth(duration: 0.2)) { helper.lockSuggestion(using: analyzer) }
+      }
+      .font(Typography.small.weight(.semibold))
+      .foregroundStyle(theme.primary)
+      .frame(minHeight: 44)
+      .accessibilityHint("Works out the 3 tiles again for your current tiles")
+      .accessibilityIdentifier("pass.again")
     }
   }
 
@@ -131,12 +162,14 @@ struct CoachPanel: View {
     .accessibilityIdentifier("helper.suggest")
   }
 
-  private func suggestionRow(tile: Tile, text: String, identifier: String) -> some View {
+  private func suggestionRow(
+    tile: Tile, text: String, dimmed: Bool = false, identifier: String
+  ) -> some View {
     HStack(spacing: Spacing.md) {
-      TileView(tile: tile, size: .medium)
+      TileView(tile: tile, size: .medium, state: dimmed ? .dim : .normal)
       Text(text)
-        .font(Typography.small)
-        .foregroundStyle(theme.text)
+        .font(Typography.small.weight(dimmed ? .semibold : .regular))
+        .foregroundStyle(dimmed ? theme.primary : theme.text)
         .frame(maxWidth: .infinity, alignment: .leading)
     }
     .accessibilityElement(children: .ignore)

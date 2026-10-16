@@ -66,7 +66,8 @@ struct HelperGateTests {
   }
 
   @Test func rackLimitsFollowTheMode() {
-    #expect(HelperRules.rackLimit(mode: .charleston, exposedTiles: 0) == 14)
+    #expect(HelperRules.rackLimit(mode: .charleston, exposedTiles: 0) == 13)
+    #expect(HelperRules.rackLimit(mode: .charleston, exposedTiles: 0, isEast: true) == 14)
     #expect(HelperRules.rackLimit(mode: .playing, exposedTiles: 0) == 14)
     #expect(HelperRules.rackLimit(mode: .playing, exposedTiles: 3) == 11)
     #expect(HelperRules.rackLimit(mode: .playing, exposedTiles: 20) == 0)

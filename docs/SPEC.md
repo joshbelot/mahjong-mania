@@ -1461,10 +1461,10 @@ Same rules as §13 and AGENTS.md (local `tools/test.sh` is the gate; no CI). Eac
 - [x] Existing UI tests updated (identifiers unchanged); one new UI test opens the ⓘ sheet.
 
 #### Phase 14: Charleston seat, tracker and locked suggestion (17.3)
-- [ ] East toggle; picker cap and auto-fold at 13/14.
-- [ ] Pass tracker from the rule book (until Phase 15 lands, use the standard sequence: 3 + 3 + courtesy).
-- [ ] Locked suggestion life cycle with ✓ Passed, "Suggest again", Peek/Coach behaviour.
-- [ ] Unit tests for the life cycle and the UI test in 17.3.
+- [x] East toggle; picker cap and auto-fold at 13/14.
+- [x] Pass tracker from the rule book (until Phase 15 lands, use the standard sequence: 3 + 3 + courtesy).
+- [x] Locked suggestion life cycle with ✓ Passed, "Suggest again", Peek/Coach behaviour.
+- [x] Unit tests for the life cycle and the UI test in 17.3.
 
 #### Phase 15: Rule book core (17.4, MahjongCore)
 - [ ] `HouseRule`, `RuleCatalog`, `RuleSet.rules`, migration from v1 fields, missing built-ins filled on load.
