@@ -1467,9 +1467,9 @@ Same rules as §13 and AGENTS.md (local `tools/test.sh` is the gate; no CI). Eac
 - [x] Unit tests for the life cycle and the UI test in 17.3.
 
 #### Phase 15: Rule book core (17.4, MahjongCore)
-- [ ] `HouseRule`, `RuleCatalog`, `RuleSet.rules`, migration from v1 fields, missing built-ins filled on load.
-- [ ] Payments v2 with `dealerID`; §10.7 table unchanged; new tests; the v1 = v2 property test.
-- [ ] Persisted sessions and settings from v1.0 load with identical totals (AppTests with a v1.0 fixture file).
+- [x] `HouseRule`, `RuleCatalog`, `RuleSet.rules`, migration from v1 fields, missing built-ins filled on load.
+- [x] Payments v2 with `dealerID`; §10.7 table unchanged; new tests; the v1 = v2 property test.
+- [x] Persisted sessions and settings from v1.0 load with identical totals (AppTests with a v1.0 fixture file).
 
 #### Phase 16: House rules screens and Learn (17.4, app)
 - [ ] Settings → House rules list, rule detail with live examples, add/edit/delete custom rules (note and scoring).

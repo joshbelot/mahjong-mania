@@ -25,8 +25,8 @@ Plan: `docs/SPEC.md` §17. v1.0 build 2 is on TestFlight (2026-10-13). One PR pe
 | Phase | Status | PR |
 |---|---|---|
 | 13 Plain words (Show/Hide tiles, exposed sets explained) | merged | [#27](https://github.com/joshbelot/mahjong-mania/pull/27) |
-| 14 Charleston seat, pass tracker, locked suggestion | PR | |
-| 15 Rule book core (MahjongCore) | not started | |
+| 14 Charleston seat, pass tracker, locked suggestion | merged | [#28](https://github.com/joshbelot/mahjong-mania/pull/28) |
+| 15 Rule book core (MahjongCore) | PR | |
 | 16 House rules screens and Learn | not started | |
 | 17 Blanks | not started | |
 | 18 Tile styles | not started | |

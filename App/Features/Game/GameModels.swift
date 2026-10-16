@@ -100,6 +100,8 @@ struct RecordHandDraft: Equatable {
   /// The card's own points for the chosen line, used to show "custom value" when `points` differs.
   var linePoints: Int?
   var lineHasNoJokerGroups = false
+  var lineSection: String?
+  var lineConcealed = false
   var jokerless = false
   var note = ""
 
@@ -119,6 +121,8 @@ struct RecordHandDraft: Equatable {
     lineID = input.lineID
     lineLabel = input.lineLabel
     lineHasNoJokerGroups = input.lineHasNoJokerGroups
+    lineSection = input.lineSection
+    lineConcealed = input.lineConcealed
     jokerless = input.jokerless
     note = input.note ?? ""
     if let lineID, let line = card?.lines.first(where: { $0.id == lineID }) {
@@ -150,6 +154,8 @@ struct RecordHandDraft: Equatable {
     linePoints = line.points
     points = line.points
     lineHasNoJokerGroups = line.hasNoJokerGroups
+    lineSection = line.section
+    lineConcealed = line.concealed
   }
 
   mutating func clearLine() {
@@ -158,6 +164,8 @@ struct RecordHandDraft: Equatable {
     lineLabel = nil
     linePoints = nil
     lineHasNoJokerGroups = false
+    lineSection = nil
+    lineConcealed = false
   }
 
   /// False when the chosen line has no joker groups and the rules give no bonus for that.
@@ -179,7 +187,8 @@ struct RecordHandDraft: Equatable {
       winnerID: winnerID, discarderID: how == .discard ? discarderID : nil, cardID: cardID,
       lineID: lineID, lineLabel: lineLabel, basePoints: points,
       jokerless: jokerless && jokerlessEnabled(rules: rules),
-      lineHasNoJokerGroups: lineHasNoJokerGroups, note: trimmed.isEmpty ? nil : trimmed)
+      lineHasNoJokerGroups: lineHasNoJokerGroups, note: trimmed.isEmpty ? nil : trimmed,
+      lineSection: lineSection, lineConcealed: lineConcealed)
   }
 }
 

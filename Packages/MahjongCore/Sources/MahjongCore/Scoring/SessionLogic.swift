@@ -13,7 +13,8 @@ extension Scoring {
     session.hands.append(
       HandRecord(
         id: id, createdAt: at, dealerID: currentDealerID(s), kind: kind,
-        payments: payments(for: kind, seats: s.seatIDs, rules: s.rules)))
+        payments: payments(
+          for: kind, seats: s.seatIDs, dealerID: currentDealerID(s), rules: s.rules)))
     return session
   }
 
@@ -80,7 +81,8 @@ extension Scoring {
       let seat = ((session.startDealerIndex + advances) % seatCount + seatCount) % seatCount
       session.hands[index].dealerID = session.seatIDs.isEmpty ? "" : session.seatIDs[seat]
       session.hands[index].payments = payments(
-        for: session.hands[index].kind, seats: session.seatIDs, rules: session.rules)
+        for: session.hands[index].kind, seats: session.seatIDs,
+        dealerID: session.hands[index].dealerID, rules: session.rules)
       if session.hands[index].kind.advancesDealer { advances += 1 }
     }
     return session
