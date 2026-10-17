@@ -31,7 +31,11 @@ Plan: `docs/SPEC.md` §17. v1.0 build 2 is on TestFlight (2026-10-13). One PR pe
 | 17 Blanks | merged | [#31](https://github.com/joshbelot/mahjong-mania/pull/31) |
 | 18 Tile styles | merged | [#32](https://github.com/joshbelot/mahjong-mania/pull/32) |
 | 19 QR card sharing | merged | [#33](https://github.com/joshbelot/mahjong-mania/pull/33) |
-| 20 1.1 QA and TestFlight upload | PR | [#34](https://github.com/joshbelot/mahjong-mania/pull/34) |
+| 20 1.1 QA and TestFlight upload | merged; **1.1 (3) uploaded and processed** | [#34](https://github.com/joshbelot/mahjong-mania/pull/34) |
+
+### 1.1 release (2026-10-16)
+
+From a clean `main` at `15d7925`: `zsh -ic 'tools/upload_testflight.sh --dry-run'` passed (tests, archive, export; build number unchanged). The exported `.ipa` was then validated with `xcrun altool --validate-app` ("VERIFY SUCCEEDED with no errors"; version 1.1, URL scheme `mahjongmania` present, no `*UsageDescription` keys). The real upload `zsh -ic 'tools/upload_testflight.sh'` ran the tests again, bumped the build, uploaded **Mahjong Mania 1.1 (3)** and pushed "Bump build to 3". App Store Connect (App Store Connect API) lists build 3 for version 1.1 with processing state **VALID** at about 11 minutes after upload. Owner steps left: paste `TestFlight/WhatToTest.txt` as the build's "What to Test", add testers to the build if needed, and install it on a real iPhone.
 
 ### 1.1 QA pass (2026-10-16, iPhone 17 Pro and iPhone Air simulators, iOS 26.5)
 
