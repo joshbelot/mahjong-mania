@@ -1,11 +1,18 @@
-Thanks for testing Mahjong Mania! Please try as much of this as you can and tell me what felt slow, confusing or wrong.
+Thanks for testing Mahjong Mania 1.1! This round is about things that were confusing the first time. Please tell me where the words still don't make sense.
 
-1. First launch: go through the welcome screens and pick how much help you want (Off, Peek, Coach).
-2. Game Night: add 3 or 4 players, start a game night and record a few hands: a discard, a self-pick, a jokerless win, a wall game and an adjustment. Check the payouts against how your group scores. Edit a hand, undo one, then end the game night and look at the summary and the settle-up.
-3. Hand Helper: enter 13 tiles in Charleston mode and check the pass suggestions (jokers should never be suggested). Try Playing mode with an exposure and "Can I call it?", and Scout mode with an opponent's exposure.
-4. Cards: duplicate the Practice Card, edit a hand, import a few lines of your own, and share a card.
-5. Learn: skim the topics and try both drills.
-6. Look at everything in dark mode and with a larger text size, and try it with VoiceOver if you use it.
-7. Force-quit in the middle of a game night and reopen: your game should still be there. Try airplane mode too.
+What's new
+- Plain words. The tile picker's toggle now says "Hide tiles" / "Show tiles". "Exposures" are now "Your exposed sets", with an (i) button that explains what that means and a drawn example.
+- Charleston. Say if you're East (14 tiles). The Helper shows "Pass 1 of 7 · Right" and holds the 3 tiles it suggests still while you swap tiles, ticking each one "Passed". It moves on only when your hand is full again.
+- House rules. Settings → House rules is now a rule book: every rule in plain words, with what it means, a worked example and named choices (never a bare number). Switch rules on or off, add a note for your table, or add a scoring rule of your own. Learn → House rules explained lists them all.
+- Blanks. If your table plays with blanks, switch them on in House rules. The tile picker gets a Blank key, and the Helper never suggests passing or discarding one.
+- Tile styles. Settings → Tile style: Classic, Traditional, Large print or Modern.
+- Share a card with a QR code. On one of your own cards, open the ... menu and choose Show QR code. Someone else scans it with the iPhone Camera to add the card, or use Cards → Import → From a QR code picture.
 
-Known limits in this first build: iPhone only, portrait only, no iPad layout, no 5-player tables.
+What to try
+1. Hand Helper → Charleston: tick "I'm East", enter 13 (or 14) tiles, and watch the pass tracker. Take out the 3 suggested tiles and put 3 others in.
+2. Hand Helper → Playing: tap the (i) next to "Your exposed sets", then add a set.
+3. Settings → House rules: open "A jokerless hand pays double", change it to Triple, and read the example. Add a scoring rule, then record a hand in a game night and check the explanation names it.
+4. Settings → Tile style: try all four, in light and dark mode and with a larger text size.
+5. Cards: make a card of your own, show its QR code and scan it from another iPhone.
+
+Known limits: iPhone only, portrait only, no iPad layout, no 5-player tables.
