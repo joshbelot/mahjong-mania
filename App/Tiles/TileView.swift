@@ -164,6 +164,9 @@ private struct TileFace: View {
       }
       .foregroundStyle(theme.joker)
       .padding(.horizontal, 1)
+    case .blank:
+      // An empty face: a blank has nothing printed on it.
+      Color.clear
     }
   }
 

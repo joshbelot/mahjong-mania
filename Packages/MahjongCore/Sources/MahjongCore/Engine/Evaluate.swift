@@ -17,12 +17,25 @@ struct EvalContext {
   var exposures: [NormalizedExposure] = []
   var exposureInvalid = false
   var anyExposureJoker = false
+  /// Blanks in the rack. They never fill a group; they only matter for the dead-hand check.
+  var blankCount = 0
+  /// Per tile: a tile with no live copies is not dead because a blank could be swapped for one of the
+  /// copies already thrown (SPEC §17.5).
+  var revivable = [Bool](repeating: false, count: tileTypeCount)
 
   /// `live == nil` turns off dead-hand detection (the live vector then ignores seen tiles).
-  init(view: PlayerView, live: TileCounts?) {
+  /// With `blanks` set and a blank in the rack, a tile that has been seen can still be got back.
+  init(view: PlayerView, live: TileCounts?, seen: TileCounts = [:], blanks: BlankPolicy? = nil) {
     detectDead = live != nil
     rackTiles = view.rack.sorted()
-    for tile in view.rack { rack[tile.sortIndex] += 1 }
+    for tile in view.rack {
+      if tile == .blank { blankCount += 1 } else { rack[tile.sortIndex] += 1 }
+    }
+    if let blanks, blankCount > 0 {
+      for tile in Tile.allCases where (seen[tile] ?? 0) > 0 && (tile != .joker || blanks.swapForJoker) {
+        revivable[tile.sortIndex] = true
+      }
+    }
     let liveMap = live ?? Engine.liveCounts(view, seen: [:])
     for tile in Tile.allCases { self.live[tile.sortIndex] = liveMap[tile] ?? 0 }
     for exposure in view.exposures {
@@ -56,9 +69,10 @@ struct EvalCore {
 extension Engine {
   /// Distance of one target from the player's view (SPEC §10.2).
   public static func evaluate(
-    _ target: Target, line: CardLine, view: PlayerView, live: TileCounts?
+    _ target: Target, line: CardLine, view: PlayerView, live: TileCounts?, seen: TileCounts = [:],
+    blanks: BlankPolicy? = nil
   ) -> Evaluation {
-    let context = EvalContext(view: view, live: live)
+    let context = EvalContext(view: view, live: live, seen: seen, blanks: blanks)
     return evaluation(of: target, concealed: line.concealed, context: context)
   }
 
@@ -133,7 +147,9 @@ extension Engine {
       jokerDeficit += defJoker
       if defPlain > 0 {
         outMask |= 1 << UInt64(need.idx)
-        if context.detectDead && defPlain > context.live[need.idx] { deadMask |= 1 << UInt64(need.idx) }
+        if context.detectDead && defPlain > context.live[need.idx] && !context.revivable[need.idx] {
+          deadMask |= 1 << UInt64(need.idx)
+        }
         if detailed { plainMissing.append(MissingTile(tile: need.tile, count: defPlain, jokerOK: false)) }
       }
       if defJoker > 0 { jokerNeeds.append((need.idx, defJoker)) }
@@ -149,7 +165,10 @@ extension Engine {
     var dead = deadMask != 0
     if context.detectDead && !dead && shortfall > 0 {
       var obtainable = context.live[jokerIndex]
-      for entry in jokerNeeds { obtainable += min(entry.deficit, context.live[entry.idx]) }
+      if context.revivable[jokerIndex] { obtainable += shortfall }
+      for entry in jokerNeeds {
+        obtainable += context.revivable[entry.idx] ? entry.deficit : min(entry.deficit, context.live[entry.idx])
+      }
       if shortfall > obtainable { dead = true }
     }
 
@@ -196,6 +215,7 @@ extension Engine {
         let left = context.rack[index] - used
         if left > 0 { unused.append(contentsOf: Array(repeating: Tile.allCases[index], count: left)) }
       }
+      unused.append(contentsOf: Array(repeating: Tile.blank, count: context.blankCount))
       core.unusedRack = unused
       if context.detectDead {
         core.deadTiles = (0..<tileTypeCount).filter { deadMask & (1 << UInt64($0)) != 0 }.map { Tile.allCases[$0] }

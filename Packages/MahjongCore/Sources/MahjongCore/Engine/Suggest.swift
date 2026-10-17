@@ -54,7 +54,7 @@ extension Analyzer {
       var held: Int
     }
     var candidates: [Candidate] = []
-    for (tile, held) in rackCounts where tile != .joker {
+    for (tile, held) in rackCounts where tile != .joker && tile != .blank {
       for instance in 0..<held {
         candidates.append(
           Candidate(
@@ -116,9 +116,9 @@ extension Analyzer {
 
   /// The three best tiles to discard from a 14-tile hand.
   public func suggestDiscards(
-    _ view: PlayerView, seen: TileCounts = [:], danger: [Tile: Double] = [:]
+    _ view: PlayerView, seen: TileCounts = [:], danger: [Tile: Double] = [:], blanks: BlankPolicy? = nil
   ) -> [DiscardSuggestion] {
-    let results = analyze(view, seen: seen)
+    let results = analyze(view, seen: seen, blanks: blanks)
     let top = weightedTopLines(results, view: view)
     let held = view.rack.counts
 
@@ -130,10 +130,10 @@ extension Analyzer {
       var lineName: String
     }
     var candidates: [Candidate] = []
-    for (tile, count) in held where tile != .joker {
+    for (tile, count) in held where tile != .joker && tile != .blank {
       var reduced = view
       reduced.rack.removeOne(tile)
-      let after = analyze(reduced, seen: seen)
+      let after = analyze(reduced, seen: seen, blanks: blanks)
       guard let best = after.first else { continue }
       candidates.append(
         Candidate(
@@ -152,6 +152,36 @@ extension Analyzer {
       if candidate.danger >= 0.5 { reason += " · risky: an opponent may need it" }
       return DiscardSuggestion(tile: candidate.tile, resultingDistance: candidate.distance, reason: reason)
     }
+  }
+
+  // MARK: Blanks
+
+  /// With a blank in the rack: tiles already thrown that, if one could be swapped for the blank, would
+  /// bring you closer to a hand. At most 3, best first. Empty without a blank or when nothing helps.
+  public func suggestBlankSwaps(
+    _ view: PlayerView, seen: TileCounts, policy: BlankPolicy = BlankPolicy()
+  ) -> [BlankSwap] {
+    guard view.rack.contains(.blank), let current = analyze(view, seen: seen, blanks: policy).first
+    else { return [] }
+    let currentDistance = current.best.distance
+    var swaps: [BlankSwap] = []
+    for tile in Tile.allCases where (seen[tile] ?? 0) > 0 && (tile != .joker || policy.swapForJoker) {
+      var swapped = view
+      swapped.rack.removeOne(.blank)
+      swapped.rack.append(tile)
+      guard let best = analyze(swapped, seen: seen, blanks: policy).first, best.best.possible,
+        best.best.distance < currentDistance
+      else { continue }
+      swaps.append(
+        BlankSwap(
+          tile: tile, newDistance: best.best.distance, currentDistance: currentDistance,
+          lineName: best.line.displayName))
+    }
+    swaps.sort { a, b in
+      if a.newDistance != b.newDistance { return a.newDistance < b.newDistance }
+      return a.tile < b.tile
+    }
+    return Array(swaps.prefix(3))
   }
 
   // MARK: Calling

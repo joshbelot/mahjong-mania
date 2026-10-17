@@ -54,6 +54,10 @@ final class HelperStore {
   private(set) var charleston: CharlestonState
   /// The pass order; the app sets it from the rule book (Phase 16).
   var sequence = CharlestonSequence.standard
+  /// How many blanks the table plays with (0 = the rule is off); set from the rule book.
+  var blankLimit = 0
+  /// How the engine treats blanks (nil = no blanks); set from the rule book.
+  var blankPolicy: BlankPolicy?
 
   @ObservationIgnored private let persister: Persister<HelperDocument>
   @ObservationIgnored private var lastKey: AnalysisKey?
@@ -67,6 +71,7 @@ final class HelperStore {
     var rack: [Tile]
     var exposures: [Exposure]
     var seen: TileCounts
+    var blanks: BlankPolicy?
   }
 
   init(directory: URL, persistDelay: Duration = .milliseconds(300)) {
@@ -117,7 +122,9 @@ final class HelperStore {
 
   var view: PlayerView { PlayerView(rack: rack, exposures: exposures) }
 
-  func canAdd(_ tile: Tile) -> Bool { (usage[tile] ?? 0) < tile.copies }
+  func canAdd(_ tile: Tile) -> Bool {
+    (usage[tile] ?? 0) < (tile == .blank ? blankLimit : tile.copies)
+  }
 
   @discardableResult
   func add(_ tile: Tile) -> Bool {
@@ -299,10 +306,11 @@ final class HelperStore {
   func results(using analyzer: Analyzer) -> [LineResult] {
     let key = AnalysisKey(
       cardID: analyzer.card.id, cardUpdatedAt: analyzer.card.updatedAt, rack: rack.sorted(),
-      exposures: exposures, seen: seen)
+      exposures: exposures, seen: seen, blanks: blankPolicy)
     if key == lastKey { return lastResults }
     analysisCount += 1
-    let results = analyzer.analyze(PlayerView(rack: rack, exposures: exposures), seen: seen)
+    let results = analyzer.analyze(
+      PlayerView(rack: rack, exposures: exposures), seen: seen, blanks: blankPolicy)
     lastKey = key
     lastResults = results
     return results

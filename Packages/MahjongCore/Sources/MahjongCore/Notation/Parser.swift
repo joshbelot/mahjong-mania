@@ -311,6 +311,14 @@ extension Notation {
           code: .badChar, message: "Add tiles before the suit, e.g. 2222/x",
           range: token.start..<token.end))
     }
+    if let blank = String(bodyChars).range(of: "BL") {
+      let start = String(bodyChars).distance(from: String(bodyChars).startIndex, to: blank.lowerBound)
+      errors.append(
+        ParseError(
+          code: .badChar, message: "Blanks can't be part of a hand",
+          range: (token.start + start)..<(token.start + start + 2)))
+      return .failure(ErrorBundle(errors: errors))
+    }
     for (i, c) in bodyChars.enumerated() where !bodyCharacters.contains(c) {
       errors.append(
         ParseError(

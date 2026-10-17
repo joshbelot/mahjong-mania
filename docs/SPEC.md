@@ -1479,9 +1479,9 @@ Same rules as §13 and AGENTS.md (local `tools/test.sh` is the gate; no CI). Eac
 - [x] UI tests: switch jokerless to Triple and see the example change; add a custom scoring rule and see it applied in Record hand.
 
 #### Phase 17: Blanks (17.5)
-- [ ] Core: `Tile.blank`, notation error, wall, dead-line change, suggestions skip blanks, swap advice, tests.
-- [ ] App: rule options, Blank key, blank art, swap advice in the Coach panel, Learn and Glossary.
-- [ ] UI test: turn blanks on, add a blank to the rack, see it never suggested and the swap advice appear.
+- [x] Core: `Tile.blank`, notation error, wall, dead-line change, suggestions skip blanks, swap advice, tests.
+- [x] App: rule options, Blank key, blank art, swap advice in the Coach panel, Learn and Glossary.
+- [x] UI test: turn blanks on, add a blank to the rack, see it never suggested and the swap advice appear.
 
 #### Phase 18: Tile styles (17.6)
 - [ ] Four styles in `TileView`, Settings → Appearance with preview, persisted.

@@ -26,6 +26,9 @@ public enum Tile: Hashable, Comparable, Sendable, CaseIterable, Codable {
   case dragon(Dragon)
   case flower
   case joker
+  /// A spare tile some tables add (SPEC §17.5). It never becomes part of a hand and is not in
+  /// `allCases`; use `allWithBlank` where the blank is wanted.
+  case blank
 
   /// Order per SPEC §5.1: 1C…9C, 1B…9B, 1D…9D, N, E, W, S, R, G, 0, F, J.
   public static let allCases: [Tile] = {
@@ -39,6 +42,12 @@ public enum Tile: Hashable, Comparable, Sendable, CaseIterable, Codable {
     tiles.append(.joker)
     return tiles
   }()
+
+  /// The 152 standard tiles followed by the blank, for screens that offer it when the rule is on.
+  public static let allWithBlank: [Tile] = allCases + [.blank]
+
+  /// The most blanks any rule book may add (the choices are 2, 4 or 6).
+  public static let maxBlanks = 6
 
   /// Position of the tile in `allCases`; used for sorting and the keyboard.
   public var sortIndex: Int {
@@ -66,6 +75,7 @@ public enum Tile: Hashable, Comparable, Sendable, CaseIterable, Codable {
       }
     case .flower: return 34
     case .joker: return 35
+    case .blank: return 36
     }
   }
 
@@ -91,6 +101,10 @@ public enum Tile: Hashable, Comparable, Sendable, CaseIterable, Codable {
       default: return nil
       }
     case 2:
+      if code == "BL" {
+        self = .blank
+        return
+      }
       guard let value = chars[0].wholeNumberValue, (1...9).contains(value),
         chars[0].isASCII,
         let suit = Suit(rawValue: String(chars[1]))
@@ -109,13 +123,16 @@ public enum Tile: Hashable, Comparable, Sendable, CaseIterable, Codable {
     case .dragon(let dragon): return dragon.rawValue
     case .flower: return "F"
     case .joker: return "J"
+    case .blank: return "BL"
     }
   }
 
-  /// Physical copies in a set: 4 of each suited/honour tile, 8 flowers, 8 jokers.
+  /// Physical copies in a set: 4 of each suited/honour tile, 8 flowers, 8 jokers. A blank reports the
+  /// most a rule book allows (6); the rule's own count caps it where it is used.
   public var copies: Int {
     switch self {
     case .flower, .joker: return 8
+    case .blank: return Tile.maxBlanks
     default: return 4
     }
   }
@@ -143,6 +160,7 @@ public enum Tile: Hashable, Comparable, Sendable, CaseIterable, Codable {
       }
     case .flower: return "Flower"
     case .joker: return "Joker"
+    case .blank: return "Blank"
     }
   }
 

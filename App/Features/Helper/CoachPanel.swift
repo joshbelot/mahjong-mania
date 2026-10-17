@@ -108,7 +108,8 @@ struct CoachPanel: View {
       if view.rack.count + exposedTiles < HelperRules.handSize {
         hint("Discard suggestions need your full 14 tiles: 13 plus the one you just drew.")
       } else if gate.showsSuggestions(revealed: revealed) {
-        let suggestions = advisor.discards(analyzer, view: view, seen: seen, danger: danger)
+        let suggestions = advisor.discards(
+          analyzer, view: view, seen: seen, danger: danger, blanks: helper.blankPolicy)
         if suggestions.isEmpty {
           hint("There is nothing sensible to discard yet.")
         } else {
@@ -123,6 +124,7 @@ struct CoachPanel: View {
       } else {
         revealButton("Suggest a discard")
       }
+      blankSwapAdvice
       if gate.offersCallCheck {
         Button(action: onCallCheck) {
           Label("Can I call it?", systemImage: "hand.raised")
@@ -131,6 +133,33 @@ struct CoachPanel: View {
         .buttonStyle(PrimaryButton(.secondary, size: .large))
         .accessibilityHint("Pick the tile someone just discarded")
         .accessibilityIdentifier("helper.call")
+      }
+    }
+  }
+
+  /// Coach, holding a blank: tiles already thrown that a blank could be swapped for to get closer.
+  @ViewBuilder
+  private var blankSwapAdvice: some View {
+    if gate.level == .coach, let policy = helper.blankPolicy, view.rack.contains(.blank) {
+      let swaps = advisor.blankSwaps(analyzer, view: view, seen: seen, policy: policy)
+      if !swaps.isEmpty {
+        VStack(alignment: .leading, spacing: Spacing.sm) {
+          Text("Your blank")
+            .font(Typography.small.weight(.semibold))
+            .foregroundStyle(theme.textMuted)
+          ForEach(Array(swaps.enumerated()), id: \.offset) { entry in
+            HStack(spacing: Spacing.md) {
+              TileView(tile: entry.element.tile, size: .small)
+              Text(entry.element.text)
+                .font(Typography.small)
+                .foregroundStyle(theme.text)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(entry.element.text)
+            .accessibilityIdentifier("blank.swap.\(entry.offset)")
+          }
+        }
       }
     }
   }

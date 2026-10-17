@@ -28,8 +28,9 @@ public final class Analyzer: Sendable {
 
   /// Every line with its best target, ranked: possible first → lower distance → fewer plain deficits →
   /// more live outs → higher points → card order.
-  public func analyze(_ view: PlayerView, seen: TileCounts = [:]) -> [LineResult] {
-    let context = EvalContext(view: view, live: Engine.liveCounts(view, seen: seen))
+  public func analyze(_ view: PlayerView, seen: TileCounts = [:], blanks: BlankPolicy? = nil) -> [LineResult] {
+    let context = EvalContext(
+      view: view, live: Engine.liveCounts(view, seen: seen), seen: seen, blanks: blanks)
     return analyze(context: context)
   }
 
