@@ -1,4 +1,5 @@
 import MahjongCore
+import PhotosUI
 import SwiftUI
 
 /// Modal: paste a card file, check it line by line, import the valid hands (SPEC §11.7).
@@ -7,6 +8,8 @@ struct ImportView: View {
     case newCard, existing
   }
 
+  /// Card file text to start with (a card that arrived by QR code); it is checked straight away.
+  var initialText: String?
   /// Called with the ID of the card that received the hands, just before the sheet closes.
   var onImported: (String) -> Void = { _ in }
 
@@ -20,6 +23,10 @@ struct ImportView: View {
   @State private var existingID: String?
   @State private var report: ImportReport?
   @FocusState private var textFocused: Bool
+  @State private var photoItem: PhotosPickerItem?
+  @State private var photoMessage: String?
+  /// The next change of `text` came from a QR code, so check it instead of clearing the result.
+  @State private var checkAfterChange = false
 
   var body: some View {
     NavigationStack {
@@ -52,7 +59,22 @@ struct ImportView: View {
             .accessibilityIdentifier("import.keyboardDone")
         }
       }
-      .onChange(of: text) { _, _ in report = nil }
+      .onChange(of: text) { _, _ in
+        if checkAfterChange {
+          checkAfterChange = false
+          check()
+        } else {
+          report = nil
+        }
+      }
+      .onChange(of: photoItem) { _, item in
+        guard let item else { return }
+        Task { await readPicture(item) }
+      }
+      .onAppear {
+        // A card from a QR code arrives pre-filled and checked, with "New card" chosen.
+        if let initialText, text.isEmpty { load(initialText) }
+      }
     }
     .presentationDetents([.large])
     .presentationDragIndicator(.visible)
@@ -78,6 +100,20 @@ struct ImportView: View {
           .frame(minWidth: 44, minHeight: 44)
           .disabled(text.isEmpty)
           .accessibilityIdentifier("import.clear")
+      }
+      PhotosPicker(selection: $photoItem, matching: .images) {
+        Label("From a QR code picture", systemImage: "qrcode.viewfinder")
+          .font(Typography.body.weight(.semibold))
+          .frame(minHeight: 44)
+      }
+      .tint(theme.primary)
+      .accessibilityHint("Pick a screenshot or photo of a Mahjong Mania card QR code")
+      .accessibilityIdentifier("import.photo")
+      if let photoMessage {
+        Text(photoMessage)
+          .font(Typography.small)
+          .foregroundStyle(theme.danger)
+          .accessibilityIdentifier("import.photoMessage")
       }
       TextEditor(text: $text)
         .font(.system(.footnote, design: .monospaced))
@@ -195,6 +231,45 @@ struct ImportView: View {
   }
 
   // MARK: Actions
+
+  /// Looks for a Mahjong Mania card QR code in the chosen picture and, if there is one, fills in and
+  /// checks the card. Nothing leaves the phone; the picker needs no permission.
+  private func readPicture(_ item: PhotosPickerItem) async {
+    defer { photoItem = nil }
+    photoMessage = nil
+    guard let data = try? await item.loadTransferable(type: Data.self), let image = UIImage(data: data) else {
+      photoMessage = "That picture couldn't be opened."
+      return
+    }
+    let codes = CardQRCode.detect(in: image)
+    guard !codes.isEmpty else {
+      photoMessage = "No QR code was found in that picture."
+      return
+    }
+    var failure: CardQRCode.DecodeError?
+    for code in codes {
+      do {
+        load(try CardQRCode.cardText(from: code))
+        return
+      } catch let error as CardQRCode.DecodeError {
+        failure = error
+      } catch {
+        failure = .notACard
+      }
+    }
+    photoMessage = (failure ?? .notACard).message
+  }
+
+  /// Fills in card text that came from a QR code, picks "New card" and checks it.
+  private func load(_ cardText: String) {
+    destination = .newCard
+    if text == cardText {
+      check()
+    } else {
+      checkAfterChange = true
+      text = cardText
+    }
+  }
 
   private func check() {
     textFocused = false

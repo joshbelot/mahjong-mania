@@ -24,6 +24,7 @@ extension LaunchOptions {
 struct MahjongManiaApp: App {
   @State private var stores = AppStores.live()
   @State private var tips = TipCenter()
+  @State private var links = IncomingLinks()
   @Environment(\.scenePhase) private var scenePhase
 
   var body: some Scene {
@@ -37,6 +38,7 @@ struct MahjongManiaApp: App {
       }
         .environment(\.theme, Theme.standard)
         .environment(tips)
+        .environment(links)
         .environment(stores.settings)
         .environment(stores.players)
         .environment(stores.sessions)
@@ -48,6 +50,10 @@ struct MahjongManiaApp: App {
         .preferredColorScheme(
           LaunchOptions.forcedColorScheme ?? stores.settings.settings.theme.colorScheme
         )
+        .onOpenURL { links.receive($0) }
+        .task {
+          if let url = LaunchOptions.openURL { links.receive(url) }
+        }
         .onChange(of: scenePhase) { _, phase in
           if phase != .active { stores.flush() }
         }

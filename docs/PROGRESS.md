@@ -29,8 +29,8 @@ Plan: `docs/SPEC.md` §17. v1.0 build 2 is on TestFlight (2026-10-13). One PR pe
 | 15 Rule book core (MahjongCore) | merged | [#29](https://github.com/joshbelot/mahjong-mania/pull/29) |
 | 16 House rules screens and Learn | merged | [#30](https://github.com/joshbelot/mahjong-mania/pull/30) |
 | 17 Blanks | merged | [#31](https://github.com/joshbelot/mahjong-mania/pull/31) |
-| 18 Tile styles | PR | [#32](https://github.com/joshbelot/mahjong-mania/pull/32) |
-| 19 QR card sharing | not started | |
+| 18 Tile styles | merged | [#32](https://github.com/joshbelot/mahjong-mania/pull/32) |
+| 19 QR card sharing | PR | [#33](https://github.com/joshbelot/mahjong-mania/pull/33) |
 | 20 1.1 QA and TestFlight upload | not started | |
 
 ### Open questions for the owner (1.1)

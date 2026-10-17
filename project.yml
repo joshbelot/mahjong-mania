@@ -40,6 +40,9 @@ targets:
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         UIRequiresFullScreen: true          # portrait only: App Store validation otherwise demands all four orientations for iPad multitasking
         UIApplicationSceneManifest: { UIApplicationSupportsMultipleScenes: false }
+        CFBundleURLTypes:                   # mahjongmania://card?... opens a shared card (SPEC §17.7); needs no permission
+          - CFBundleURLName: com.joshbelot.mahjongmania
+            CFBundleURLSchemes: [mahjongmania]
   MahjongManiaTests:
     type: bundle.unit-test
     platform: iOS

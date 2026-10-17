@@ -1488,8 +1488,8 @@ Same rules as §13 and AGENTS.md (local `tools/test.sh` is the gate; no CI). Eac
 - [x] UI test screenshots of every style in light and dark.
 
 #### Phase 19: QR card sharing (17.7)
-- [ ] QR sheet, image share, URL scheme, `.onOpenURL` import, import from a picture.
-- [ ] AppTests for the codec and detection; UI tests for the sheet and URL import.
+- [x] QR sheet, image share, URL scheme, `.onOpenURL` import, import from a picture.
+- [x] AppTests for the codec and detection; UI tests for the sheet and URL import.
 
 #### Phase 20: 1.1 QA and release (17.8)
 - [ ] Simulator QA: the §13 checklist plus every 1.1 feature, light/dark/AX5.
