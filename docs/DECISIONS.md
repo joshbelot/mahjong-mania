@@ -152,3 +152,12 @@ The spec title "<Right>'s exposed sets" gives "Across's exposed sets", which rea
 - The Blank key sits on its own row under the Joker row with a plain caption ("a spare tile with nothing on it"): a tenth key on the honours row would have shrunk the whole picker, and an empty tile with no words is not self-explanatory.
 - Swap advice (Coach, holding a blank) lists up to 3 thrown tiles whose swap would bring the best line closer, in the Discard panel.
 - `-UITestBlanks <n>` launch argument (with `-UITestResetData`) switches the rule on for UI tests.
+
+## 2026-10-16, §17.6 (Phase 18): tile styles
+
+- `TileView` reads the style from the environment (`\.tileStyle`, set once at the app root from `settings.tileStyle`); the Settings preview rows set it locally so every option shows itself.
+- Traditional dots and bams also carry a tiny index numeral in the corner (real sets do not), so the count can be read at the small size; pips are nudged away from it. Winds show 東 南 西 北 with a small Latin letter.
+- Large print spells the suit out (CRAK, BAM, DOT) and labels dragons, flower and joker with a word under a big letter or numeral.
+- Modern puts number tiles on a suit-coloured face (red, green, blue) with a white numeral and a square (Cracks), triangle (Bams) or circle (Dots); honours reuse the Classic art on a neutral face. Blank is an empty ivory face in every style.
+- The style screen lists the four styles as large selectable cards, each with its own preview row (Crack 1, Bam 5, Dot 9, East, Red Dragon, Soap, Flower, Joker, Blank when the blanks rule is on), in Settings under Appearance and feel.
+- `-UITestTileStyle <style>` launch argument (with `-UITestResetData`) for UI tests and simulator checks.

@@ -39,6 +39,29 @@ enum TileSort: String, Codable, CaseIterable, Sendable {
   }
 }
 
+/// How tiles are drawn everywhere in the app (SPEC §17.6).
+enum TileStyle: String, Codable, CaseIterable, Sendable {
+  case classic, traditional, largePrint, modern
+
+  var title: String {
+    switch self {
+    case .classic: return "Classic"
+    case .traditional: return "Traditional"
+    case .largePrint: return "Large print"
+    case .modern: return "Modern"
+    }
+  }
+
+  var summary: String {
+    switch self {
+    case .classic: return "Clear numbers on ivory tiles. The way the app has always looked."
+    case .traditional: return "Like a real set: Chinese numerals, pips and sticks, wind and dragon characters."
+    case .largePrint: return "Big, bold numbers and letters with the suit spelled out. Easiest to read."
+    case .modern: return "Flat colour: red, green and blue faces for the suits, with a simple shape for each."
+    }
+  }
+}
+
 struct BestStreaks: Codable, Hashable, Sendable {
   var pickAHand = 0
   var charleston = 0
@@ -54,6 +77,7 @@ struct AppSettings: VersionedDocument, Equatable {
   var haptics = true
   var keepAwake = true
   var tileSort: TileSort = .suit
+  var tileStyle: TileStyle = .classic
   var defaultRules: RuleSet = .standard
   var savedRules: [RuleSet] = []
   var onboardingDone = false
@@ -72,6 +96,7 @@ struct AppSettings: VersionedDocument, Equatable {
     haptics = try c.decodeIfPresent(Bool.self, forKey: .haptics) ?? true
     keepAwake = try c.decodeIfPresent(Bool.self, forKey: .keepAwake) ?? true
     tileSort = try c.decodeIfPresent(TileSort.self, forKey: .tileSort) ?? .suit
+    tileStyle = try c.decodeIfPresent(TileStyle.self, forKey: .tileStyle) ?? .classic
     defaultRules = try c.decodeIfPresent(RuleSet.self, forKey: .defaultRules) ?? .standard
     savedRules = try c.decodeIfPresent([RuleSet].self, forKey: .savedRules) ?? []
     onboardingDone = try c.decodeIfPresent(Bool.self, forKey: .onboardingDone) ?? false

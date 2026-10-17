@@ -75,6 +75,7 @@ enum TileState: Sendable, CaseIterable {
 /// One mahjong tile drawn with SwiftUI shapes and text. Wrap in a `Button` where it is tappable.
 struct TileView: View {
   @Environment(\.theme) private var theme
+  @Environment(\.tileStyle) private var style
   let tile: Tile
   var size: TileSize = .medium
   var state: TileState = .normal
@@ -93,15 +94,15 @@ struct TileView: View {
           .fill(theme.tileFace.opacity(0.14))
         RoundedRectangle(cornerRadius: size.radius)
           .strokeBorder(theme.textFaint, style: StrokeStyle(lineWidth: 1.5, dash: [4, 3]))
-        TileFace(tile: tile, size: size)
+        StyledTileFace(tile: tile, size: size, style: style)
           .frame(width: size.width, height: faceHeight)
           .opacity(0.5)
       } else {
         RoundedRectangle(cornerRadius: size.radius).fill(theme.tileEdge)
         RoundedRectangle(cornerRadius: size.radius)
-          .fill(theme.tileFace)
+          .fill(style.faceColor(for: tile, theme: theme))
           .frame(width: size.width, height: faceHeight)
-          .overlay(TileFace(tile: tile, size: size))
+          .overlay(StyledTileFace(tile: tile, size: size, style: style))
           .overlay(
             RoundedRectangle(cornerRadius: size.radius)
               .strokeBorder(theme.tileEdge.opacity(0.35), lineWidth: 0.5)
@@ -126,8 +127,8 @@ struct TileView: View {
   }
 }
 
-/// The printed face of a tile, centred in the ivory area.
-private struct TileFace: View {
+/// The Classic face: the printed face of a tile, centred in the ivory area.
+struct ClassicTileFace: View {
   @Environment(\.theme) private var theme
   let tile: Tile
   let size: TileSize

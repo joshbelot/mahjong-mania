@@ -91,6 +91,9 @@ struct Theme: Sendable {
   // Ink for winds and other dark glyphs on the ivory tile face (does not adapt, like the face itself).
   let tileInk = Color.fixed(0x1E2420)
   let flower = Color.fixed(0x8A4FA3)
+  // Modern tile style: honours sit on a neutral face, numbers on a suit-coloured one.
+  let modernNeutral = Color.fixed(0xE8E4D9)
+  let modernOnColor = Color.fixed(0xFFFFFF)
   let joker = Color.fixed(0xB8862A)
 
   static let standard = Theme()

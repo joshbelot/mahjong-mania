@@ -93,6 +93,12 @@ struct SettingsView: View {
         ForEach(AppTheme.allCases, id: \.self) { Text($0.title).tag($0) }
       }
       .accessibilityIdentifier("settings.theme")
+      NavigationLink {
+        TileStyleView()
+      } label: {
+        LabeledContent("Tile style", value: store.settings.tileStyle.title)
+      }
+      .accessibilityIdentifier("settings.tileStyle")
       Toggle("Haptics", isOn: store.binding(\.haptics))
         .accessibilityIdentifier("settings.haptics")
       Toggle("Keep screen awake during games", isOn: store.binding(\.keepAwake))
