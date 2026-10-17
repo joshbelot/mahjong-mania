@@ -1494,4 +1494,4 @@ Same rules as §13 and AGENTS.md (local `tools/test.sh` is the gate; no CI). Eac
 #### Phase 20: 1.1 QA and release (17.8)
 - [x] Simulator QA: the §13 checklist plus every 1.1 feature, light/dark/AX5.
 - [x] Version 1.1, What to Test, handoff notes.
-- [ ] `--dry-run` passes, then the real upload; the build shows as processed in App Store Connect.
+- [x] `--dry-run` passes, then the real upload; the build shows as processed in App Store Connect.
