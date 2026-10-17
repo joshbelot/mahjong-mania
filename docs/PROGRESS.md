@@ -33,6 +33,13 @@ Plan: `docs/SPEC.md` §17. v1.0 build 2 is on TestFlight (2026-10-13). One PR pe
 | 19 QR card sharing | merged | [#33](https://github.com/joshbelot/mahjong-mania/pull/33) |
 | 20 1.1 QA and TestFlight upload | PR | [#34](https://github.com/joshbelot/mahjong-mania/pull/34) |
 
+### 1.1 QA pass (2026-10-16, iPhone 17 Pro and iPhone Air simulators, iOS 26.5)
+
+- **Every phase** was built, driven and looked at in the simulator in light, dark and the largest accessibility text size before it merged (screens are listed in each PR). `tools/test.sh` passed on every phase branch (core 208 tests, app unit 270, app UI 60 by Phase 19; the UI suite takes about 35 minutes).
+- **SPEC §13 checklist, simulator half:** covered by the UI suite on the final code: onboarding to the Game tab and a scripted game night with discard, self-pick, jokerless, wall game, adjustment, edit, undo, relaunch and settle-up (GameNightTests); Helper Charleston (jokers never passed), Playing and call check, Scout (HelperTests); Cards duplicate, edit, import and share (CardsTests); every Learn topic and both drills (LearnOnboardingTests); Settings and reset (SettingsTests); large text (LargeTextTests); dark mode in all of them. No network code exists, so airplane mode cannot change anything.
+- **1.1 features:** the new tests listed under each phase's PR, plus a look at each new screen. The QA pass found one wording bug (the rule text said "pay the hand's value the hand's points" for a single choice); fixed in the release PR with a test over every choice of every rule.
+- **Not verifiable here, owner steps (boxes left open):** VoiceOver by hand on the new screens, haptics, scanning a card's QR code with the real iPhone Camera and seeing iOS offer to open the app, real-device speed, and installing the TestFlight build.
+
 ### Open questions for the owner (1.1)
 
 Each of these was a product judgement the spec did not settle. The choice made is the one most consistent with the rest of the app; the owner can change any of them. Details are in `docs/DECISIONS.md`.
