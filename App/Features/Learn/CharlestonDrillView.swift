@@ -19,6 +19,7 @@ private struct ShakeEffect: GeometryEffect {
 struct CharlestonDrillView: View {
   @Environment(\.theme) private var theme
   @Environment(SettingsStore.self) private var settings
+  @Environment(PracticeStore.self) private var practice
   @Environment(CardsStore.self) private var cards
 
   @State private var drill = CharlestonDrill(seed: DrillSeed.initial())
@@ -38,7 +39,7 @@ struct CharlestonDrillView: View {
     ScreenContainer {
       VStack(alignment: .leading, spacing: Spacing.lg) {
         DrillStatusBar(
-          seed: drill.seed, streak: streak, best: settings.settings.bestStreaks.charleston)
+          seed: drill.seed, streak: streak, best: practice.progress.freePlay.charlestonStreakBest)
         if let outcome {
           revealed(outcome)
         } else {
@@ -190,7 +191,7 @@ struct CharlestonDrillView: View {
     withAnimation(.smooth(duration: 0.2)) { outcome = result }
     if countsForStreak {
       streak = CharlestonDrill.updatedStreak(streak, score: result.score)
-      settings.setBestStreak(charleston: streak)
+      practice.setBestStreak(charleston: streak)
       countsForStreak = false
     }
   }
@@ -216,6 +217,7 @@ struct CharlestonDrillView: View {
   let stores = AppStores.inMemory()
   return NavigationStack { CharlestonDrillView() }
     .environment(stores.settings)
+    .environment(stores.practice)
     .environment(stores.cards)
     .preferredColorScheme(.light)
 }
@@ -224,6 +226,7 @@ struct CharlestonDrillView: View {
   let stores = AppStores.inMemory()
   return NavigationStack { CharlestonDrillView() }
     .environment(stores.settings)
+    .environment(stores.practice)
     .environment(stores.cards)
     .preferredColorScheme(.dark)
 }

@@ -2,7 +2,7 @@ import SwiftUI
 
 /// The four root tabs of `RootView`.
 enum AppTab: Hashable, Sendable {
-  case game, helper, cards, learn
+  case game, helper, practice, cards, learn
 }
 
 /// Lets a deep screen switch the selected tab, e.g. "Practise this hand" opening the Helper.

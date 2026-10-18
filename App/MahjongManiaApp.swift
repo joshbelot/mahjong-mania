@@ -31,7 +31,7 @@ struct MahjongManiaApp: App {
     WindowGroup {
       Group {
         if stores.settings.settings.onboardingDone {
-          RootView()
+          RootView(startTab: stores.practice.startTab)
         } else {
           OnboardingView()
         }
@@ -44,6 +44,7 @@ struct MahjongManiaApp: App {
         .environment(stores.sessions)
         .environment(stores.cards)
         .environment(stores.helper)
+        .environment(stores.practice)
         .environment(stores)
         .environment(\.hapticsEnabled, stores.settings.settings.haptics)
         .environment(\.tileStyle, stores.settings.settings.tileStyle)

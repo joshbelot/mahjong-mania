@@ -84,6 +84,21 @@ public struct Exercise: Sendable {
 
   public var line: CardLine? { lines.first }
 
+  /// For multiple-choice exercises: is choice `index` a right answer? Nil when the exercise isn't one
+  /// (selection exercises). Used by UI tests to find the right button; the app never shows it.
+  public func isChoiceCorrect(_ index: Int) -> Bool? {
+    switch key {
+    case .choices(let correct, _, _): return correct.contains(index)
+    default: return nil
+    }
+  }
+
+  /// `keepOrPass`: should the `queueIndex`-th tile be kept? Nil for other exercises.
+  public func shouldKeep(queueIndex: Int) -> Bool? {
+    if case .keepOrPass(let keeps, _) = key, keeps.indices.contains(queueIndex) { return keeps[queueIndex] }
+    return nil
+  }
+
   /// Jokers may never be passed.
   public func canSelect(position: Int) -> Bool {
     tiles.indices.contains(position) && tiles[position] != .joker

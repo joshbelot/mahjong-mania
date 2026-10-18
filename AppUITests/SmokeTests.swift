@@ -22,7 +22,7 @@ final class SmokeTests: XCTestCase {
   private func visitTabs(dark: Bool) {
     let app = launch(dark: dark)
     let scheme = dark ? "dark" : "light"
-    for tab in ["Game", "Helper", "Cards", "Learn"] {
+    for tab in ["Game", "Helper", "Practice", "Cards", "Learn"] {
       let button = app.tabBars.buttons[tab]
       XCTAssertTrue(button.waitForExistence(timeout: 10), "Missing tab \(tab)")
       button.tap()

@@ -72,6 +72,20 @@ final class LearnOnboardingTests: XCTestCase {
     XCTAssertTrue(app.navigationBars["Learn"].waitForExistence(timeout: 5))
   }
 
+  private func openPractice(_ app: XCUIApplication) {
+    let tab = app.tabBars.buttons["Practice"]
+    XCTAssertTrue(tab.waitForExistence(timeout: 10), "Missing Practice tab")
+    tab.tap()
+    XCTAssertTrue(app.navigationBars["Practice"].waitForExistence(timeout: 5))
+  }
+
+  private func backToPractice(_ app: XCUIApplication) {
+    let back = app.navigationBars.buttons["Practice"].firstMatch
+    XCTAssertTrue(back.waitForExistence(timeout: 5), "Missing back button")
+    back.tap()
+    XCTAssertTrue(app.navigationBars["Practice"].waitForExistence(timeout: 5))
+  }
+
   private func backToLearn(_ app: XCUIApplication) {
     let back = app.navigationBars.buttons["Learn"].firstMatch
     XCTAssertTrue(back.waitForExistence(timeout: 5), "Missing back button")
@@ -88,12 +102,16 @@ final class LearnOnboardingTests: XCTestCase {
     attach("onboarding-1-welcome-light")
 
     app.buttons["onboarding.next"].tap()
+    tapWhenHittable(app, "placement.regular")
+    attach("onboarding-2-placement-light")
+
+    app.buttons["onboarding.next"].tap()
     tapWhenHittable(app, "assist.coach")
-    attach("onboarding-2-assist-light")
+    attach("onboarding-3-assist-light")
 
     app.buttons["onboarding.next"].tap()
     tapWhenHittable(app, "card.practice")
-    attach("onboarding-3-card-light")
+    attach("onboarding-4-card-light")
 
     app.buttons["onboarding.done"].tap()
     XCTAssertTrue(app.tabBars.buttons["Game"].waitForExistence(timeout: 10), "Did not reach the app")
@@ -119,11 +137,14 @@ final class LearnOnboardingTests: XCTestCase {
     XCTAssertTrue(app.buttons["onboarding.next"].waitForExistence(timeout: 10))
     attach("onboarding-1-welcome-dark")
     app.buttons["onboarding.next"].tap()
+    tapWhenHittable(app, "placement.basics")
+    attach("onboarding-2-placement-dark")
+    app.buttons["onboarding.next"].tap()
     tapWhenHittable(app, "assist.peek")
-    attach("onboarding-2-assist-dark")
+    attach("onboarding-3-assist-dark")
     app.buttons["onboarding.next"].tap()
     tapWhenHittable(app, "card.own")
-    attach("onboarding-3-card-dark")
+    attach("onboarding-4-card-dark")
     app.buttons["onboarding.skip"].tap()
     XCTAssertTrue(app.tabBars.buttons["Game"].waitForExistence(timeout: 10), "Skip did not finish")
   }
@@ -133,11 +154,14 @@ final class LearnOnboardingTests: XCTestCase {
     XCTAssertTrue(app.buttons["onboarding.next"].waitForExistence(timeout: 10))
     attach("onboarding-1-welcome-ax-light")
     app.buttons["onboarding.next"].tap()
+    tapWhenHittable(app, "placement.new")
+    attach("onboarding-2-placement-ax-light")
+    app.buttons["onboarding.next"].tap()
     tapWhenHittable(app, "assist.coach")
-    attach("onboarding-2-assist-ax-light")
+    attach("onboarding-3-assist-ax-light")
     app.buttons["onboarding.next"].tap()
     tapWhenHittable(app, "card.later")
-    attach("onboarding-3-card-ax-light")
+    attach("onboarding-4-card-ax-light")
   }
 
   // MARK: Learn
@@ -163,7 +187,8 @@ final class LearnOnboardingTests: XCTestCase {
     app.swipeUp()
     attach("axxl-topic-notation-2")
     backToLearn(app)
-    tapElement(app, "learn.drill.charleston")
+    openPractice(app)
+    tapElement(app, "practice.free.charleston")
     XCTAssertTrue(element(app, "drill.seed").waitForExistence(timeout: 10))
     attach("axxl-charleston")
     tapElement(app, "charleston.tile.12")
@@ -199,12 +224,16 @@ final class LearnOnboardingTests: XCTestCase {
     attach("learn-glossary-\(tag)")
     backToLearn(app)
 
+    // The drills live in Practice → Free play; Learn points there.
+    tapElement(app, "learn.practice")
+    XCTAssertTrue(app.navigationBars["Practice"].waitForExistence(timeout: 5), "Learn did not open Practice")
+    attach("learn-to-practice-\(tag)")
     pickAHandTour(app, tag: tag)
     charlestonTour(app, tag: tag)
   }
 
   private func pickAHandTour(_ app: XCUIApplication, tag: String) {
-    tapElement(app, "learn.drill.pick")
+    tapElement(app, "practice.free.pick")
     let seed = element(app, "drill.seed")
     XCTAssertTrue(seed.waitForExistence(timeout: 10), "Pick-a-Hand did not open")
     let seedText = seed.label
@@ -227,11 +256,11 @@ final class LearnOnboardingTests: XCTestCase {
     tapElement(app, "drill.next")
     XCTAssertTrue(element(app, "pick.line.0").waitForExistence(timeout: 5))
     XCTAssertNotEqual(element(app, "drill.seed").label, seedText, "Next deal kept the same deal")
-    backToLearn(app)
+    backToPractice(app)
   }
 
   private func charlestonTour(_ app: XCUIApplication, tag: String) {
-    tapElement(app, "learn.drill.charleston")
+    tapElement(app, "practice.free.charleston")
     let seed = element(app, "drill.seed")
     XCTAssertTrue(seed.waitForExistence(timeout: 10), "Charleston Pass did not open")
     let seedText = seed.label
@@ -260,6 +289,6 @@ final class LearnOnboardingTests: XCTestCase {
     XCTAssertTrue(element(app, "charleston.submit").waitForExistence(timeout: 5))
     XCTAssertEqual(element(app, "drill.seed").label, seedText, "Try again changed the deal")
     XCTAssertTrue(element(app, "charleston.count").label.contains("0 of 3"))
-    backToLearn(app)
+    backToPractice(app)
   }
 }

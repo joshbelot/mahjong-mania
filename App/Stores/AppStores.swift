@@ -11,6 +11,7 @@ final class AppStores {
   let sessions: SessionsStore
   let cards: CardsStore
   let helper: HelperStore
+  let practice: PracticeStore
 
   /// `resetFirst` wipes the directory before loading (the `-UITestResetData` launch flag). A reset skips
   /// onboarding unless `showOnboarding` is set (the `-UITestShowOnboarding` launch flag).
@@ -25,6 +26,11 @@ final class AppStores {
     sessions = SessionsStore(directory: directory, persistDelay: persistDelay)
     cards = CardsStore(directory: directory, persistDelay: persistDelay)
     helper = HelperStore(directory: directory, persistDelay: persistDelay)
+    practice = PracticeStore(directory: directory, persistDelay: persistDelay, clock: LaunchOptions.practiceClock())
+    if !practice.loadedFromFile {
+      practice.importBestStreaks(settings.settings.bestStreaks)
+      settings.update { $0.bestStreaks = BestStreaks() }
+    }
     if resetFirst && !showOnboarding { settings.update { $0.onboardingDone = true } }
   }
 
@@ -40,6 +46,7 @@ final class AppStores {
       resetFirst: LaunchOptions.resetData || LaunchOptions.showOnboarding,
       showOnboarding: LaunchOptions.showOnboarding)
     stores.applyHelperLaunchOptions()
+    if let placement = LaunchOptions.placement() { stores.practice.applyPlacement(placement) }
     return stores
   }
 
@@ -57,6 +64,7 @@ final class AppStores {
     sessions.flush()
     cards.flush()
     helper.flush()
+    practice.flush()
   }
 
   /// Settings → Reset all data: deletes every store file and returns to a first-launch state.
@@ -66,6 +74,7 @@ final class AppStores {
     sessions.reset()
     cards.reset()
     helper.reset()
+    practice.reset()
     try? FileManager.default.removeItem(at: directory)
   }
 }

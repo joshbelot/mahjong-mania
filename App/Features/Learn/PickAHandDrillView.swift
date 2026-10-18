@@ -5,6 +5,7 @@ import SwiftUI
 struct PickAHandDrillView: View {
   @Environment(\.theme) private var theme
   @Environment(SettingsStore.self) private var settings
+  @Environment(PracticeStore.self) private var practice
   @Environment(CardsStore.self) private var cards
 
   @State private var drill = PickAHandDrill(seed: DrillSeed.initial())
@@ -21,7 +22,7 @@ struct PickAHandDrillView: View {
     ScreenContainer {
       VStack(alignment: .leading, spacing: Spacing.lg) {
         DrillStatusBar(
-          seed: drill.seed, streak: streak, best: settings.settings.bestStreaks.pickAHand)
+          seed: drill.seed, streak: streak, best: practice.progress.freePlay.pickStreakBest)
         DrillHandView(tiles: drill.hand)
         if let outcome {
           revealed(outcome)
@@ -122,7 +123,7 @@ struct PickAHandDrillView: View {
     withAnimation(.smooth(duration: 0.2)) { outcome = result }
     if countsForStreak {
       streak = PickAHandDrill.updatedStreak(streak, correct: result.isCorrect)
-      settings.setBestStreak(pickAHand: streak)
+      practice.setBestStreak(pickAHand: streak)
       countsForStreak = false
     }
   }
@@ -143,6 +144,7 @@ struct PickAHandDrillView: View {
   let stores = AppStores.inMemory()
   return NavigationStack { PickAHandDrillView() }
     .environment(stores.settings)
+    .environment(stores.practice)
     .environment(stores.cards)
     .preferredColorScheme(.light)
 }
@@ -151,6 +153,7 @@ struct PickAHandDrillView: View {
   let stores = AppStores.inMemory()
   return NavigationStack { PickAHandDrillView() }
     .environment(stores.settings)
+    .environment(stores.practice)
     .environment(stores.cards)
     .preferredColorScheme(.dark)
 }
