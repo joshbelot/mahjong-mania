@@ -48,6 +48,7 @@ final class AppStores {
     stores.applyHelperLaunchOptions()
     if let placement = LaunchOptions.placement() { stores.practice.applyPlacement(placement) }
     stores.practice.applyLaunchOptions()
+    if LaunchOptions.speedNoTimer { stores.settings.update { $0.speedRoundNoTimer = true } }
     return stores
   }
 

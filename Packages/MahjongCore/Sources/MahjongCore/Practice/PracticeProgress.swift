@@ -400,6 +400,48 @@ public struct PracticeProgress: Codable, Equatable, Sendable {
 
   // MARK: Other activities
 
+  /// A question answered in free play: right first time earns 5 XP, a miss goes to the review queue, and
+  /// the answer counts toward the skill and badge counters. `queueMiss` is false for a deal on your own card,
+  /// which a later review (always on the Practice Card) could not rebuild. Free play is not a lesson, so it does not touch
+  /// the daily goal or streak.
+  public mutating func recordFreePlay(
+    _ record: AnswerRecord, day: LocalDay, queueMiss: Bool = true
+  ) -> (xp: Int, levelUp: Levels.Position?, newBadges: [BadgeID]) {
+    counters.note(record)
+    var gained = record.correct ? XP.freePlayRight : 0
+    if !record.correct && queueMiss { reviewQueue.recordMiss(record.exercise, today: day) }
+    let badges = awardBadges(on: day)
+    gained += badges.count * XP.badge
+    return (gained, addXP(gained), badges)
+  }
+
+  /// A "Review mistakes" session: answers pay as in a lesson, follow the spaced steps of the review queue
+  /// and count as one lesson toward the daily goal.
+  public mutating func applyFreeReview(_ records: [AnswerRecord], day: LocalDay, hour: Int = 12) -> PlayOutcome {
+    var outcome = PlayOutcome(node: nil)
+    outcome.accuracy = LessonScoring.firstTryAccuracy(records)
+    let combo = LessonScoring.combo(records)
+    outcome.bestCombo = combo.best
+    counters.bestCombo = max(counters.bestCombo, combo.best)
+    for record in records {
+      counters.note(record)
+      reviewQueue.recordReview(record.exercise, correct: record.correct, today: day)
+    }
+    var breakdown = XPBreakdown()
+    breakdown.answers = records.map(XP.forAnswer).reduce(0, +)
+    breakdown.combo = combo.bonus
+    breakdown.finished = records.isEmpty ? 0 : XP.lessonFinished
+    let activity = noteActivity(on: day, hour: hour)
+    outcome.streakEvents = activity.events
+    outcome.lessonsToday = activity.lessonsToday
+    outcome.goalJustMet = activity.goalJustMet
+    outcome.newBadges = awardBadges(on: day)
+    breakdown.badges = outcome.newBadges.count * XP.badge
+    outcome.xp = breakdown
+    outcome.levelUp = addXP(breakdown.total)
+    return outcome
+  }
+
   /// A finished Daily Deal; counts as one lesson toward the daily goal. Returns nil when today's scored
   /// attempt already exists (the replay is practice).
   public mutating func recordDailyDeal(

@@ -28,6 +28,11 @@ public struct LessonSpec: Hashable, Identifiable, Sendable {
   /// Number of questions (before any re-asked mistakes).
   public var count: Int
   public var parts: [LessonPart]
+
+  /// A play that is not a node of the path (Daily Deal, free play, review): no hints and no re-asks.
+  public static func custom(id: String, title: String, count: Int) -> LessonSpec {
+    LessonSpec(id: id, unit: 0, kind: .checkpoint, title: title, intro: "", count: count, parts: [])
+  }
 }
 
 public struct UnitSpec: Hashable, Identifiable, Sendable {

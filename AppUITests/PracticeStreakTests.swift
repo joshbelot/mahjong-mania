@@ -77,8 +77,8 @@ final class PracticeStreakTests: PracticeUITestCase {
     tap(app, "lesson.start")
     for _ in 0..<8 { answer(app, correct: true) }
     tap(app, "lesson.continue")
-    // Level, badge, goal met, then the choice.
-    for _ in 0..<3 {
+    // Level, badge, then the goal choice (which also says today's goal is done).
+    for _ in 0..<2 {
       XCTAssertTrue(element(app, "celebration.continue").waitForExistence(timeout: 5))
       tap(app, "celebration.continue")
     }

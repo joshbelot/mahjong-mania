@@ -29,6 +29,7 @@ final class LessonSession {
   let testOut: Bool
   let seed: UInt64
   @ObservationIgnored private let analyzer: Analyzer
+  @ObservationIgnored private let fixed: [Exercise]?
   @ObservationIgnored private var rng: SeededRandom
   @ObservationIgnored private let startedAt = Date()
 
@@ -37,6 +38,9 @@ final class LessonSession {
   private(set) var phase: Phase
   private(set) var exercise: Exercise?
   private(set) var records: [AnswerRecord] = []
+  /// The answers given, in order (the Daily Deal result reads them).
+  private(set) var answers: [Answer] = []
+  private(set) var grades: [Grade] = []
   private(set) var feedback: Feedback?
   private(set) var grade: Grade?
   private(set) var hint: Hint?
@@ -64,11 +68,28 @@ final class LessonSession {
     self.gold = gold
     self.testOut = testOut
     self.seed = seed
+    fixed = nil
     analyzer = Analyzer.cached(for: PracticeCard.card)
     rng = SeededRandom(seed: seed ^ 0x5E55)
     items = Curriculum.exercises(for: node, seed: seed, gold: gold, review: review).map { Item(id: $0, isReask: false) }
     phase = showIntro && !node.intro.isEmpty && node.kind == .lesson && !gold ? .intro : .answering
     if phase == .answering { loadCurrent() }
+  }
+
+  /// A play outside the path: the given questions, no hints, no re-asks. `exercises` are used as they are
+  /// (a Daily Deal); otherwise each of `ids` is made on `card`.
+  init(title: String, ids: [ExerciseID] = [], exercises: [Exercise]? = nil, card: Card = PracticeCard.card, seed: UInt64 = 1) {
+    let count = exercises?.count ?? ids.count
+    node = LessonSpec.custom(id: "custom", title: title, count: count)
+    gold = false
+    testOut = false
+    self.seed = seed
+    fixed = exercises
+    analyzer = Analyzer.cached(for: card)
+    rng = SeededRandom(seed: seed ^ 0x5E55)
+    items = (exercises?.map(\.id) ?? ids).map { Item(id: $0, isReask: false) }
+    phase = .answering
+    loadCurrent()
   }
 
   // MARK: Derived state
@@ -119,7 +140,11 @@ final class LessonSession {
       exercise = nil
       return
     }
-    exercise = Exercises.make(item.id, analyzer: analyzer)
+    if let fixed, fixed.indices.contains(index) {
+      exercise = fixed[index]
+    } else {
+      exercise = Exercises.make(item.id, analyzer: analyzer)
+    }
     resetAnswerState()
   }
 
@@ -199,6 +224,8 @@ final class LessonSession {
     let reask = currentItem?.isReask ?? false
     let record = AnswerRecord(exercise: exercise.id, correct: result.correct, usedHint: hintUsed, isReask: reask)
     records.append(record)
+    answers.append(answer)
+    grades.append(result)
 
     let before = LessonScoring.combo(records.dropLast())
     let after = LessonScoring.combo(records)

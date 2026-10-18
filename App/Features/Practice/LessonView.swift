@@ -8,6 +8,7 @@ struct LessonView: View {
   @Environment(PracticeStore.self) private var practice
   @State private var session: LessonSession
   @State private var outcome: PlayOutcome?
+  @State private var applied = false
   @State private var confirmQuit = false
   @State private var celebrations: [CelebrationItem] = []
   @State private var celebrationIndex = 0
@@ -15,11 +16,20 @@ struct LessonView: View {
   let onClose: () -> Void
   /// Starts another play of the same node (Play again / Try again).
   let onReplay: () -> Void
+  /// Plays that are not a path node (Daily Deal, review) record their own result and show their own end screen.
+  var applyResult: ((LessonSession) -> PlayOutcome?)?
+  var completion: ((LessonSession, PlayOutcome?, @escaping () -> Void) -> AnyView)?
 
-  init(session: LessonSession, onClose: @escaping () -> Void, onReplay: @escaping () -> Void) {
+  init(
+    session: LessonSession, onClose: @escaping () -> Void, onReplay: @escaping () -> Void = {},
+    applyResult: ((LessonSession) -> PlayOutcome?)? = nil,
+    completion: ((LessonSession, PlayOutcome?, @escaping () -> Void) -> AnyView)? = nil
+  ) {
     _session = State(initialValue: session)
     self.onClose = onClose
     self.onReplay = onReplay
+    self.applyResult = applyResult
+    self.completion = completion
   }
 
   var body: some View {
@@ -52,8 +62,13 @@ struct LessonView: View {
     }
     .hapticOnChange(trigger: session.answerCount) { _ in session.lastCorrect ? .success : .warning }
     .onChange(of: session.phase) { _, phase in
-      if phase == .finished, outcome == nil {
-        outcome = practice.apply(session.playResult(day: practice.today, hour: practice.hour))
+      if phase == .finished, !applied {
+        applied = true
+        if let applyResult {
+          outcome = applyResult(session)
+        } else {
+          outcome = practice.apply(session.playResult(day: practice.today, hour: practice.hour))
+        }
       }
     }
   }
@@ -63,7 +78,11 @@ struct LessonView: View {
   /// Shows a new level, badges and streak news, one screen at a time, and then does `action`.
   private func runCelebrations(then action: @escaping () -> Void) {
     var items = outcome.map(Celebrations.items(for:)) ?? []
-    if !practice.progress.goalChosen { items.append(.chooseGoal) }
+    if !practice.progress.goalChosen {
+      // The first time, the goal screen says the day's goal is done and asks for the real one: no separate "goal met".
+      items.removeAll { if case .goalMet = $0 { return true } else { return false } }
+      items.append(.chooseGoal)
+    }
     guard !items.isEmpty else { return action() }
     afterCelebrations = action
     celebrationIndex = 0
@@ -150,7 +169,9 @@ struct LessonView: View {
         .safeAreaInset(edge: .bottom, spacing: 0) { bottomBar }
       }
     case .finished:
-      if let outcome {
+      if let completion {
+        completion(session, outcome) { runCelebrations(then: onClose) }
+      } else if let outcome {
         CompletionView(
           session: session, outcome: outcome, onContinue: { runCelebrations(then: onClose) },
           onReplay: { runCelebrations(then: onReplay) })
@@ -233,6 +254,9 @@ struct ProgressBar: View {
 struct FeedbackBar: View {
   @Environment(\.theme) private var theme
   let feedback: LessonSession.Feedback
+  var continueTitle = "Continue"
+  var secondaryTitle: String?
+  var onSecondary: (() -> Void)?
   let onContinue: () -> Void
 
   var body: some View {
@@ -282,9 +306,14 @@ struct FeedbackBar: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
       }
-      Button("Continue", action: onContinue)
+      Button(continueTitle, action: onContinue)
         .buttonStyle(PrimaryButton(.primary, size: .large))
         .accessibilityIdentifier("lesson.continue")
+      if let secondaryTitle, let onSecondary {
+        Button(secondaryTitle, action: onSecondary)
+          .buttonStyle(PrimaryButton(.secondary, size: .large))
+          .accessibilityIdentifier("lesson.secondary")
+      }
     }
     .padding(Spacing.lg)
     .frame(maxWidth: .infinity, alignment: .leading)

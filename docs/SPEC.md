@@ -1723,10 +1723,10 @@ Same rules as §17.9 (local `tools/test.sh` is the gate; look at every changed s
 - [x] UI tests with injected day logs.
 
 #### Phase 26: Daily Deal, Speed Round, free play
-- [ ] Daily Deal with weekday difficulty, one scored attempt per day, share text, "Played today" countdown.
-- [ ] Speed Round (+ "No timer" option) with personal best.
-- [ ] Free play: Pick-a-Hand and Charleston on the Practice or active card at three difficulties; Review mistakes.
-- [ ] UI tests from §18.10.
+- [x] Daily Deal with weekday difficulty, one scored attempt per day, share text, "Played today" countdown.
+- [x] Speed Round (+ "No timer" option) with personal best.
+- [x] Free play: Pick-a-Hand and Charleston on the Practice or active card at three difficulties; Review mistakes.
+- [x] UI tests from §18.10.
 
 #### Phase 27: 1.2 QA and release
 - [ ] Simulator QA: a fresh install played as a beginner through Unit 2 and as an experienced player via test-out; every 1.2 screen in light/dark/AX5 and with Reduce Motion; existing §13 and §17 checks still pass.
