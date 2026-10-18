@@ -11,6 +11,8 @@ enum CelebrationItem: Hashable, Identifiable {
   case freezeEarned(held: Int)
   case freezeUsed(streak: Int)
   case streakBroken(daysPlayed: Int)
+  /// Asked once, after the first lesson (not a celebration, but it rides the same screens).
+  case chooseGoal
 
   var id: String {
     switch self {
@@ -21,6 +23,7 @@ enum CelebrationItem: Hashable, Identifiable {
     case .freezeEarned: return "freeze.earned"
     case .freezeUsed: return "freeze.used"
     case .streakBroken: return "streak.broken"
+    case .chooseGoal: return "goal.choose"
     }
   }
 }
@@ -159,6 +162,8 @@ struct CelebrationView: View {
       return ("snowflake", theme.primary, "Streak saved", StreakLogic.freezeMessage(streak: streak), nil)
     case .streakBroken(let days):
       return ("sun.max.fill", theme.gold, "Welcome back", StreakLogic.brokenMessage(daysPlayed: days), "Every lesson counts. Start a new streak today.")
+    case .chooseGoal:
+      return ("target", theme.primary, "Pick a daily goal", "How much will you practise a day?", "A streak grows each day you reach it. You can change it any time in Settings.")
     }
   }
 
@@ -201,11 +206,17 @@ struct CelebrationView: View {
         }
         .padding(.horizontal, Spacing.lg)
         Spacer(minLength: Spacing.xl)
-        Button(isLast ? "Continue" : "Next", action: onContinue)
-          .buttonStyle(PrimaryButton(.primary, size: .large))
-          .padding(.horizontal, Spacing.lg)
-          .padding(.bottom, Spacing.lg)
-          .accessibilityIdentifier("celebration.continue")
+        if item == .chooseGoal {
+          GoalChoiceButtons(onChosen: onContinue)
+            .padding(.horizontal, Spacing.lg)
+            .padding(.bottom, Spacing.lg)
+        } else {
+          Button(isLast ? "Continue" : "Next", action: onContinue)
+            .buttonStyle(PrimaryButton(.primary, size: .large))
+            .padding(.horizontal, Spacing.lg)
+            .padding(.bottom, Spacing.lg)
+            .accessibilityIdentifier("celebration.continue")
+        }
       }
       .frame(maxWidth: 640)
     }
@@ -221,8 +232,41 @@ struct CelebrationView: View {
 
   private var celebratesWithConfetti: Bool {
     switch item {
-    case .freezeUsed, .streakBroken: return false
+    case .freezeUsed, .streakBroken, .chooseGoal: return false
     default: return true
+    }
+  }
+}
+
+/// Casual, Regular or Serious: how many lessons make a day count.
+struct GoalChoiceButtons: View {
+  @Environment(\.theme) private var theme
+  @Environment(PracticeStore.self) private var practice
+  let onChosen: () -> Void
+
+  var body: some View {
+    VStack(spacing: Spacing.md) {
+      ForEach(DailyGoal.allCases, id: \.self) { goal in
+        Button {
+          practice.update {
+            $0.dailyGoal = goal
+            $0.goalChosen = true
+          }
+          onChosen()
+        } label: {
+          HStack {
+            VStack(alignment: .leading, spacing: 2) {
+              Text(goal.title).font(Typography.h2).foregroundStyle(theme.text)
+              Text(goal.lessons == 1 ? "1 lesson a day" : "\(goal.lessons) lessons a day")
+                .font(Typography.small).foregroundStyle(theme.textMuted)
+            }
+            Spacer(minLength: Spacing.sm)
+            Image(systemName: "chevron.right").foregroundStyle(theme.textFaint).accessibilityHidden(true)
+          }
+        }
+        .buttonStyle(ChoiceButtonStyle(mark: goal == practice.progress.dailyGoal ? .selected : .none))
+        .accessibilityIdentifier("goal.\(goal.rawValue)")
+      }
     }
   }
 }

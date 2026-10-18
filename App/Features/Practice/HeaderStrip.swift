@@ -14,10 +14,13 @@ struct HeaderStrip: View {
 
   var body: some View {
     AdaptiveStack(spacing: Spacing.lg) {
-      levelBlock
+      NavigationLink(value: PracticeRoute.profile) { levelBlock }
+        .buttonStyle(.plain)
+        .accessibilityHint("Opens your profile")
       if typeSize.isAccessibilitySize == false { Spacer(minLength: 0) }
       HStack(spacing: Spacing.lg) {
-        streakBlock
+        NavigationLink(value: PracticeRoute.profile) { streakBlock }
+          .buttonStyle(.plain)
         goalBlock
       }
     }
@@ -59,16 +62,27 @@ struct HeaderStrip: View {
       Text("\(streak.current)")
         .font(Typography.h2.monospacedDigit())
         .foregroundStyle(active ? theme.text : theme.textMuted)
+      if streak.freezes > 0 {
+        Image(systemName: "snowflake")
+          .font(.footnote)
+          .foregroundStyle(theme.primary)
+        Text("\(streak.freezes)")
+          .font(Typography.small.monospacedDigit())
+          .foregroundStyle(theme.primary)
+      }
     }
     .accessibilityElement(children: .ignore)
     .accessibilityLabel("Streak")
-    .accessibilityValue(streak.current == 1 ? "1 day" : "\(streak.current) days")
+    .accessibilityValue(
+      (streak.current == 1 ? "1 day" : "\(streak.current) days")
+        + (streak.freezes > 0 ? ", \(streak.freezes) \(streak.freezes == 1 ? "freeze" : "freezes") held" : ""))
     .accessibilityIdentifier("header.streak")
   }
 
   private var goalBlock: some View {
     let goal = progress.dailyGoal.lessons
-    let fraction = min(1, Double(lessonsToday) / Double(max(1, goal)))
+    let met = progress.goalMet(on: practice.today)
+    let fraction = met ? 1 : min(1, Double(lessonsToday) / Double(max(1, goal)))
     return ZStack {
       Circle().stroke(theme.border, lineWidth: 5)
       Circle()
@@ -84,7 +98,7 @@ struct HeaderStrip: View {
     .frame(width: 40, height: 40)
     .accessibilityElement(children: .ignore)
     .accessibilityLabel("Today's goal")
-    .accessibilityValue("\(lessonsToday) of \(goal) lessons")
+    .accessibilityValue(met ? "Done for today" : "\(lessonsToday) of \(goal) lessons")
     .accessibilityIdentifier("header.goal")
   }
 }

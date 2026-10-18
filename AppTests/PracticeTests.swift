@@ -301,6 +301,24 @@ struct PracticeStoreTests {
     let clock = LaunchOptions.practiceClock(arguments: ["-UITestResetData", "-UITestToday", "2026-11-02", "-UITestHour", "7"])
     #expect(clock.now().day == today && clock.now().hour == 7)
     #expect(LaunchOptions.initialTab(arguments: ["-UITestResetData", "-UITestTab", "practice"]) == .practice)
+    #expect(
+      LaunchOptions.dayLog(arguments: ["-UITestResetData", "-UITestDayLog", "2026-10-31,2026-10-30,nope"])
+        == [LocalDay(year: 2026, month: 10, day: 30), LocalDay(year: 2026, month: 10, day: 31)])
+    #expect(LaunchOptions.freezes(arguments: ["-UITestResetData", "-UITestFreezes", "2"]) == 2)
+    #expect(LaunchOptions.dailyGoal(arguments: ["-UITestResetData", "-UITestDailyGoal", "serious"]) == .serious)
+    #expect(LaunchOptions.dayLog(arguments: ["-UITestDayLog", "2026-10-31"]).isEmpty)
+  }
+
+  @Test func injectedDaysBuildAStreakAndAGoal() {
+    let store = PracticeStore(directory: makeTempDirectory(), persistDelay: fast, clock: .fixed(today))
+    store.update {
+      $0.dailyGoal = .regular
+      for n in (1...7).reversed() { $0.recordDay(today.adding(days: -n)) }
+    }
+    #expect(store.progress.streak.current == 7, "\(store.progress.streak)")
+    #expect(store.progress.streak.freezes == 1, "\(store.progress.streak)")
+    #expect(store.progress.lessonsPlayed(on: today.adding(days: -3)) == 2)
+    #expect(store.progress.goalMet(on: today.adding(days: -3)))
   }
 }
 

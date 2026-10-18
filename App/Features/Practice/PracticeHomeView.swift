@@ -4,6 +4,7 @@ import SwiftUI
 enum PracticeRoute: Hashable {
   case pickAHand
   case charleston
+  case profile
 }
 
 /// A lesson being played (presented full screen).
@@ -34,8 +35,9 @@ struct PracticeHomeView: View {
       ScreenContainer {
         VStack(alignment: .leading, spacing: Spacing.lg) {
           if typeSize.isAccessibilitySize { HeaderStrip() }
+          StreakBanners()
           PathView(
-            nodes: progress.nodes(), progress: progress,
+            nodes: progress.nodes(), progress: progress, reviewDue: progress.reviewQueue.dueCount(today: practice.today),
             onTap: { handleTap($0) }, onTestOut: { testOutUnit = $0 }, popNodeID: popNodeID, popTick: popTick)
           freePlay
         }
@@ -69,6 +71,7 @@ struct PracticeHomeView: View {
       switch route {
       case .pickAHand: PickAHandDrillView()
       case .charleston: CharlestonDrillView()
+      case .profile: ProfileView()
       }
     }
     .fullScreenCover(item: $play) { active in

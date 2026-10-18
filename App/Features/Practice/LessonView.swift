@@ -62,7 +62,8 @@ struct LessonView: View {
 
   /// Shows a new level, badges and streak news, one screen at a time, and then does `action`.
   private func runCelebrations(then action: @escaping () -> Void) {
-    let items = outcome.map(Celebrations.items(for:)) ?? []
+    var items = outcome.map(Celebrations.items(for:)) ?? []
+    if !practice.progress.goalChosen { items.append(.chooseGoal) }
     guard !items.isEmpty else { return action() }
     afterCelebrations = action
     celebrationIndex = 0

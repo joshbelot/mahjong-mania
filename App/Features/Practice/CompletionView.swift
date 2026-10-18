@@ -57,7 +57,7 @@ struct CompletionView: View {
           .accessibilityIdentifier("complete.subtitle")
 
         HStack(spacing: Spacing.md) {
-          stat("XP", "+\(outcome.xp.total)", id: "complete.xp")
+          xpStat
           stat("Accuracy", "\(Int((outcome.accuracy * 100).rounded()))%", id: "complete.accuracy")
           stat("Time", timeText, id: "complete.time")
         }
@@ -123,6 +123,22 @@ struct CompletionView: View {
     return seconds >= 60 ? "\(seconds / 60)m \(seconds % 60)s" : "\(seconds)s"
   }
 
+  /// The XP total counts up (0.8 s) while the stars land; it is simply there with Reduce Motion.
+  private var xpStat: some View {
+    VStack(spacing: 2) {
+      CountingText(target: outcome.xp.total, prefix: "+")
+        .font(Typography.h2.monospacedDigit())
+        .foregroundStyle(theme.text)
+        .accessibilityIdentifier("complete.xp")
+      Text("XP").tinyStyle().foregroundStyle(theme.textMuted)
+    }
+    .frame(maxWidth: .infinity)
+    .padding(.vertical, Spacing.md)
+    .background(theme.surface, in: RoundedRectangle(cornerRadius: Radius.md))
+    .overlay(RoundedRectangle(cornerRadius: Radius.md).strokeBorder(theme.border, lineWidth: 1))
+    .accessibilityElement(children: .combine)
+  }
+
   private func stat(_ label: String, _ value: String, id: String) -> some View {
     VStack(spacing: 2) {
       Text(value)
@@ -178,5 +194,27 @@ struct StarsView: View {
         if soundsEnabled, let sound = Sound(rawValue: "star\(min(index, 3))") { SoundPlayer.shared.play(sound) }
       }
     }
+  }
+}
+
+/// A number that counts up from 0 to `target` (the final value is announced at once to VoiceOver).
+struct CountingText: View {
+  @Environment(\.reduceMotion) private var reduceMotion
+  let target: Int
+  var prefix = ""
+  @State private var shown = 0
+
+  var body: some View {
+    Text("\(prefix)\(reduceMotion ? target : shown)")
+      .accessibilityLabel("\(prefix)\(target)")
+      .task {
+        guard !reduceMotion, target > 0 else { return }
+        let steps = min(target, 30)
+        for step in 1...steps {
+          try? await Task.sleep(for: .milliseconds(800 / steps))
+          shown = target * step / steps
+        }
+        shown = target
+      }
   }
 }

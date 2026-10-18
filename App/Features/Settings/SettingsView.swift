@@ -1,3 +1,4 @@
+import MahjongCore
 import SwiftUI
 
 struct SettingsView: View {
@@ -172,10 +173,23 @@ struct SettingsView: View {
 
   private var practiceSection: some View {
     Section {
+      Picker(
+        "Daily goal",
+        selection: Binding(
+          get: { stores.practice.progress.dailyGoal },
+          set: { goal in stores.practice.update { $0.dailyGoal = goal; $0.goalChosen = true } })
+      ) {
+        ForEach(DailyGoal.allCases, id: \.self) { goal in
+          Text("\(goal.title) · \(goal.lessons)").tag(goal)
+        }
+      }
+      .accessibilityIdentifier("settings.practice.goal")
       Button("Reset practice progress", role: .destructive) { confirmPracticeReset = true }
         .accessibilityIdentifier("settings.practice.reset")
     } header: {
       Text("Practice")
+    } footer: {
+      Text("A day counts when you finish this many lessons, reviews, checkpoints, the Daily Deal or a Speed Round (the last two count as one).")
     }
     .listRowBackground(theme.surface)
   }

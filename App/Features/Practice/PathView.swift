@@ -7,6 +7,7 @@ struct PathView: View {
   @Environment(\.dynamicTypeSize) private var typeSize
   let nodes: [PathNode]
   let progress: PracticeProgress
+  var reviewDue = 0
   let onTap: (PathNode) -> Void
   let onTestOut: (Int) -> Void
   /// The node that just unlocked, which pops once per `popTick`.
@@ -32,7 +33,8 @@ struct PathView: View {
       VStack(spacing: Spacing.lg) {
         ForEach(Array(unitNodes.enumerated()), id: \.element.id) { entry in
           NodeButton(
-            node: entry.element, offset: offset(entry.offset), popTick: entry.element.id == popNodeID ? popTick : 0
+            node: entry.element, offset: offset(entry.offset), popTick: entry.element.id == popNodeID ? popTick : 0,
+            badge: entry.element.spec.kind == .review && reviewDue > 0 ? reviewDue : nil
           ) { onTap(entry.element) }
             .id("node.\(entry.element.id)")
         }
@@ -101,6 +103,8 @@ struct NodeButton: View {
   let node: PathNode
   let offset: CGFloat
   var popTick = 0
+  /// A number shown on the node (questions waiting in a review node).
+  var badge: Int?
   let action: () -> Void
   @State private var pulse = false
 
@@ -127,6 +131,17 @@ struct NodeButton: View {
             .foregroundStyle(symbolColor)
         }
         .frame(width: 68, height: 68)
+        .overlay(alignment: .topTrailing) {
+          if let badge {
+            Text("\(badge)")
+              .font(Typography.tiny.monospacedDigit())
+              .foregroundStyle(theme.onPrimary)
+              .padding(.horizontal, 6)
+              .padding(.vertical, 2)
+              .background(theme.accent, in: Capsule())
+              .accessibilityHidden(true)
+          }
+        }
         .scaleEffect(isNext && pulse && !reduceMotion ? 1.05 : 1)
         .pop(trigger: popTick, enabled: popTick > 0)
         if node.status == .done && node.spec.kind == .lesson {
@@ -203,7 +218,7 @@ struct NodeButton: View {
 
   private var value: String {
     switch node.status {
-    case .next: return "Next"
+    case .next: return badge.map { "Next, \($0) to review" } ?? "Next"
     case .locked: return "Locked"
     case .testedOut: return "Tested out"
     case .done:
