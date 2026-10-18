@@ -98,6 +98,8 @@ final class PracticeStore {
     pendingStreakEvents += events
   }
 
+  func clearPendingStreakEvents() { pendingStreakEvents = [] }
+
   /// First launch of 1.2: the drills' best streaks move here from Settings.
   func importBestStreaks(_ streaks: BestStreaks) {
     guard !loadedFromFile, streaks.pickAHand > 0 || streaks.charleston > 0 else { return }
@@ -111,6 +113,22 @@ final class PracticeStore {
     update {
       if let pickAHand { $0.freePlay.pickStreakBest = max($0.freePlay.pickStreakBest, pickAHand) }
       if let charleston { $0.freePlay.charlestonStreakBest = max($0.freePlay.charlestonStreakBest, charleston) }
+    }
+  }
+
+  /// Streak set-up from `-UITestDayLog`, `-UITestFreezes` and `-UITestDailyGoal` (UI tests only).
+  func applyLaunchOptions() {
+    let days = LaunchOptions.dayLog()
+    let freezes = LaunchOptions.freezes()
+    let goal = LaunchOptions.dailyGoal()
+    guard !days.isEmpty || freezes != nil || goal != nil else { return }
+    update {
+      if let goal {
+        $0.dailyGoal = goal
+        $0.goalChosen = true
+      }
+      for day in days { $0.recordDay(day) }
+      if let freezes { $0.streak.freezes = freezes }
     }
   }
 

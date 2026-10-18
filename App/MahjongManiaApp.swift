@@ -59,7 +59,7 @@ struct MahjongManiaApp: App {
           SoundPlayer.shared.warmUp()
         }
         .onChange(of: scenePhase) { _, phase in
-          if phase != .active { stores.flush() }
+          if phase != .active { stores.flush() } else { stores.practice.openDay() }
         }
     }
   }

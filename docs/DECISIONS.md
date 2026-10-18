@@ -215,3 +215,12 @@ The spec title "<Right>'s exposed sets" gives "Across's exposed sets", which rea
 - **Combo.** A right answer that earns the combo bonus plays the combo arpeggio instead of the ding; the flame in the top bar bumps on every step and rings at 5, 10 and 15.
 - **UI-test note.** XCUITest waits for the app to be idle, which includes the 2.2 s confetti, so a screenshot taken after waiting for a celebration screen usually misses the confetti; one taken straight after a tap catches it.
 
+## 2026-10-18, §18.6 (Phase 25): goal, streak and profile details
+
+- **The daily goal is asked after the first play** as the last screen of the celebration queue (after "Daily goal met", which uses the default Casual goal). Changing the goal, there or in Settings → Practice, never un-meets today: today stays counted and the header ring reads "Done for today"; the new goal applies from tomorrow. (Taking a streak day back would punish the player for choosing to aim higher.)
+- **Streak news is shown inline, not in a pop-up.** A freeze that saved the streak, or a restart after a break, appears as a dismissible card at the top of the path when the Practice tab opens (and when the app returns to the front on a new day), with the spec's wording. Earned things (milestones, freezes earned, level-ups, badges, the goal) are the full-screen celebrations.
+- **A milestone replaces the plain "goal met" screen** on the same day, so a 3-day streak is one celebration, not two. A freeze earned on a 7-day milestone is a second screen.
+- **The profile** opens from the level badge or the flame in the header. The calendar is 12 weeks (Monday to Sunday columns ending this week), shaded by lessons that day; accuracy by skill counts questions right first time without a hint and shows "Not yet" until a skill has been asked.
+- **Review nodes** show how many questions are waiting (from the review queue) as a small number on the node.
+- **Test hooks:** `-UITestDayLog <days>`, `-UITestFreezes <n>`, `-UITestDailyGoal <goal>` (with `-UITestResetData`) set up a history; `PracticeProgress.recordDay` is what they call.
+

@@ -1718,9 +1718,9 @@ Same rules as §17.9 (local `tools/test.sh` is the gate; look at every changed s
 - [x] Screenshots of celebrations with Reduce Motion on and off.
 
 #### Phase 25: Daily goal, streaks, badges, profile
-- [ ] Daily goal choice (after first lesson and in Settings), streak flame, freezes, milestone screens, break copy.
-- [ ] Badges with XP, profile screen with heat map and per-skill accuracy, review nodes and the review queue.
-- [ ] UI tests with injected day logs.
+- [x] Daily goal choice (after first lesson and in Settings), streak flame, freezes, milestone screens, break copy.
+- [x] Badges with XP, profile screen with heat map and per-skill accuracy, review nodes and the review queue.
+- [x] UI tests with injected day logs.
 
 #### Phase 26: Daily Deal, Speed Round, free play
 - [ ] Daily Deal with weekday difficulty, one scored attempt per day, share text, "Played today" countdown.

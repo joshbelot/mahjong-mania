@@ -47,6 +47,7 @@ final class AppStores {
       showOnboarding: LaunchOptions.showOnboarding)
     stores.applyHelperLaunchOptions()
     if let placement = LaunchOptions.placement() { stores.practice.applyPlacement(placement) }
+    stores.practice.applyLaunchOptions()
     return stores
   }
 

@@ -47,3 +47,23 @@ extension LaunchOptions {
     return Curriculum.node(id: id)
   }
 }
+
+/// - `-UITestDayLog 2026-10-29,2026-10-30`: days on which the daily goal was already met (with `-UITestResetData`).
+/// - `-UITestFreezes 1`: start holding this many streak freezes.
+/// - `-UITestDailyGoal casual|regular|serious`: start with this goal chosen.
+extension LaunchOptions {
+  static func dayLog(arguments: [String] = ProcessInfo.processInfo.arguments) -> [LocalDay] {
+    guard arguments.contains("-UITestResetData"), let text = value(after: "-UITestDayLog", in: arguments) else { return [] }
+    return text.split(separator: ",").compactMap { LocalDay(String($0)) }.sorted()
+  }
+
+  static func freezes(arguments: [String] = ProcessInfo.processInfo.arguments) -> Int? {
+    guard arguments.contains("-UITestResetData"), let text = value(after: "-UITestFreezes", in: arguments) else { return nil }
+    return Int(text)
+  }
+
+  static func dailyGoal(arguments: [String] = ProcessInfo.processInfo.arguments) -> DailyGoal? {
+    guard arguments.contains("-UITestResetData"), let text = value(after: "-UITestDailyGoal", in: arguments) else { return nil }
+    return DailyGoal(rawValue: text)
+  }
+}

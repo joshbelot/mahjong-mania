@@ -264,6 +264,13 @@ public struct PracticeProgress: Codable, Equatable, Sendable {
     StreakLogic.settle(&streak, today: today)
   }
 
+  /// Records that `lessons` lessons were played on `day` without touching anything else. Used to set up
+  /// streak histories for UI tests and previews.
+  public mutating func recordDay(_ day: LocalDay, lessons: Int? = nil) {
+    let count = lessons ?? dailyGoal.lessons
+    for _ in 0..<max(1, count) { _ = noteActivity(on: day, hour: 12) }
+  }
+
   // MARK: Applying a play
 
   mutating func noteActivity(on day: LocalDay, hour: Int) -> (events: [StreakEvent], lessonsToday: Int, goalJustMet: Bool) {
