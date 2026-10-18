@@ -25,7 +25,7 @@ Plan: `docs/SPEC.md` §18 (Practice becomes a game). v1.1 build 3 is on TestFlig
 | Phase | Status | PR |
 |---|---|---|
 | 21 Exercise engine (MahjongCore) | in review | PR pending |
-| 22 Progress logic (MahjongCore) | not started | |
+| 22 Progress logic (MahjongCore) | in review | PR pending |
 | 23 Practice tab, path and lesson player | not started | |
 | 24 Feel: animation, haptics, sound | not started | |
 | 25 Daily goal, streaks, badges, profile | not started | |
