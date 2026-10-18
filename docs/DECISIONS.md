@@ -169,3 +169,14 @@ The spec title "<Right>'s exposed sets" gives "Across's exposed sets", which rea
 - A link that arrives before onboarding finishes waits in `IncomingLinks` until the main screen is up. After a successful import from a link the new card opens in the Cards tab.
 - "From a QR code picture" shows a plain message when the picture has no code, has a code that is not a card, or cannot be opened. Detection uses `CIDetector`; the Photos picker needs no permission.
 - `-UITestOpenURL <url>` launch argument (with `-UITestResetData`) acts as if the link had opened the app.
+
+## 2026-10-17, §18.3 (Phase 21): exercise engine details the spec left open
+
+- **`ExerciseID` has a fourth field, `focus`** (default 0, optional when decoding). The curriculum's lessons narrow what a type asks about ("Winds & dragons" only asks about winds and dragons; "Colours mean suits" only uses lines with two suit colours; "Exposed vs concealed" mixes in the X/C question). A seed cannot carry that, so the ID does.
+- **Extra answer kind `.decisions([Bool])`** for `keepOrPass` (one keep/pass per tile of `Exercise.queue`). `Grade` also carries `score`/`outOf` so Charleston and keep-or-pass show partial credit, and `Exercises.hint(for:card:)` supplies the lightbulb help (§18.5) so the lesson player has no engine knowledge.
+- **`Exercise` also carries** `groups` (tiles in clusters, for hands where the grouping is the lesson), `lines` (not just one; `passThree` easy shows the two best), `queue`, `discard` and a `caption`.
+- **Easy and normal deals are partly stacked.** Pick-a-Hand d1/d2 and Charleston d1 build the 13 tiles from 9 (d1) or 7 (d2) tiles of one hand of the card plus random tiles, then apply the §18.3.1 filter. A plain random deal is usually 8–9 tiles from every hand, which is the opposite of "clear-cut" for a beginner. Hard (d3) pickHand uses `Wall.deal(seed)` unchanged, so free play at Hard is today's drill and v1 grading is reproduced exactly (tested in `ExerciseCompatibilityTests`).
+- **Pick-a-Hand d1/d2 are graded among the offered lines only**; d2 offers five lines with exactly one closest, d1 three lines from different sections at least two tiles further than the best.
+- **Calling (`callIt`)** is graded by `checkCall` for the *shown* line, which is the engine's best line for the 13 tiles. A deal where another line would be best is rejected.
+- **Test cost.** `ExerciseTests` runs 500 seeds for each of 13 types × 3 difficulties (about 80 s in a debug `swift test`); set `EXERCISE_SEEDS=20` for a quick run.
+

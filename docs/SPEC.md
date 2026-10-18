@@ -1698,8 +1698,8 @@ New store `PracticeStore` with file `practice.json` (`version: 1`): `placement` 
 Same rules as §17.9 (local `tools/test.sh` is the gate; look at every changed screen in the simulator in light, dark and AX5; record deviations in DECISIONS.md; tick boxes in the same PR).
 
 #### Phase 21: Exercise engine (MahjongCore)
-- [ ] `ExerciseType`, `ExerciseID`, `Exercise`, `Choice`, `Answer`, `Grade`; `Exercises.make`/`grade` for all 13 types and 3 difficulties; explanations.
-- [ ] Deal filters (§18.3.1); tests: 500 seeds per type × difficulty are gradable, deterministic, filters hold ≥ 95%; `pickHand`/`passThree` grading matches today's drills.
+- [x] `ExerciseType`, `ExerciseID`, `Exercise`, `Choice`, `Answer`, `Grade`; `Exercises.make`/`grade` for all 13 types and 3 difficulties; explanations.
+- [x] Deal filters (§18.3.1); tests: 500 seeds per type × difficulty are gradable, deterministic, filters hold ≥ 95%; `pickHand`/`passThree` grading matches today's drills.
 
 #### Phase 22: Progress logic (MahjongCore)
 - [ ] `Curriculum` (units, lessons, checkpoints, gold rules) exactly as §18.4.
