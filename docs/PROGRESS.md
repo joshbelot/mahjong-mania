@@ -30,7 +30,7 @@ Plan: `docs/SPEC.md` §18 (Practice becomes a game). v1.1 build 3 is on TestFlig
 | 24 Feel: animation, haptics, sound | merged | [#39](https://github.com/joshbelot/mahjong-mania/pull/39) |
 | 25 Daily goal, streaks, badges, profile | merged | [#40](https://github.com/joshbelot/mahjong-mania/pull/40) |
 | 26 Daily Deal, Speed Round, free play | merged | [#41](https://github.com/joshbelot/mahjong-mania/pull/41) |
-| 27 1.2 QA and TestFlight upload | QA and version done in this PR; upload pending | PR pending |
+| 27 1.2 QA and TestFlight upload | merged; **1.2 (4) uploaded and processed** | [#43](https://github.com/joshbelot/mahjong-mania/pull/43) |
 
 ### Open questions for the owner (1.2)
 
@@ -47,6 +47,10 @@ Product judgements the spec did not settle. Each choice is the one that best fit
 9. **Speed Round.** Chosen: single keep-or-pass questions with a new target every 5, bonus name-the-tile / name-the-group questions from the 21st; the reason for the last answer sits under the next question instead of a feedback sheet; both modes (60 s, or 30 untimed) share one personal best.
 10. **Free play and Review mistakes.** Chosen: free play pays 5 XP per right-first-time question, counts for the Sharp Eye and Charleston Champ badges, and does not touch the streak; "Review mistakes" counts as one lesson toward the daily goal. A miss on your own card is not queued for review.
 11. **Celebrations.** Chosen: full-screen, one at a time, after the completion screen (level, each badge, then goal or milestone); Continue and Play again both go through them. A new player sees three screens after their first lesson.
+
+### 1.2 release (2026-10-18)
+
+From a clean `main` at `4aeb26a`: `zsh -ic 'tools/upload_testflight.sh --dry-run'` passed (tests, archive, export; build number unchanged). The exported `.ipa` was validated with `xcrun altool --validate-app` ("VERIFY SUCCEEDED with no errors"; version 1.2, URL scheme present, no `*UsageDescription` keys). The real upload ran the tests again, bumped the build, uploaded **Mahjong Mania 1.2 (4)** and pushed "Bump build to 4". App Store Connect (API) lists build 4 for version 1.2 with processing state **VALID** about 17 minutes after upload. Owner steps left: paste `TestFlight/WhatToTest.txt` as the build's "What to Test", add testers if needed, and install it on a real iPhone.
 
 ### 1.2 QA pass (2026-10-18, iPhone 17 Pro and iPhone Air simulators, iOS 27 SDK)
 
