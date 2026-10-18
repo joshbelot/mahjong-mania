@@ -6,6 +6,8 @@ Hand Helper: enter your tiles and see which hands on your card you are closest t
 
 Cards: the app includes an original Practice Card. You can also type in or paste hands from a card you own, using a compact notation with a live preview. Please enter only cards you own and don't share copyrighted cards.
 
-Learn: a rules quick reference, a tile guide, how to read a card, a glossary and two practice drills.
+Practice: a path of short lessons that takes you from the tiles to choosing hands and the Charleston, with stars, levels, a daily goal and streak, a Daily Deal, a Speed Round and free play. No notifications and no timers in lessons.
+
+Learn: a rules quick reference, a tile guide, how to read a card and a glossary.
 
 Everything stays on your phone. There are no accounts and no network use. Mahjong Mania is not affiliated with the National Mah Jongg League.
