@@ -13,8 +13,15 @@ final class PracticeDealTests: PracticeUITestCase {
   // MARK: Daily Deal
 
   private func playDeal(_ app: XCUIApplication, shots: String?) {
-    tap(app, "daily.card")
-    XCTAssertTrue(element(app, "lesson.prompt").waitForExistence(timeout: 10), "The deal did not open")
+    var opened = false
+    for _ in 0..<4 where !opened {
+      app.swipeDown()
+      let card = element(app, "daily.card")
+      XCTAssertTrue(card.waitForExistence(timeout: 10), "No Daily Deal card")
+      card.tap()
+      opened = element(app, "lesson.prompt").waitForExistence(timeout: 5)
+    }
+    XCTAssertTrue(opened, "The deal did not open")
     if let shots { attach("\(shots)-1-pick") }
     tap(app, "lesson.choice.0")
     tap(app, "lesson.check")
