@@ -85,7 +85,8 @@ final class LessonSession {
     testOut = false
     self.seed = seed
     fixed = exercises
-    analyzer = Analyzer.cached(for: card)
+    // A card with no hands yet can't make questions; fall back to the Practice Card.
+    analyzer = Analyzer.cached(for: card.lines.isEmpty ? PracticeCard.card : card)
     rng = SeededRandom(seed: seed ^ 0x5E55)
     items = (exercises?.map(\.id) ?? ids).map { Item(id: $0, isReask: false) }
     phase = .answering

@@ -41,7 +41,8 @@ struct FreePlayView: View {
 
   private var activeCard: Card? {
     let id = settings.settings.activeCardID
-    return id == PracticeCard.card.id ? nil : cards.card(id: id)
+    guard id != PracticeCard.card.id, let card = cards.card(id: id), !card.lines.isEmpty else { return nil }
+    return card
   }
 
   private var card: Card { useActiveCard ? (activeCard ?? PracticeCard.card) : PracticeCard.card }
