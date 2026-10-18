@@ -163,7 +163,7 @@ struct CelebrationView: View {
     case .streakBroken(let days):
       return ("sun.max.fill", theme.gold, "Welcome back", StreakLogic.brokenMessage(daysPlayed: days), "Every lesson counts. Start a new streak today.")
     case .chooseGoal:
-      return ("target", theme.primary, "Pick a daily goal", "How much will you practise a day?", "A streak grows each day you reach it. You can change it any time in Settings.")
+      return ("target", theme.primary, "Today's goal is done!", "How much will you practise a day?", "A streak grows each day you reach your goal. You can change it any time in Settings.")
     }
   }
 

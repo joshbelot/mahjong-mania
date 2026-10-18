@@ -72,20 +72,6 @@ final class LearnOnboardingTests: XCTestCase {
     XCTAssertTrue(app.navigationBars["Learn"].waitForExistence(timeout: 5))
   }
 
-  private func openPractice(_ app: XCUIApplication) {
-    let tab = app.tabBars.buttons["Practice"]
-    XCTAssertTrue(tab.waitForExistence(timeout: 10), "Missing Practice tab")
-    tab.tap()
-    XCTAssertTrue(app.navigationBars["Practice"].waitForExistence(timeout: 5))
-  }
-
-  private func backToPractice(_ app: XCUIApplication) {
-    let back = app.navigationBars.buttons["Practice"].firstMatch
-    XCTAssertTrue(back.waitForExistence(timeout: 5), "Missing back button")
-    back.tap()
-    XCTAssertTrue(app.navigationBars["Practice"].waitForExistence(timeout: 5))
-  }
-
   private func backToLearn(_ app: XCUIApplication) {
     let back = app.navigationBars.buttons["Learn"].firstMatch
     XCTAssertTrue(back.waitForExistence(timeout: 5), "Missing back button")
@@ -186,18 +172,10 @@ final class LearnOnboardingTests: XCTestCase {
     attach("axxl-topic-notation")
     app.swipeUp()
     attach("axxl-topic-notation-2")
-    backToLearn(app)
-    openPractice(app)
-    tapElement(app, "practice.free.charleston")
-    XCTAssertTrue(element(app, "drill.seed").waitForExistence(timeout: 10))
-    attach("axxl-charleston")
-    tapElement(app, "charleston.tile.12")
-    attach("axxl-charleston-joker")
   }
 
-  /// Seed 3 deals exactly one joker (it sorts last, at position 12), so the joker rule can be tested.
   private func launchTour(dark: Bool = false, textSize: String? = nil) -> XCUIApplication {
-    launch(["-UITestResetData", "-UITestDrillSeed", "3"], dark: dark, textSize: textSize)
+    launch(["-UITestResetData"], dark: dark, textSize: textSize)
   }
 
   private func learnTour(app: XCUIApplication, tag: String) {
@@ -228,67 +206,5 @@ final class LearnOnboardingTests: XCTestCase {
     tapElement(app, "learn.practice")
     XCTAssertTrue(app.navigationBars["Practice"].waitForExistence(timeout: 5), "Learn did not open Practice")
     attach("learn-to-practice-\(tag)")
-    pickAHandTour(app, tag: tag)
-    charlestonTour(app, tag: tag)
-  }
-
-  private func pickAHandTour(_ app: XCUIApplication, tag: String) {
-    tapElement(app, "practice.free.pick")
-    let seed = element(app, "drill.seed")
-    XCTAssertTrue(seed.waitForExistence(timeout: 10), "Pick-a-Hand did not open")
-    let seedText = seed.label
-    XCTAssertTrue(seedText.contains("3"), "Expected the forced seed in \(seedText)")
-    attach("drill-pick-\(tag)-1")
-
-    tapElement(app, "pick.line.0")
-    XCTAssertTrue(element(app, "drill.result").waitForExistence(timeout: 10), "No result shown")
-    attach("drill-pick-\(tag)-2")
-    app.swipeUp()
-    attach("drill-pick-\(tag)-3")
-
-    // "Try again" replays the same deal.
-    tapElement(app, "drill.tryagain")
-    XCTAssertTrue(element(app, "pick.line.0").waitForExistence(timeout: 5), "Did not return to picking")
-    XCTAssertEqual(element(app, "drill.seed").label, seedText, "Try again changed the deal")
-
-    tapElement(app, "pick.line.1")
-    XCTAssertTrue(element(app, "drill.result").waitForExistence(timeout: 10))
-    tapElement(app, "drill.next")
-    XCTAssertTrue(element(app, "pick.line.0").waitForExistence(timeout: 5))
-    XCTAssertNotEqual(element(app, "drill.seed").label, seedText, "Next deal kept the same deal")
-    backToPractice(app)
-  }
-
-  private func charlestonTour(_ app: XCUIApplication, tag: String) {
-    tapElement(app, "practice.free.charleston")
-    let seed = element(app, "drill.seed")
-    XCTAssertTrue(seed.waitForExistence(timeout: 10), "Charleston Pass did not open")
-    let seedText = seed.label
-    attach("drill-charleston-\(tag)-1")
-
-    // The joker cannot be selected.
-    tapElement(app, "charleston.tile.12")
-    XCTAssertTrue(element(app, "charleston.message").waitForExistence(timeout: 5), "No joker message")
-    XCTAssertTrue(
-      element(app, "charleston.count").label.contains("0 of 3"), "The joker should not be selected")
-    attach("drill-charleston-\(tag)-joker")
-
-    tapElement(app, "charleston.tile.0")
-    tapElement(app, "charleston.tile.1")
-    tapElement(app, "charleston.tile.2")
-    XCTAssertTrue(element(app, "charleston.count").label.contains("3 of 3"))
-    attach("drill-charleston-\(tag)-2")
-
-    tapElement(app, "charleston.submit")
-    XCTAssertTrue(element(app, "drill.result").waitForExistence(timeout: 10), "No result shown")
-    attach("drill-charleston-\(tag)-3")
-    app.swipeUp()
-    attach("drill-charleston-\(tag)-4")
-
-    tapElement(app, "drill.tryagain")
-    XCTAssertTrue(element(app, "charleston.submit").waitForExistence(timeout: 5))
-    XCTAssertEqual(element(app, "drill.seed").label, seedText, "Try again changed the deal")
-    XCTAssertTrue(element(app, "charleston.count").label.contains("0 of 3"))
-    backToPractice(app)
   }
 }

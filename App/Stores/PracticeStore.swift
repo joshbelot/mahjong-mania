@@ -86,6 +86,46 @@ final class PracticeStore {
     return outcome
   }
 
+  /// A finished Daily Deal (nil when today's scored attempt already exists: the replay is practice).
+  @discardableResult
+  func recordDailyDeal(day: LocalDay, result: DailyDeal.Result) -> PlayOutcome? {
+    var copy = progress
+    guard let outcome = copy.recordDailyDeal(day: day, result: result, hour: hour) else { return nil }
+    progress = copy
+    persister.changed()
+    persister.flush()
+    return outcome
+  }
+
+  @discardableResult
+  func recordSpeedRound(right: Int, bestRun: Int) -> (outcome: PlayOutcome, newBest: Bool) {
+    var copy = progress
+    let result = copy.recordSpeedRound(right: right, bestRun: bestRun, day: today, hour: hour)
+    progress = copy
+    persister.changed()
+    persister.flush()
+    return result
+  }
+
+  @discardableResult
+  func recordFreePlay(_ record: AnswerRecord, queueMiss: Bool = true) -> (xp: Int, levelUp: Levels.Position?, newBadges: [BadgeID]) {
+    var copy = progress
+    let result = copy.recordFreePlay(record, day: today, queueMiss: queueMiss)
+    progress = copy
+    persister.changed()
+    return result
+  }
+
+  @discardableResult
+  func applyFreeReview(_ records: [AnswerRecord]) -> PlayOutcome {
+    var copy = progress
+    let outcome = copy.applyFreeReview(records, day: today, hour: hour)
+    progress = copy
+    persister.changed()
+    persister.flush()
+    return outcome
+  }
+
   func applyPlacement(_ placement: Placement) {
     update { $0.applyPlacement(placement) }
     startTab = placement == .regular ? .game : .practice
@@ -121,8 +161,13 @@ final class PracticeStore {
     let days = LaunchOptions.dayLog()
     let freezes = LaunchOptions.freezes()
     let goal = LaunchOptions.dailyGoal()
-    guard !days.isEmpty || freezes != nil || goal != nil else { return }
+    let review = LaunchOptions.reviewItems()
+    guard !days.isEmpty || freezes != nil || goal != nil || review != nil else { return }
+    let today = self.today
     update {
+      for n in 0..<(review ?? 0) {
+        $0.reviewQueue.recordMiss(ExerciseID(type: .nameTile, seed: UInt64(n + 1), difficulty: 1), today: today.adding(days: -2))
+      }
       if let goal {
         $0.dailyGoal = goal
         $0.goalChosen = true

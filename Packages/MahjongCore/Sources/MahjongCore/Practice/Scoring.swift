@@ -33,6 +33,8 @@ public enum XP {
   public static let comboBonus = 5
   public static let comboEvery = 5
   public static let badge = 20
+  /// A free-play question right first time.
+  public static let freePlayRight = 5
 
   public static func forAnswer(_ record: AnswerRecord) -> Int {
     guard record.correct else { return 0 }

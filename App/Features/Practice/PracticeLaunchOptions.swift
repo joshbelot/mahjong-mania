@@ -67,3 +67,19 @@ extension LaunchOptions {
     return DailyGoal(rawValue: text)
   }
 }
+
+extension LaunchOptions {
+  /// `-UITestSpeedNoTimer`: switch "No timer in Speed Round" on (with `-UITestResetData`).
+  static var speedNoTimer: Bool {
+    let arguments = ProcessInfo.processInfo.arguments
+    return arguments.contains("-UITestResetData") && arguments.contains("-UITestSpeedNoTimer")
+  }
+}
+
+extension LaunchOptions {
+  /// `-UITestReviewItems 3`: start with this many questions waiting in the review queue.
+  static func reviewItems(arguments: [String] = ProcessInfo.processInfo.arguments) -> Int? {
+    guard arguments.contains("-UITestResetData"), let text = value(after: "-UITestReviewItems", in: arguments) else { return nil }
+    return Int(text)
+  }
+}

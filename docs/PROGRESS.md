@@ -28,8 +28,8 @@ Plan: `docs/SPEC.md` §18 (Practice becomes a game). v1.1 build 3 is on TestFlig
 | 22 Progress logic (MahjongCore) | in review | [#37](https://github.com/joshbelot/mahjong-mania/pull/37) |
 | 23 Practice tab, path and lesson player | in review | [#38](https://github.com/joshbelot/mahjong-mania/pull/38) |
 | 24 Feel: animation, haptics, sound | in review | [#39](https://github.com/joshbelot/mahjong-mania/pull/39) |
-| 25 Daily goal, streaks, badges, profile | in review | PR pending |
-| 26 Daily Deal, Speed Round, free play | not started | |
+| 25 Daily goal, streaks, badges, profile | in review | [#40](https://github.com/joshbelot/mahjong-mania/pull/40) |
+| 26 Daily Deal, Speed Round, free play | in review | PR pending |
 | 27 1.2 QA and TestFlight upload | not started | |
 
 ### Open questions for the owner (1.2)

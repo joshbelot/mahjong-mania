@@ -79,9 +79,10 @@ final class PracticeTests: PracticeUITestCase {
     Thread.sleep(forTimeInterval: reduceMotion ? 0.4 : 0.7)
     attach("lesson1-\(tag)-6c-badge")
     tap(app, "celebration.continue")
-    XCTAssertTrue(element(app, "celebration.goal").waitForExistence(timeout: 5), "No daily goal celebration")
+    // The first time, the goal screen asks for the real goal (and says today's is done).
+    XCTAssertTrue(element(app, "goal.casual").waitForExistence(timeout: 5), "No daily goal choice")
     attach("lesson1-\(tag)-6d-goal")
-    tap(app, "celebration.continue")
+    tap(app, "goal.casual")
     XCTAssertTrue(app.navigationBars["Practice"].waitForExistence(timeout: 10))
     let next = element(app, "path.node.u1l2")
     XCTAssertTrue(next.waitForExistence(timeout: 5))
@@ -129,11 +130,12 @@ final class PracticeTests: PracticeUITestCase {
     XCTAssertEqual(title.label, "You tested out!")
     attach("testout-complete")
     tap(app, "lesson.continue")
-    // Level, the Tile Whisperer badge and the daily goal.
-    for _ in 0..<3 {
+    // Level, the Tile Whisperer badge, then the daily goal choice.
+    for _ in 0..<2 {
       XCTAssertTrue(element(app, "celebration.continue").waitForExistence(timeout: 5), "A celebration is missing")
       tap(app, "celebration.continue")
     }
+    tap(app, "goal.casual")
     XCTAssertTrue(app.navigationBars["Practice"].waitForExistence(timeout: 10))
     let next = element(app, "path.node.u2l1")
     XCTAssertTrue(next.waitForExistence(timeout: 5))

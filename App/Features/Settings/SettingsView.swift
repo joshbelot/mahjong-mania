@@ -184,6 +184,8 @@ struct SettingsView: View {
         }
       }
       .accessibilityIdentifier("settings.practice.goal")
+      Toggle("No timer in Speed Round", isOn: store.binding(\.speedRoundNoTimer))
+        .accessibilityIdentifier("settings.speed.notimer")
       Button("Reset practice progress", role: .destructive) { confirmPracticeReset = true }
         .accessibilityIdentifier("settings.practice.reset")
     } header: {
