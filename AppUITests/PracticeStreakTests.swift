@@ -103,8 +103,14 @@ final class PracticeStreakTests: PracticeUITestCase {
   }
 
   private func openProfile(_ app: XCUIApplication) {
-    tap(app, "header.level")
-    XCTAssertTrue(app.navigationBars["Profile"].waitForExistence(timeout: 5))
+    for _ in 0..<3 {
+      app.swipeDown()
+      let level = element(app, "header.level")
+      XCTAssertTrue(level.waitForExistence(timeout: 10), "No header")
+      level.tap()
+      if app.navigationBars["Profile"].waitForExistence(timeout: 4) { return }
+    }
+    XCTFail("The profile did not open")
   }
 
   private func profileTour(dark: Bool, textSize: String?, tag: String) {

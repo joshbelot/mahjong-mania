@@ -313,9 +313,10 @@ struct PracticeStoreTests {
     let store = PracticeStore(directory: makeTempDirectory(), persistDelay: fast, clock: .fixed(today))
     store.update {
       $0.dailyGoal = .regular
-      for n in 1...7 { $0.recordDay(today.adding(days: -n)) }
+      for n in (1...7).reversed() { $0.recordDay(today.adding(days: -n)) }
     }
-    #expect(store.progress.streak.current == 7 && store.progress.streak.freezes == 1)
+    #expect(store.progress.streak.current == 7, "\(store.progress.streak)")
+    #expect(store.progress.streak.freezes == 1, "\(store.progress.streak)")
     #expect(store.progress.lessonsPlayed(on: today.adding(days: -3)) == 2)
     #expect(store.progress.goalMet(on: today.adding(days: -3)))
   }
