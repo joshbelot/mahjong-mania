@@ -195,3 +195,15 @@ The spec title "<Right>'s exposed sets" gives "Across's exposed sets", which rea
 - **Daily Deal XP** is 25 per part (50), the Speed Round 2 per right answer; both count as one lesson for the daily goal.
 - The whole state (`PracticeProgress`) and the rules that change it live in MahjongCore as a pure value type; the app's store (Phase 23) only loads and saves it.
 
+## 2026-10-17, §18.2 and §18.4–§18.5 (Phase 23): Practice tab, path and lesson player
+
+- **`practice.json` is flat**: `version` sits beside the fields of `PracticeProgress`, as §18.9 lists them. The store saves right after each finished play (a lesson is not worth losing to the 0.3 s debounce). The drills' best streaks move from `settings.json` to `freePlay` the first time 1.2 runs without a `practice.json`, and are zeroed in settings so they move once.
+- **Skip in onboarding opens on Game and starts the path at Unit 1**; only an explicit choice on the new placement page sets the placement and, for "I'm new" and "I know the basics", the first tab (Practice). A skipper is saying "let me in", and the Game tab is where 1.1 users expect to land.
+- **Lesson intros.** A teaching card (title, one or two sentences, and a row of labelled tiles for the first lessons) shows before the first question of a lesson that has never been finished, and not again once it has. Quitting before finishing does not count as finishing.
+- **Choosing then Check; Yes/No and Keep/Pass commit on tap** (§18.5). In Keep or pass each tile gets its green or orange dot straight away; the one feedback sheet follows the fifth.
+- **Re-asks** appear after the last planned question, once each, only in lessons and reviews (never in checkpoints, which are tests). A re-asked question that is missed again is not asked a third time.
+- **"Test out"** sits on every unfinished unit's header. It asks the unit's checkpoint with an 8-of-10 bar and a confirmation first.
+- **The header strip** is pinned above the path at normal text sizes and is the first item in the scroll at accessibility sizes, where a pinned strip would eat the screen.
+- **UI-test hooks** (all need `-UITestResetData`): `-UITestPracticeSeed`, `-UITestRevealAnswers` (choice buttons get the value "correct" or "wrong"), `-UITestPlacement`, `-UITestToday`, `-UITestHour`, `-UITestPlayNode <id>` (opens a lesson at once, without its intro, for simulator checks). `-UITestTab practice` is accepted.
+- The two drills stay as they were in 1.1, moved into Practice → Free play; Phase 26 rebuilds them on the exercise engine.
+

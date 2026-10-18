@@ -5,13 +5,12 @@ enum LearnRoute: Hashable {
   case topic(String)
   case houseRules
   case glossary
-  case pickAHand
-  case charleston
 }
 
-/// Root of the Learn tab: reading topics, the glossary and the two drills.
+/// Root of the Learn tab: reading topics and the glossary, with a pointer to Practice.
 struct LearnHomeView: View {
   @Environment(SettingsStore.self) private var settings
+  @Environment(\.tabSwitcher) private var tabSwitcher
 
   var body: some View {
     ScreenContainer {
@@ -45,25 +44,15 @@ struct LearnHomeView: View {
           }
         }
         SectionCard("Practise") {
-          VStack(spacing: 0) {
-            NavigationLink(value: LearnRoute.pickAHand) {
-              LearnRow(
-                symbol: "hand.point.up.left", title: "Pick-a-Hand",
-                subtitle: "Look at 13 tiles and choose the line you would aim for.",
-                badge: "Best streak \(settings.settings.bestStreaks.pickAHand)")
-            }
-            .buttonStyle(.plain)
-            .accessibilityIdentifier("learn.drill.pick")
-            Divider()
-            NavigationLink(value: LearnRoute.charleston) {
-              LearnRow(
-                symbol: "arrow.left.arrow.right", title: "Charleston Pass",
-                subtitle: "Choose the 3 tiles you would pass and compare with the engine.",
-                badge: "Best streak \(settings.settings.bestStreaks.charleston)")
-            }
-            .buttonStyle(.plain)
-            .accessibilityIdentifier("learn.drill.charleston")
+          Button {
+            tabSwitcher.select(.practice)
+          } label: {
+            LearnRow(
+              symbol: "flame.fill", title: "Practise this in the Practice tab",
+              subtitle: "Short lessons, a daily deal and the Pick-a-Hand and Charleston drills.")
           }
+          .buttonStyle(.plain)
+          .accessibilityIdentifier("learn.practice")
         }
       }
     }
@@ -77,10 +66,6 @@ struct LearnHomeView: View {
         LearnTopicView(topic: LearnHouseRules.topic(for: settings.settings.defaultRules))
       case .glossary:
         GlossaryView()
-      case .pickAHand:
-        PickAHandDrillView()
-      case .charleston:
-        CharlestonDrillView()
       }
     }
   }

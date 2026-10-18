@@ -1,16 +1,20 @@
 import SwiftUI
 
-/// The four tabs. Each tab's root view lives in its feature folder and applies its own title and
+/// The five tabs. Each tab's root view lives in its feature folder and applies its own title and
 /// `settingsToolbar()`.
 struct RootView: View {
   @Environment(\.theme) private var theme
   @Environment(SettingsStore.self) private var settings
-  @State fileprivate var selectedTab: AppTab = LaunchOptions.initialTab() ?? .game
+  @State fileprivate var selectedTab: AppTab
   @State fileprivate var cardsPath: [CardsRoute] = []
   @Environment(IncomingLinks.self) fileprivate var links
   @State fileprivate var importRequest: LinkImport?
   @State fileprivate var linkError: CardQRCode.DecodeError?
   @State fileprivate var openedCardID: String?
+
+  init(startTab: AppTab? = nil) {
+    _selectedTab = State(initialValue: LaunchOptions.initialTab() ?? startTab ?? .game)
+  }
 
   /// A card file that arrived by QR code, waiting in the Import screen.
   fileprivate struct LinkImport: Identifiable {
@@ -30,6 +34,10 @@ struct RootView: View {
           .accessibilityIdentifier("tab.helper")
           .tag(AppTab.helper)
       }
+      NavigationStack { PracticeHomeView() }
+        .tabItem { Label("Practice", systemImage: "flame.fill") }
+        .accessibilityIdentifier("tab.practice")
+        .tag(AppTab.practice)
       NavigationStack(path: $cardsPath) { CardsListView() }
         .tabItem { Label("Cards", systemImage: "rectangle.stack") }
         .accessibilityIdentifier("tab.cards")
@@ -86,13 +94,17 @@ extension RootView {
 }
 
 #Preview("Light") {
-  RootView()
-    .environment(AppStores.inMemory().settings)
+  let stores = AppStores.inMemory()
+  return RootView()
+    .environment(stores.settings)
+    .environment(stores.practice)
     .preferredColorScheme(.light)
 }
 
 #Preview("Dark") {
-  RootView()
-    .environment(AppStores.inMemory().settings)
+  let stores = AppStores.inMemory()
+  return RootView()
+    .environment(stores.settings)
+    .environment(stores.practice)
     .preferredColorScheme(.dark)
 }

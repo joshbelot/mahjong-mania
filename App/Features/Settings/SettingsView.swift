@@ -7,6 +7,7 @@ struct SettingsView: View {
   @Environment(AppStores.self) private var stores
   @State private var confirmFirst = false
   @State private var confirmSecond = false
+  @State private var confirmPracticeReset = false
 
   private var version: String {
     let info = Bundle.main.infoDictionary
@@ -23,6 +24,7 @@ struct SettingsView: View {
         rulesSection
         moneySection
         helperSection
+        practiceSection
         aboutSection
         resetSection
         #if DEBUG
@@ -52,6 +54,15 @@ struct SettingsView: View {
         Button("Cancel", role: .cancel) {}
       } message: {
         Text("This removes every player, game night, card and setting on this phone.")
+      }
+      .confirmationDialog(
+        "Reset practice progress?", isPresented: $confirmPracticeReset, titleVisibility: .visible
+      ) {
+        Button("Reset practice progress", role: .destructive) { stores.practice.reset() }
+          .accessibilityIdentifier("settings.practice.reset.confirm")
+        Button("Cancel", role: .cancel) {}
+      } message: {
+        Text("Your path, XP, streak, badges and best streaks go back to the start. Everything else stays.")
       }
       .alert("This cannot be undone", isPresented: $confirmSecond) {
         Button("Delete everything", role: .destructive) {
@@ -157,6 +168,16 @@ struct SettingsView: View {
     .listRowBackground(theme.surface)
   }
 
+  private var practiceSection: some View {
+    Section {
+      Button("Reset practice progress", role: .destructive) { confirmPracticeReset = true }
+        .accessibilityIdentifier("settings.practice.reset")
+    } header: {
+      Text("Practice")
+    }
+    .listRowBackground(theme.surface)
+  }
+
   private var aboutSection: some View {
     Section {
       LabeledContent("Version", value: version)
@@ -187,6 +208,7 @@ struct SettingsView: View {
   let stores = AppStores.inMemory()
   return SettingsView()
     .environment(stores.settings)
+    .environment(stores.practice)
     .environment(stores)
     .preferredColorScheme(.light)
 }
@@ -195,6 +217,7 @@ struct SettingsView: View {
   let stores = AppStores.inMemory()
   return SettingsView()
     .environment(stores.settings)
+    .environment(stores.practice)
     .environment(stores)
     .preferredColorScheme(.dark)
 }

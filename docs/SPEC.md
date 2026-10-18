@@ -1707,10 +1707,10 @@ Same rules as §17.9 (local `tools/test.sh` is the gate; look at every changed s
 - [x] Tests for every rule in §18.6 (including time zone/DST/freeze cases) and the curriculum's structure.
 
 #### Phase 23: Practice tab, path and lesson player
-- [ ] `PracticeStore` + `practice.json` (§18.9) with migration of drill best streaks; Reset clears it.
-- [ ] Practice tab, header strip, path with locked/next/played/gold nodes, lesson player for all exercise types, hints, feedback sheet, mistakes-come-back, completion screen, checkpoints and test-out.
-- [ ] Onboarding placement page; Learn link card; drills removed from Learn.
-- [ ] UI tests from §18.10 for onboarding, a lesson and test-out.
+- [x] `PracticeStore` + `practice.json` (§18.9) with migration of drill best streaks; Reset clears it.
+- [x] Practice tab, header strip, path with locked/next/played/gold nodes, lesson player for all exercise types, hints, feedback sheet, mistakes-come-back, completion screen, checkpoints and test-out.
+- [x] Onboarding placement page; Learn link card; drills removed from Learn.
+- [x] UI tests from §18.10 for onboarding, a lesson and test-out.
 
 #### Phase 24: Feel
 - [ ] Animations, haptics and celebrations per §18.7; Reduce Motion variants.

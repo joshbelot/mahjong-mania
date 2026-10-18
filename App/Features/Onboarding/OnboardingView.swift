@@ -1,7 +1,8 @@
 import MahjongCore
 import SwiftUI
 
-/// First-launch flow: Welcome, "How much help do you want?", "Which card?". Three full-screen pages with
+/// First-launch flow: Welcome, "How well do you know American Mahjong?", "How much help do you want?",
+/// "Which card?". Four full-screen pages with
 /// progress dots, Skip and Next. Choices are saved as they are made; finishing sets `onboardingDone`.
 struct OnboardingView: View {
   enum CardChoice: String, CaseIterable, Sendable {
@@ -10,10 +11,12 @@ struct OnboardingView: View {
 
   @Environment(\.theme) private var theme
   @Environment(SettingsStore.self) private var settings
+  @Environment(PracticeStore.self) private var practice
   @State private var page = 0
+  @State private var placement = Placement.new
   @State private var cardChoice = CardChoice.practice
 
-  private static let pageCount = 3
+  private static let pageCount = 4
 
   var body: some View {
     ZStack {
@@ -21,7 +24,7 @@ struct OnboardingView: View {
       VStack(spacing: 0) {
         HStack {
           Spacer()
-          Button("Skip") { finish() }
+          Button("Skip") { finish(applyingPlacement: false) }
             .font(Typography.body.weight(.semibold))
             .foregroundStyle(theme.primary)
             .frame(minWidth: 44, minHeight: 44)
@@ -31,8 +34,9 @@ struct OnboardingView: View {
 
         TabView(selection: $page) {
           welcomePage.tag(0)
-          assistPage.tag(1)
-          cardPage.tag(2)
+          placementPage.tag(1)
+          assistPage.tag(2)
+          cardPage.tag(3)
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
 
@@ -71,9 +75,11 @@ struct OnboardingView: View {
     .accessibilityLabel("Page \(page + 1) of \(Self.pageCount)")
   }
 
-  private func finish() {
+  private func finish(applyingPlacement: Bool = true) {
+    if applyingPlacement && page >= 1 { practice.applyPlacement(placement) }
     settings.update { $0.onboardingDone = true }
     settings.flush()
+    practice.flush()
   }
 
   // MARK: Pages
@@ -111,6 +117,7 @@ struct OnboardingView: View {
       VStack(alignment: .leading, spacing: Spacing.md) {
         featureRow("dice", "Keep score at game night, with payouts worked out for you.")
         featureRow("lightbulb", "Get hints on your hand, only when you want them.")
+        featureRow("flame.fill", "Practise with short lessons, a daily deal and streaks.")
         featureRow("graduationcap", "Learn the tiles, the card and the Charleston.")
       }
     }
@@ -128,6 +135,31 @@ struct OnboardingView: View {
         .foregroundStyle(theme.text)
         .frame(maxWidth: .infinity, alignment: .leading)
         .fixedSize(horizontal: false, vertical: true)
+    }
+  }
+
+  private var placementPage: some View {
+    pageScroll {
+      Text("How well do you know American Mahjong?")
+        .titleStyle()
+        .foregroundStyle(theme.text)
+        .accessibilityAddTraits(.isHeader)
+        .padding(.top, Spacing.lg)
+      Text("This sets where your practice path starts. You can test out of anything later.")
+        .font(Typography.small)
+        .foregroundStyle(theme.textMuted)
+      choiceCard(
+        title: "I'm new", detail: "Start from the very beginning: the tiles, the card, then how to play.",
+        example: nil, selected: placement == .new, id: "placement.new"
+      ) { placement = .new }
+      choiceCard(
+        title: "I know the basics", detail: "I know the tiles, the card and jokers. Start with choosing hands.",
+        example: nil, selected: placement == .basics, id: "placement.basics"
+      ) { placement = .basics }
+      choiceCard(
+        title: "I play regularly", detail: "I play already. Open the app on the score sheet; practice is there when I want it.",
+        example: nil, selected: placement == .regular, id: "placement.regular"
+      ) { placement = .regular }
     }
   }
 
@@ -244,6 +276,7 @@ struct OnboardingView: View {
   let stores = AppStores.inMemory()
   return OnboardingView()
     .environment(stores.settings)
+    .environment(stores.practice)
     .preferredColorScheme(.light)
 }
 
@@ -251,5 +284,6 @@ struct OnboardingView: View {
   let stores = AppStores.inMemory()
   return OnboardingView()
     .environment(stores.settings)
+    .environment(stores.practice)
     .preferredColorScheme(.dark)
 }

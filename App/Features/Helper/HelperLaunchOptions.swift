@@ -9,7 +9,7 @@ import MahjongCore
 /// - `-UITestOpenURL <url>`: open this link as if it had launched the app (card QR import).
 /// - `-UITestTileStyle classic|traditional|largePrint|modern`: start with this tile style.
 /// - `-UITestBlanks <n>`: switch the blanks rule on with n blanks.
-/// - `-UITestTab game|helper|cards|learn`: start on this tab.
+/// - `-UITestTab game|helper|cards|learn`: start on this tab (game, helper, practice, cards, learn).
 extension LaunchOptions {
   static func value(after flag: String, in arguments: [String]) -> String? {
     guard let index = arguments.firstIndex(of: flag), arguments.indices.contains(index + 1) else {
@@ -60,6 +60,7 @@ extension LaunchOptions {
     switch text {
     case "game": return .game
     case "helper": return .helper
+    case "practice": return .practice
     case "cards": return .cards
     case "learn": return .learn
     default: return nil
