@@ -9,7 +9,7 @@ settings:
   base:
     SWIFT_VERSION: "6.0"
     MARKETING_VERSION: "1.2"            # what testers see
-    CURRENT_PROJECT_VERSION: "3"        # build number; tools/bump_build.sh increments it every upload
+    CURRENT_PROJECT_VERSION: "4"        # build number; tools/bump_build.sh increments it every upload
     # DEVELOPMENT_TEAM is NOT set here. The release script passes DEVELOPMENT_TEAM="$DEVELOPMENT_TEAM" to xcodebuild;
     # for on-device runs from Xcode, the owner picks their team once in Signing & Capabilities (it lives in the generated, git-ignored project).
     CODE_SIGN_STYLE: Automatic
