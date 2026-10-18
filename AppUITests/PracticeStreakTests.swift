@@ -35,8 +35,12 @@ final class PracticeStreakTests: PracticeUITestCase {
     XCTAssertTrue(app.staticTexts["Your streak freeze kept your 7-day streak safe."].exists)
     XCTAssertEqual(streakValue(app), "7 days")
     attach("streak-freeze-used-light")
+    app.swipeDown()
+    app.swipeDown()
     tap(app, "banner.freeze.dismiss")
-    XCTAssertTrue(element(app, "banner.freeze").waitForNonExistence(timeout: 5), "The message was not dismissed")
+    let gone = element(app, "banner.freeze").waitForNonExistence(timeout: 5)
+    attach("streak-freeze-dismissed")
+    XCTAssertTrue(gone, "The message was not dismissed")
   }
 
   func testABrokenStreakRestartsKindly() {

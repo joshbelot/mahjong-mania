@@ -69,7 +69,10 @@ struct PracticeHomeView: View {
       .task {
         practice.openDay()
         try? await Task.sleep(for: .milliseconds(150))
-        if let next = progress.nextNode { proxy.scrollTo("node.\(next.id)", anchor: .center) }
+        // Streak news sits at the top of the path: leave it in view instead of scrolling past it.
+        if practice.pendingStreakEvents.isEmpty, let next = progress.nextNode {
+          proxy.scrollTo("node.\(next.id)", anchor: .center)
+        }
         if let node = LaunchOptions.playNode(), play == nil { start(node) }
       }
     }
