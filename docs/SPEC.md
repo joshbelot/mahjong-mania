@@ -1702,9 +1702,9 @@ Same rules as §17.9 (local `tools/test.sh` is the gate; look at every changed s
 - [x] Deal filters (§18.3.1); tests: 500 seeds per type × difficulty are gradable, deterministic, filters hold ≥ 95%; `pickHand`/`passThree` grading matches today's drills.
 
 #### Phase 22: Progress logic (MahjongCore)
-- [ ] `Curriculum` (units, lessons, checkpoints, gold rules) exactly as §18.4.
-- [ ] XP, levels and titles; streak and freezes over local days; badges; review queue scheduling; Daily Deal seed and weekday difficulty.
-- [ ] Tests for every rule in §18.6 (including time zone/DST/freeze cases) and the curriculum's structure.
+- [x] `Curriculum` (units, lessons, checkpoints, gold rules) exactly as §18.4.
+- [x] XP, levels and titles; streak and freezes over local days; badges; review queue scheduling; Daily Deal seed and weekday difficulty.
+- [x] Tests for every rule in §18.6 (including time zone/DST/freeze cases) and the curriculum's structure.
 
 #### Phase 23: Practice tab, path and lesson player
 - [ ] `PracticeStore` + `practice.json` (§18.9) with migration of drill best streaks; Reset clears it.

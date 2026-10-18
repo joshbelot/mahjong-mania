@@ -180,3 +180,18 @@ The spec title "<Right>'s exposed sets" gives "Across's exposed sets", which rea
 - **Calling (`callIt`)** is graded by `checkCall` for the *shown* line, which is the engine's best line for the 13 tiles. A deal where another line would be best is rejected.
 - **Test cost.** `ExerciseTests` runs 500 seeds for each of 13 types × 3 difficulties (about 80 s in a debug `swift test`); set `EXERCISE_SEEDS=20` for a quick run.
 
+## 2026-10-17, §18.4–§18.6 (Phase 22): progress logic details the spec left open
+
+- **Days are `LocalDay`, not `Date`.** A `Date` becomes a `LocalDay` (year-month-day, stored as `"2026-10-17"`) once, with the user's `Calendar`, and the streak, day log, review queue and Daily Deal then use whole-day arithmetic. That makes DST days (23 or 25 hours), midnight and a changed time zone harmless: past days never move, and a phone that goes back a day (a flight west) changes nothing.
+- **Freezes are kept when they cannot save the streak.** With one freeze and two missed days the streak resets and the freeze stays (spending it for nothing felt like a penalty, §18.1). With enough freezes every missed day uses one.
+- **A freeze is earned every 7th day of a streak** (7, 14, 21…) while fewer than two are held; the 7-day milestone therefore gives the first.
+- **Combo and "On Fire".** The spec's "15 in a row in one lesson" cannot happen in a lesson of 5–10 questions, so the badge counts the best run in any lesson or Speed Round (`counters.bestCombo`); the per-lesson combo bonus (+5 per 5 in a row) is as specified. A right re-asked answer continues the run.
+- **Stars.** Re-asked questions never count as misses; hints cost the third star but are not misses.
+- **Lesson texts.** Every lesson has a one- or two-sentence intro (shown before the first question) so a beginner is told what a Pung or a Crack is before being asked; not in the spec, added under §18.1 ("fun in 30 seconds" needs a first question that can be answered).
+- **Review node** asks 8 questions: due review items first, then the unit's questions at their hardest level. Units 1–2 have none (spec: after Unit 2). A review node counts as done once played.
+- **Checkpoints** ask 7 questions from the unit's types at the hardest difficulty the unit uses, and 3 from earlier units (all 10 from the unit itself in Unit 1). They carry no lesson focus. A failed checkpoint still counts as a play toward the daily goal.
+- **"Test out"** is offered on every unit that is not finished (not only locked ones), so a brand-new experienced player can test out of Unit 1 through the current unit. Testing out marks the unit and every earlier one tested out (stars already earned stay).
+- **Daily Deal difficulty by weekday.** Monday to Wednesday are built around one hand (9, 8, 7 of the 13 tiles) so the best choice is clear; Thursday needs a clear best section, Friday any deal, Saturday a murky one (best section less than 2 tiles clearer), Sunday a murky deal whose best hand is 8+ tiles away. The pick is graded by the Pick-a-Hand rule (top three or tied), the pass squares are 🟩 as good as the engine's set, 🟥 a tile the best hand uses, 🟨 in between.
+- **Daily Deal XP** is 25 per part (50), the Speed Round 2 per right answer; both count as one lesson for the daily goal.
+- The whole state (`PracticeProgress`) and the rules that change it live in MahjongCore as a pure value type; the app's store (Phase 23) only loads and saves it.
+
