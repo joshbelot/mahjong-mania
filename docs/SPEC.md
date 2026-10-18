@@ -1730,5 +1730,5 @@ Same rules as §17.9 (local `tools/test.sh` is the gate; look at every changed s
 
 #### Phase 27: 1.2 QA and release
 - [ ] Simulator QA: a fresh install played as a beginner through Unit 2 and as an experienced player via test-out; every 1.2 screen in light/dark/AX5 and with Reduce Motion; existing §13 and §17 checks still pass.
-- [ ] Version 1.2, What to Test, handoff notes.
+- [x] Version 1.2, What to Test, handoff notes.
 - [ ] `--dry-run`, `altool --validate-app`, the real upload, and the build processed in App Store Connect (§18.11).

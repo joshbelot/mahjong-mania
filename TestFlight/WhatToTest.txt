@@ -1,18 +1,20 @@
-Thanks for testing Mahjong Mania 1.1! This round is about things that were confusing the first time. Please tell me where the words still don't make sense.
+Thanks for testing Mahjong Mania 1.2! This round turns practice into a game. Please tell me whether it's fun, and where anything felt confusing, too easy or too hard.
 
 What's new
-- Plain words. The tile picker's toggle now says "Hide tiles" / "Show tiles". "Exposures" are now "Your exposed sets", with an (i) button that explains what that means and a drawn example.
-- Charleston. Say if you're East (14 tiles). The Helper shows "Pass 1 of 7 · Right" and holds the 3 tiles it suggests still while you swap tiles, ticking each one "Passed". It moves on only when your hand is full again.
-- House rules. Settings → House rules is now a rule book: every rule in plain words, with what it means, a worked example and named choices (never a bare number). Switch rules on or off, add a note for your table, or add a scoring rule of your own. Learn → House rules explained lists them all.
-- Blanks. If your table plays with blanks, switch them on in House rules. The tile picker gets a Blank key, and the Helper never suggests passing or discarding one.
-- Tile styles. Settings → Tile style: Classic, Traditional, Large print or Modern.
-- Share a card with a QR code. On one of your own cards, open the ... menu and choose Show QR code. Someone else scans it with the iPhone Camera to add the card, or use Cards → Import → From a QR code picture.
+- A new Practice tab. A path of short lessons (2 to 3 minutes each) takes you from "what is a Bam?" through reading the card, jokers, choosing a hand and the Charleston. Earn stars, XP and levels. Mistakes never stop you: they come back at the end of the lesson and again on later days.
+- "I'm new", "I know the basics" or "I play regularly" at setup sets where your path starts. You can test out of any unit at any time.
+- Daily goal and streak. Pick a goal (1, 2 or 4 lessons a day). Your streak counts your own calendar days, a streak freeze covers a day you miss, and there's no nagging: no notifications at all.
+- The Daily Deal: one hand to choose and three tiles to pass, the same for everyone each day, harder as the week goes on. Share your result as text.
+- Speed Round (after Unit 6): 60 seconds of keep or pass. Prefer no clock? Settings → Practice → "No timer in Speed Round".
+- Free play: the Pick-a-Hand and Charleston drills moved here, with Easy, Normal and Hard, your own card if you like, and "Review mistakes".
+- Badges, a profile with a 12-week calendar and accuracy by skill, and a little celebration when you level up. Sounds can be turned off in Settings.
 
 What to try
-1. Hand Helper → Charleston: tick "I'm East", enter 13 (or 14) tiles, and watch the pass tracker. Take out the 3 suggested tiles and put 3 others in.
-2. Hand Helper → Playing: tap the (i) next to "Your exposed sets", then add a set.
-3. Settings → House rules: open "A jokerless hand pays double", change it to Triple, and read the example. Add a scoring rule, then record a hand in a game night and check the explanation names it.
-4. Settings → Tile style: try all four, in light and dark mode and with a larger text size.
-5. Cards: make a card of your own, show its QR code and scan it from another iPhone.
+1. Start with Practice → Lesson 1. Is the next step always obvious? Did anything take longer than 3 minutes?
+2. Get a question wrong on purpose. Is the explanation clear? Does it come back at the end?
+3. If you already play: test out of a unit from its header and see whether the questions feel fair.
+4. Play the Daily Deal and tap Share.
+5. Turn on a bigger text size, dark mode, or Reduce Motion and look around Practice.
+6. After Unit 6 (or by testing out of it), try the Speed Round.
 
-Known limits: iPhone only, portrait only, no iPad layout, no 5-player tables.
+Known limits: iPhone only, portrait only, no leagues or online play, no reminders. Everything stays on your phone.

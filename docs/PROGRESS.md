@@ -25,16 +25,35 @@ Plan: `docs/SPEC.md` §18 (Practice becomes a game). v1.1 build 3 is on TestFlig
 | Phase | Status | PR |
 |---|---|---|
 | 21 Exercise engine (MahjongCore) | merged | [#36](https://github.com/joshbelot/mahjong-mania/pull/36) |
-| 22 Progress logic (MahjongCore) | in review | [#37](https://github.com/joshbelot/mahjong-mania/pull/37) |
-| 23 Practice tab, path and lesson player | in review | [#38](https://github.com/joshbelot/mahjong-mania/pull/38) |
-| 24 Feel: animation, haptics, sound | in review | [#39](https://github.com/joshbelot/mahjong-mania/pull/39) |
-| 25 Daily goal, streaks, badges, profile | in review | [#40](https://github.com/joshbelot/mahjong-mania/pull/40) |
-| 26 Daily Deal, Speed Round, free play | in review | PR pending |
-| 27 1.2 QA and TestFlight upload | not started | |
+| 22 Progress logic (MahjongCore) | merged | [#37](https://github.com/joshbelot/mahjong-mania/pull/37) |
+| 23 Practice tab, path and lesson player | merged | [#42](https://github.com/joshbelot/mahjong-mania/pull/42) (replaced #38) |
+| 24 Feel: animation, haptics, sound | merged | [#39](https://github.com/joshbelot/mahjong-mania/pull/39) |
+| 25 Daily goal, streaks, badges, profile | merged | [#40](https://github.com/joshbelot/mahjong-mania/pull/40) |
+| 26 Daily Deal, Speed Round, free play | merged | [#41](https://github.com/joshbelot/mahjong-mania/pull/41) |
+| 27 1.2 QA and TestFlight upload | QA and version done in this PR; upload pending | PR pending |
 
 ### Open questions for the owner (1.2)
 
-_None yet._
+Product judgements the spec did not settle. Each choice is the one that best fits §18.1; any can be changed. Details are in `docs/DECISIONS.md`.
+
+1. **Skip in onboarding.** Chosen: Skip opens on Game and starts the path at Unit 1; only an explicit placement choice opens on Practice ("I'm new", "I know the basics") or Game ("I play regularly").
+2. **Lesson intros.** Chosen: every lesson that has never been finished opens with a short teaching card (and labelled tiles for the first lessons) before its first question, so a beginner is told what a Pung or a Crack is before being asked. The spec has no intro.
+3. **Where "Test out" lives.** Chosen: on every unfinished unit's header (not only locked units' checkpoints), so a new experienced player can skip several units at once. Pass mark 8 of 10, a confirmation first.
+4. **Easy and normal deals are partly stacked.** Chosen: Pick-a-Hand d1/d2 and Charleston d1 build the 13 tiles around one hand of the card, then apply the §18.3.1 filter, because a random deal is rarely "clear-cut". Hard is today's random deal.
+5. **Changing the daily goal never un-meets today.** Chosen: today stays counted and the new goal applies from tomorrow; the goal is asked as the last of the first lesson's screens, and replaces the separate "goal met" screen that time.
+6. **Freezes when they can't save the streak.** Chosen: with two missed days and one freeze the streak restarts and the freeze is kept (no punishment for a loss that could not be prevented).
+7. **"On Fire" (15 in a row).** Chosen: counted over any lesson or Speed Round, because a lesson has at most 10 questions.
+8. **Daily Deal difficulty by weekday.** Chosen: Monday to Wednesday are built around one hand so the best choice shows; Thursday needs a clear best section; Friday is any deal; Saturday and Sunday are murky deals (Sunday's best hand is 8+ tiles away). Replays are practice and pay nothing.
+9. **Speed Round.** Chosen: single keep-or-pass questions with a new target every 5, bonus name-the-tile / name-the-group questions from the 21st; the reason for the last answer sits under the next question instead of a feedback sheet; both modes (60 s, or 30 untimed) share one personal best.
+10. **Free play and Review mistakes.** Chosen: free play pays 5 XP per right-first-time question, counts for the Sharp Eye and Charleston Champ badges, and does not touch the streak; "Review mistakes" counts as one lesson toward the daily goal. A miss on your own card is not queued for review.
+11. **Celebrations.** Chosen: full-screen, one at a time, after the completion screen (level, each badge, then goal or milestone); Continue and Play again both go through them. A new player sees three screens after their first lesson.
+
+### 1.2 QA pass (2026-10-18, iPhone 17 Pro and iPhone Air simulators, iOS 27 SDK)
+
+- **Every phase** was built, driven and looked at in the simulator in light, dark and the first accessibility size before it merged, and every PR's `tools/test.sh` was run locally on its branch head. The gates found and fixed: a streak message hidden by the path's auto-scroll, a wrong-order unit test, and three flaky UI tests; one run also failed from a nearly full disk (a simulator launch error, not a test failure) and was simply rerun.
+- **Beginner:** `PracticeQATests.testBeginnerPlaysThroughUnitTwo` plays a fresh install through Units 1 and 2 (all eight lessons and both checkpoints, with mistakes and a hint), shown unlocking Unit 3. **Experienced:** `testExperiencedPlayerTestsOutOfThreeUnits` tests out of Units 1-3 at once. `PracticeScreensTests` opens a lesson of every question type in light, dark and AX; the Daily Deal, Speed Round, free play, review, streak and profile tests add the rest. Reduce Motion on and off is covered for the lesson and its celebrations.
+- **Existing §13 and §17 checks** still pass: they are the rest of the UI suite (Game Night, Helper, Cards, QR, Learn, Settings, large text), which ran green in the same gates.
+- **Not verifiable here, owner steps (boxes left open):** haptics and sounds on a real phone (and the silent switch), VoiceOver by hand through a lesson and the path, real midnight and time-zone changes on a device, sharing the Daily Deal into Messages, real-device speed, and installing the TestFlight build.
 
 ## Version 1.1 (done)
 

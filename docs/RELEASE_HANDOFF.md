@@ -1,4 +1,36 @@
-# Release handoff — Mahjong Mania v1.1
+# Release handoff — Mahjong Mania v1.2
+
+_Status: all 1.2 phases (21–27) are merged and the 1.2 upload was made by the agent from a clean `main` with the owner's authorisation (SPEC §18.11). The build number and processing state are in `docs/PROGRESS.md`._
+
+## 1.2 in short
+
+Plan: `docs/SPEC.md` §18. Decisions: `docs/DECISIONS.md` (entries dated 2026-10-17 and 2026-10-18). Open questions for the owner: `docs/PROGRESS.md`.
+
+Practice became a game:
+
+- **Exercise engine** (21, `MahjongCore/Practice`): 13 question types × 3 difficulties, generated from `(type, seed, difficulty, focus)` on the built-in Practice Card, graded in core with explanations and hints; deal filters keep early deals clear-cut.
+- **Progress logic** (22): the curriculum (10 units, lessons, review nodes, checkpoints, gold), XP, levels, streaks and freezes over `LocalDay` (whole-day arithmetic, safe across DST and time zones), badges, the spaced review queue, the Daily Deal and `PracticeProgress`, the one value type the app saves to `practice.json`.
+- **Practice tab** (23): header strip, path, lesson player, test-out, placement during onboarding; the two 1.1 drills moved here.
+- **Feel** (24): animations, haptics, eight generated sounds (`tools/make_sounds.py`), confetti celebrations, Reduce Motion variants; Settings → Sound effects.
+- **Streaks and profile** (25): daily goal, streak flame and freezes, milestones, kind restart messages, profile with calendar, accuracy and badges.
+- **Daily Deal, Speed Round, free play** (26): see the Practice tab; Settings → Practice has the goal, "No timer in Speed Round" and "Reset practice progress".
+
+## Things only a person with an iPhone can check
+
+- Haptics (right/wrong/level-up), the sounds through the speaker and the silent switch (the audio session is `.ambient`), real-device speed of a lesson, VoiceOver by hand through a lesson and the path, and installing the TestFlight build.
+- Whether a day change at real midnight (and a time-zone change while travelling) behaves: the logic is tested on whole days, but only a phone can prove the system clock events.
+- Sharing the Daily Deal text into Messages (the share sheet is the system's).
+
+## Known limitations
+
+- The Daily Deal has no shared leaderboard (no backend, by design).
+- A streak can't be repaired after the fact; freezes are earned every 7 days up to two.
+- Free play on your own card never feeds the review queue (a review rebuilds questions on the Practice Card).
+- The 1.1 limitations below still apply. Everything under "Your one-time setup" is unchanged.
+
+---
+
+# Earlier handoff: Mahjong Mania v1.1
 
 _Status: all 1.1 phases (13–19) are merged and the 1.1 upload was made by the agent from a clean `main` with the owner's authorisation (SPEC §17.8). The build number and processing state are in `docs/PROGRESS.md`._
 
