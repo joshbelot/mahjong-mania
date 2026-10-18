@@ -23,7 +23,7 @@ final class PracticeTests: XCTestCase {
     app.launchArguments += flags
     if dark { app.launchArguments += ["-UITestDark"] }
     if let textSize { app.launchArguments += ["-UIPreferredContentSizeCategoryName", textSize] }
-    if reduceMotion { app.launchArguments += ["-UIAccessibilityReduceMotionEnabled", "YES"] }
+    if reduceMotion { app.launchArguments += ["-UITestReduceMotion"] }
     app.launch()
     return app
   }
@@ -120,6 +120,7 @@ final class PracticeTests: XCTestCase {
   // MARK: A lesson
 
   private func lessonOne(dark: Bool = false, textSize: String? = nil, reduceMotion: Bool = false, tag: String) {
+    let reduceMotion = reduceMotion
     let app = launch(practiceFlags, dark: dark, textSize: textSize, reduceMotion: reduceMotion)
     let node = element(app, "path.node.u1l1")
     XCTAssertTrue(node.waitForExistence(timeout: 10))
@@ -145,6 +146,19 @@ final class PracticeTests: XCTestCase {
     XCTAssertTrue(element(app, "complete.xp").label.hasPrefix("+"))
     attach("lesson1-\(tag)-6-complete")
     tap(app, "lesson.continue")
+    // Level 2, the First Steps badge and the daily goal each get a screen.
+    let level = element(app, "celebration.level.2")
+    XCTAssertTrue(level.waitForExistence(timeout: 5), "No level-up celebration")
+    Thread.sleep(forTimeInterval: reduceMotion ? 0.4 : 0.7)
+    attach("lesson1-\(tag)-6b-levelup")
+    tap(app, "celebration.continue")
+    XCTAssertTrue(element(app, "celebration.badge.firstSteps").waitForExistence(timeout: 5), "No badge celebration")
+    Thread.sleep(forTimeInterval: reduceMotion ? 0.4 : 0.7)
+    attach("lesson1-\(tag)-6c-badge")
+    tap(app, "celebration.continue")
+    XCTAssertTrue(element(app, "celebration.goal").waitForExistence(timeout: 5), "No daily goal celebration")
+    attach("lesson1-\(tag)-6d-goal")
+    tap(app, "celebration.continue")
     XCTAssertTrue(app.navigationBars["Practice"].waitForExistence(timeout: 10))
     let next = element(app, "path.node.u1l2")
     XCTAssertTrue(next.waitForExistence(timeout: 5))
@@ -156,6 +170,7 @@ final class PracticeTests: XCTestCase {
   func testPlayLessonOneLight() { lessonOne(tag: "light") }
   func testPlayLessonOneDark() { lessonOne(dark: true, tag: "dark") }
   func testPlayLessonOneAccessibilitySize() { lessonOne(textSize: Self.accessibilityM, tag: "ax") }
+  func testPlayLessonOneReduceMotion() { lessonOne(reduceMotion: true, tag: "reduce-motion") }
 
   func testQuittingAskForConfirmation() {
     let app = launch(practiceFlags)
@@ -191,6 +206,11 @@ final class PracticeTests: XCTestCase {
     XCTAssertEqual(title.label, "You tested out!")
     attach("testout-complete")
     tap(app, "lesson.continue")
+    // Level, the Tile Whisperer badge and the daily goal.
+    for _ in 0..<3 {
+      XCTAssertTrue(element(app, "celebration.continue").waitForExistence(timeout: 5), "A celebration is missing")
+      tap(app, "celebration.continue")
+    }
     XCTAssertTrue(app.navigationBars["Practice"].waitForExistence(timeout: 10))
     let next = element(app, "path.node.u2l1")
     XCTAssertTrue(next.waitForExistence(timeout: 5))

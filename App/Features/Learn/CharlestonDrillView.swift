@@ -1,20 +1,6 @@
 import MahjongCore
 import SwiftUI
 
-/// A horizontal wobble that returns to rest when `shakes` is a whole number.
-private struct ShakeEffect: GeometryEffect {
-  var shakes: CGFloat
-
-  var animatableData: CGFloat {
-    get { shakes }
-    set { shakes = newValue }
-  }
-
-  func effectValue(size: CGSize) -> ProjectionTransform {
-    ProjectionTransform(CGAffineTransform(translationX: 8 * sin(shakes * .pi * 6), y: 0))
-  }
-}
-
 /// Drill: pick 3 of 13 dealt tiles to pass, then compare with the engine's suggestion.
 struct CharlestonDrillView: View {
   @Environment(\.theme) private var theme

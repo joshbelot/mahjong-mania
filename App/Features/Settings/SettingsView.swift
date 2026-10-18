@@ -112,6 +112,8 @@ struct SettingsView: View {
       .accessibilityIdentifier("settings.tileStyle")
       Toggle("Haptics", isOn: store.binding(\.haptics))
         .accessibilityIdentifier("settings.haptics")
+      Toggle("Sound effects", isOn: store.binding(\.soundEffects))
+        .accessibilityIdentifier("settings.sound")
       Toggle("Keep screen awake during games", isOn: store.binding(\.keepAwake))
         .accessibilityIdentifier("settings.keepAwake")
     }

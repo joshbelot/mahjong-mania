@@ -4,11 +4,14 @@ import SwiftUI
 /// The full-screen lesson player (SPEC §18.5): top bar, intro card, question, feedback, completion.
 struct LessonView: View {
   @Environment(\.theme) private var theme
-  @Environment(\.accessibilityReduceMotion) private var reduceMotion
+  @Environment(\.reduceMotion) private var reduceMotion
   @Environment(PracticeStore.self) private var practice
   @State private var session: LessonSession
   @State private var outcome: PlayOutcome?
   @State private var confirmQuit = false
+  @State private var celebrations: [CelebrationItem] = []
+  @State private var celebrationIndex = 0
+  @State private var afterCelebrations: (() -> Void)?
   let onClose: () -> Void
   /// Starts another play of the same node (Play again / Try again).
   let onReplay: () -> Void
@@ -35,10 +38,45 @@ struct LessonView: View {
     } message: {
       Text("Your progress in it will be lost.")
     }
+    .overlay {
+      if celebrations.indices.contains(celebrationIndex) {
+        CelebrationView(
+          item: celebrations[celebrationIndex], isLast: celebrationIndex + 1 >= celebrations.count
+        ) { advanceCelebrations() }
+        .id(celebrations[celebrationIndex].id)
+        .transition(.opacity)
+      }
+    }
+    .sound(trigger: session.answerCount) { _ in
+      session.feedback?.comboBonus ?? 0 > 0 ? .combo : (session.lastCorrect ? .right : .wrong)
+    }
+    .hapticOnChange(trigger: session.answerCount) { _ in session.lastCorrect ? .success : .warning }
     .onChange(of: session.phase) { _, phase in
       if phase == .finished, outcome == nil {
         outcome = practice.apply(session.playResult(day: practice.today, hour: practice.hour))
       }
+    }
+  }
+
+  // MARK: Celebrations
+
+  /// Shows a new level, badges and streak news, one screen at a time, and then does `action`.
+  private func runCelebrations(then action: @escaping () -> Void) {
+    let items = outcome.map(Celebrations.items(for:)) ?? []
+    guard !items.isEmpty else { return action() }
+    afterCelebrations = action
+    celebrationIndex = 0
+    withAnimation(.easeIn(duration: 0.2)) { celebrations = items }
+  }
+
+  private func advanceCelebrations() {
+    if celebrationIndex + 1 < celebrations.count {
+      withAnimation(.easeInOut(duration: 0.2)) { celebrationIndex += 1 }
+    } else {
+      let action = afterCelebrations
+      celebrations = []
+      afterCelebrations = nil
+      action?()
     }
   }
 
@@ -66,6 +104,8 @@ struct LessonView: View {
         Label("\(session.combo)", systemImage: "flame.fill")
           .font(Typography.small.weight(.bold).monospacedDigit())
           .foregroundStyle(theme.accent)
+          .pop(trigger: session.combo)
+          .background { ComboBurst(combo: session.combo) }
           .accessibilityLabel("\(session.combo) in a row")
           .accessibilityIdentifier("lesson.combo")
       }
@@ -111,7 +151,8 @@ struct LessonView: View {
     case .finished:
       if let outcome {
         CompletionView(
-          session: session, outcome: outcome, onContinue: onClose, onReplay: onReplay)
+          session: session, outcome: outcome, onContinue: { runCelebrations(then: onClose) },
+          onReplay: { runCelebrations(then: onReplay) })
       } else {
         ProgressView().frame(maxHeight: .infinity)
       }
@@ -170,7 +211,7 @@ struct LessonView: View {
 /// The thin progress bar along the top of a lesson.
 struct ProgressBar: View {
   @Environment(\.theme) private var theme
-  @Environment(\.accessibilityReduceMotion) private var reduceMotion
+  @Environment(\.reduceMotion) private var reduceMotion
   let fraction: Double
 
   var body: some View {
@@ -196,10 +237,14 @@ struct FeedbackBar: View {
   var body: some View {
     VStack(alignment: .leading, spacing: Spacing.md) {
       HStack(alignment: .firstTextBaseline, spacing: Spacing.sm) {
-        Image(systemName: feedback.correct ? "checkmark.circle.fill" : "exclamationmark.circle.fill")
-          .font(.title2)
-          .foregroundStyle(feedback.correct ? theme.success : theme.warning)
-          .accessibilityHidden(true)
+        if feedback.correct {
+          DrawnCheckmark(color: theme.success)
+        } else {
+          Image(systemName: "exclamationmark.circle.fill")
+            .font(.title2)
+            .foregroundStyle(theme.warning)
+            .accessibilityHidden(true)
+        }
         Text(feedback.title)
           .font(Typography.h2)
           .foregroundStyle(theme.text)
@@ -249,6 +294,10 @@ struct FeedbackBar: View {
     .overlay(alignment: .top) {
       Rectangle().fill(feedback.correct ? theme.success : theme.warning).frame(height: 2)
     }
+    .overlay(alignment: .topTrailing) {
+      FloatingXP(amount: feedback.xp)
+        .padding(.trailing, Spacing.xl)
+    }
     .accessibilityElement(children: .contain)
     .accessibilityIdentifier("lesson.feedback")
   }
@@ -277,4 +326,25 @@ struct CappedScroll<Content: View>: View {
 private struct CappedScrollHeightKey: PreferenceKey {
   static let defaultValue: CGFloat = 0
   static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) { value = max(value, nextValue()) }
+}
+
+/// A brighter burst round the flame when the run reaches 5, 10 or 15 (nothing with Reduce Motion).
+struct ComboBurst: View {
+  @Environment(\.theme) private var theme
+  @Environment(\.reduceMotion) private var reduceMotion
+  let combo: Int
+  @State private var expanded = false
+
+  var body: some View {
+    if combo > 0 && combo % 5 == 0 && !reduceMotion {
+      Circle()
+        .strokeBorder(theme.gold, lineWidth: 3)
+        .scaleEffect(expanded ? 2.6 : 0.6)
+        .opacity(expanded ? 0 : 0.9)
+        .onAppear { withAnimation(.easeOut(duration: 0.6)) { expanded = true } }
+        .id(combo)
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
+    }
+  }
 }

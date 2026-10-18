@@ -1713,9 +1713,9 @@ Same rules as §17.9 (local `tools/test.sh` is the gate; look at every changed s
 - [x] UI tests from §18.10 for onboarding, a lesson and test-out.
 
 #### Phase 24: Feel
-- [ ] Animations, haptics and celebrations per §18.7; Reduce Motion variants.
-- [ ] `tools/make_sounds.py`, committed sounds, the Sound effects setting, `.ambient` audio session.
-- [ ] Screenshots of celebrations with Reduce Motion on and off.
+- [x] Animations, haptics and celebrations per §18.7; Reduce Motion variants.
+- [x] `tools/make_sounds.py`, committed sounds, the Sound effects setting, `.ambient` audio session.
+- [x] Screenshots of celebrations with Reduce Motion on and off.
 
 #### Phase 25: Daily goal, streaks, badges, profile
 - [ ] Daily goal choice (after first lesson and in Settings), streak flame, freezes, milestone screens, break copy.

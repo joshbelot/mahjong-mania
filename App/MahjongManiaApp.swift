@@ -47,6 +47,8 @@ struct MahjongManiaApp: App {
         .environment(stores.practice)
         .environment(stores)
         .environment(\.hapticsEnabled, stores.settings.settings.haptics)
+        .environment(\.soundsEnabled, stores.settings.settings.soundEffects)
+        .modifier(MotionSettings())
         .environment(\.tileStyle, stores.settings.settings.tileStyle)
         .preferredColorScheme(
           LaunchOptions.forcedColorScheme ?? stores.settings.settings.theme.colorScheme
@@ -54,6 +56,7 @@ struct MahjongManiaApp: App {
         .onOpenURL { links.receive($0) }
         .task {
           if let url = LaunchOptions.openURL { links.receive(url) }
+          SoundPlayer.shared.warmUp()
         }
         .onChange(of: scenePhase) { _, phase in
           if phase != .active { stores.flush() }

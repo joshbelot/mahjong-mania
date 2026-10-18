@@ -4,7 +4,7 @@ import SwiftUI
 /// The end of a play: stars, XP, accuracy, and what it unlocked (SPEC §18.5).
 struct CompletionView: View {
   @Environment(\.theme) private var theme
-  @Environment(\.accessibilityReduceMotion) private var reduceMotion
+  @Environment(\.reduceMotion) private var reduceMotion
   let session: LessonSession
   let outcome: PlayOutcome
   let onContinue: () -> Void
@@ -33,7 +33,7 @@ struct CompletionView: View {
           .accessibilityAddTraits(.isHeader)
           .accessibilityIdentifier("complete.title")
         if kind == .lesson && !session.gold {
-          StarsView(count: outcome.stars)
+          StarsView(count: outcome.stars, animated: true)
             .accessibilityElement(children: .ignore)
             .accessibilityLabel("\(outcome.stars) of 3 stars")
             .accessibilityIdentifier("complete.stars")
@@ -140,44 +140,42 @@ struct CompletionView: View {
 
   @ViewBuilder
   private var extras: some View {
-    VStack(spacing: Spacing.sm) {
-      if let level = outcome.levelUp {
-        Label("Level \(level.level): \(level.title)", systemImage: "arrow.up.circle.fill")
-          .foregroundStyle(theme.primary)
-          .accessibilityIdentifier("complete.levelup")
-      }
-      ForEach(outcome.newBadges, id: \.self) { badge in
-        Label("New badge: \(badge.title)", systemImage: badge.symbol)
-          .foregroundStyle(theme.gold)
-          .accessibilityIdentifier("complete.badge.\(badge.rawValue)")
-      }
-      if outcome.goalJustMet {
-        Label("Daily goal met", systemImage: "checkmark.seal.fill")
-          .foregroundStyle(theme.success)
-          .accessibilityIdentifier("complete.goal")
-      }
-      if let unit = outcome.unitGold {
-        Label("Unit \(unit) is gold", systemImage: "crown.fill")
-          .foregroundStyle(theme.gold)
-      }
+    if let unit = outcome.unitGold {
+      Label("Unit \(unit) is gold", systemImage: "crown.fill")
+        .font(Typography.body.weight(.semibold))
+        .foregroundStyle(theme.gold)
+        .multilineTextAlignment(.center)
     }
-    .font(Typography.body.weight(.semibold))
-    .multilineTextAlignment(.center)
   }
 }
 
-/// Three stars, filled up to `count`.
+/// Three stars, filled up to `count`. With `animated`, each filled star bounces in 0.25 s after the last,
+/// with a rising chime (a plain fade with Reduce Motion).
 struct StarsView: View {
   @Environment(\.theme) private var theme
+  @Environment(\.reduceMotion) private var reduceMotion
+  @Environment(\.soundsEnabled) private var soundsEnabled
   let count: Int
   var size: CGFloat = 44
+  var animated = false
+  @State private var shown = 0
 
   var body: some View {
     HStack(spacing: Spacing.sm) {
       ForEach(1...3, id: \.self) { index in
-        Image(systemName: index <= count ? "star.fill" : "star")
+        let filled = index <= (animated ? shown : count)
+        Image(systemName: filled ? "star.fill" : "star")
           .font(.system(size: size))
-          .foregroundStyle(index <= count ? theme.gold : theme.border)
+          .foregroundStyle(filled ? theme.gold : theme.border)
+          .symbolEffect(.bounce, options: .nonRepeating, value: filled && animated && !reduceMotion ? 1 : 0)
+      }
+    }
+    .task {
+      guard animated else { return }
+      for index in 1...max(1, count) where count > 0 {
+        try? await Task.sleep(for: .milliseconds(reduceMotion ? 120 : 250))
+        withAnimation(reduceMotion ? .easeIn(duration: 0.2) : .spring(response: 0.35, dampingFraction: 0.45)) { shown = index }
+        if soundsEnabled, let sound = Sound(rawValue: "star\(min(index, 3))") { SoundPlayer.shared.play(sound) }
       }
     }
   }

@@ -1,3 +1,4 @@
+import AVFoundation
 import Foundation
 import MahjongCore
 import Testing
@@ -300,5 +301,60 @@ struct PracticeStoreTests {
     let clock = LaunchOptions.practiceClock(arguments: ["-UITestResetData", "-UITestToday", "2026-11-02", "-UITestHour", "7"])
     #expect(clock.now().day == today && clock.now().hour == 7)
     #expect(LaunchOptions.initialTab(arguments: ["-UITestResetData", "-UITestTab", "practice"]) == .practice)
+  }
+}
+
+@MainActor
+struct FeelTests {
+  private func outcome(_ build: (inout PlayOutcome) -> Void) -> PlayOutcome {
+    var o = PlayOutcome(node: Curriculum.node(id: "u1l1"))
+    build(&o)
+    return o
+  }
+
+  @Test func celebrationsComeInOrderAndOnlyWhenEarned() {
+    #expect(Celebrations.items(for: outcome { _ in }).isEmpty)
+    let full = outcome {
+      $0.levelUp = Levels.position(totalXP: 130)
+      $0.newBadges = [.firstSteps, .earlyBird]
+      $0.goalJustMet = true
+      $0.streakEvents = [.goalMet, .streakGrew(to: 3), .milestone(3)]
+    }
+    #expect(
+      Celebrations.items(for: full) == [
+        .levelUp(level: 2, title: "Newcomer"), .badge(.firstSteps), .badge(.earlyBird), .milestone(days: 3),
+      ])
+    let goalOnly = outcome {
+      $0.goalJustMet = true
+      $0.streakEvents = [.goalMet, .streakGrew(to: 4)]
+    }
+    #expect(Celebrations.items(for: goalOnly) == [.goalMet(streak: 4)])
+    let freeze = outcome { $0.streakEvents = [.streakGrew(to: 7), .freezeEarned(held: 1), .milestone(7)] }
+    #expect(Celebrations.items(for: freeze) == [.milestone(days: 7), .freezeEarned(held: 1)])
+  }
+
+  @Test func everySoundIsBundledAndUnderAHalfSecondOrSo() throws {
+    for sound in Sound.allCases {
+      let url = try #require(Bundle.main.url(forResource: sound.rawValue, withExtension: "wav"), "\(sound)")
+      let player = try AVAudioPlayer(contentsOf: url)
+      #expect(player.duration > 0.05 && player.duration < 0.6, "\(sound) \(player.duration)")
+    }
+  }
+
+  @Test func soundAndSpeedSettingsDefaultAndPersist() {
+    let directory = makeTempDirectory()
+    let store = SettingsStore(directory: directory, persistDelay: fast)
+    #expect(store.settings.soundEffects && !store.settings.speedRoundNoTimer)
+    store.update { $0.soundEffects = false; $0.speedRoundNoTimer = true }
+    store.flush()
+    let again = SettingsStore(directory: directory, persistDelay: fast)
+    #expect(!again.settings.soundEffects && again.settings.speedRoundNoTimer)
+  }
+
+  @Test func levelsAreCelebratedOncePerLevel() {
+    var p = PracticeProgress()
+    p.xp = 99
+    let up = p.apply(PlayResult(nodeID: "u1l1", records: (0..<8).map { AnswerRecord(exercise: ExerciseID(type: .nameTile, seed: UInt64($0), difficulty: 1), correct: true) }, day: today))
+    #expect(Celebrations.items(for: up!).contains(.levelUp(level: 3, title: "Tile Spotter")))
   }
 }
