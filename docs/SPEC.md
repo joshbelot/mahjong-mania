@@ -17,7 +17,7 @@
 6. When the spec gives an exact algorithm, signature, string, or number, use it exactly. When it says "suggested", you may adjust as long as the acceptance criteria still hold. Algorithms in §9–§10 are written as language-neutral pseudocode. The Swift API they must have is fixed in §7.
 7. Do not ship the official NMJL card's hands or branding anywhere in the app (see §2.4). The built-in card is the **original Practice Card** in §9.6.
 8. Keep a running checklist: tick the boxes in §13 in the same PR that completes them.
-9. **Version 1.1** is planned in §17 (phases 13–20). It builds on everything above.
+9. **Version 1.1** is planned in §17 (phases 13–20) and **version 1.2** in §18 (phases 21–27). Each builds on everything before it.
 10. The app ships through **TestFlight**. §16 is the release process. Phase 0 sets up the project so a TestFlight build is possible from day one, and Phase 12 adds the upload script.
 
 ---
@@ -1495,3 +1495,240 @@ Same rules as §13 and AGENTS.md (local `tools/test.sh` is the gate; no CI). Eac
 - [x] Simulator QA: the §13 checklist plus every 1.1 feature, light/dark/AX5.
 - [x] Version 1.1, What to Test, handoff notes.
 - [x] `--dry-run` passes, then the real upload; the build shows as processed in App Store Connect.
+
+---
+
+## 18. Version 1.2: Practice becomes a game
+
+v1.1 shipped to TestFlight on 2026-10-16 (build 3). v1.2 turns the two drills (Pick-a-Hand and Charleston Pass) into a **Duolingo-style practice game**: a path of short lessons that takes a complete beginner from "what is a Bam?" to choosing hands and passing well, with levels, XP, streaks, stars, a daily challenge and lots of feedback. It must stay useful to experienced players (test out of the basics, a hard "gold" tier, a daily deal and a speed round).
+
+Everything in §0–§17 still applies unless this section says otherwise. Work the phases in §18.12 in order, one PR each.
+
+### 18.1 Design principles (from research; apply them when a detail isn't specified)
+
+| Principle | What it means here | Source |
+|---|---|---|
+| **The core action must be fun in 30 seconds** | Opening Practice and tapping "Start" puts a question on screen in one tap; every answer gets instant, satisfying feedback. | Core-loop guidance, Miyamoto's "fun in the first moments" ([wayline](https://www.wayline.io/blog/mastering-core-loop-engaging-game-design)) |
+| **Three nested loops** | Moment: answer → feedback (seconds). Session: a 2–3 minute lesson → stars and XP. Long term: path, player level, streak, badges. Each loop feeds the next. | ([wayline](https://www.wayline.io/blog/mastering-core-loop-engaging-game-design)) |
+| **Flow: challenge matches skill** | Difficulty rises gradually along the path; early deals are chosen to be clear-cut, later ones ambiguous. Too hard → anxiety, too easy → boredom. | Csikszentmihalyi/Chen flow, as summarised ([wayline](https://www.wayline.io/blog/mastering-core-loop-engaging-game-design)) |
+| **Competence, autonomy, relatedness** | Competence: visible mastery (stars, gold, levels). Autonomy: pick your daily goal, replay anything, skip ahead by testing out, free play. Relatedness (no backend): share the Daily Deal result. | Self-determination theory applied to games, Ryan, Rigby & Przybylski 2006 ([SDT Center](https://selfdeterminationtheory.org/player-experience-of-needs-satisfaction-pens/)) |
+| **Fun is learning patterns** | Mahjong hands *are* patterns; every exercise is "spot the pattern" at the right level. | Koster, *A Theory of Fun* (via [RIT](https://www.se.rit.edu/~the-moose/termone/Senior_Project/What%20Makes%20a%20Game%20Fun_.pdf)) |
+| **Juice serves clarity** | Animations, haptics and sounds reinforce *right/wrong/progress*; they never hide information or slow the loop. Respect Reduce Motion. | ([wayline on juice](https://www.wayline.io/blog/the-seductive-squeeze-when-juice-in-game-development-becomes-a-crutch)) |
+| **Retrieval, spacing, interleaving** | Exercises make you answer (not read). Missed items come back at the end of the lesson and again days later. Checkpoints mix earlier units in. | [MIT Open Learning](https://openlearning.mit.edu/mit-faculty/research-based-learning-findings/spaced-and-interleaved-practice), [UMN](https://cei.umn.edu/teaching-resources/leveraging-learning-sciences/spaced-and-interleaved-practice-improves-recall) |
+| **Path of small units, practice inside the path, a hard "legendary" tier** | Linear path of units → lessons; review lives in the path; a gold replay with harder content and no hints. | Duolingo's path redesign ([Duolingo blog](https://blog.duolingo.com/new-duolingo-home-screen-design)) |
+| **Streaks help habits but must not punish** | Small daily action, visible progress, milestones, freezes, local-calendar days, encouraging copy after a break, no shame, no anxiety monetisation, no nagging. | [Smashing Magazine 2026](https://smashingmagazine.com/2026/02/designing-streak-system-ux-psychology/); critique of gamification misuse ([arXiv 2203.16175](https://arxiv.org/pdf/2203.16175)) |
+| **No lives/hearts** | Mistakes never stop a lesson. Competitive pressure (leagues) is out of scope: it causes anxiety for some learners and needs a backend. | ([arXiv 2203.16175](https://arxiv.org/pdf/2203.16175)) |
+
+Hard rules: no notifications or reminders (no permission prompts, no nagging), no network, no purchases, no ads, no timers in path lessons (time pressure only in the optional Speed Round), and every lesson can always be finished.
+
+### 18.2 Information architecture
+
+- New tab **Practice** (SF Symbol `flame.fill`), placed after Helper: Game · Helper · **Practice** · Cards · Learn. It is always visible (Assist level does not hide it).
+- The Pick-a-Hand and Charleston Pass drills move from Learn into Practice → **Free play** (§18.8); Learn keeps the reference topics and gets a card "Practise this in the Practice tab".
+- **Onboarding** gains a page after Welcome: **"How well do you know American Mahjong?"** with three big choices:
+  - **"I'm new"** → the path starts at Unit 1, and after onboarding the app opens on Practice with Lesson 1 highlighted.
+  - **"I know the basics"** → Units 1–3 are marked *tested out* (no stars, but unlocked), the path starts at Unit 4.
+  - **"I play regularly"** → Units 1–6 tested out; the app opens on Game as today.
+  Any choice can be changed later by testing out (§18.4) or "Reset practice progress" in Settings.
+- Practice home (top to bottom): a header strip (player level badge + XP bar, streak flame with count, today's goal ring), the **Daily Deal** card (§18.8), the **path** (§18.4), and **Free play** (§18.8) under the path.
+
+### 18.3 Exercise types (MahjongCore, `Practice/Exercises.swift`)
+
+Every exercise is generated deterministically from `(type, seed, difficulty)` using `SeededRandom`, graded in core, and carries an explanation string. All generation uses the **built-in Practice Card** so the curriculum is the same for everyone (free play may use the active card, §18.8). Difficulty is `1...3`.
+
+```swift
+public enum ExerciseType: String, Codable, CaseIterable, Sendable {
+  case nameTile, findTile, groupName, matchesLine, whichHand, jokerLegal,
+       howFar, neededTile, pickHand, passOne, passThree, keepOrPass, callIt
+}
+public struct ExerciseID: Hashable, Codable, Sendable { public var type: ExerciseType; public var seed: UInt64; public var difficulty: Int }
+public struct Exercise: Sendable {               // what the UI renders
+  public var id: ExerciseID
+  public var prompt: String                      // e.g. "Which hand is this?"
+  public var tiles: [Tile]                       // the tiles shown (may be empty)
+  public var line: CardLine?                     // a card line shown as a pattern, if any
+  public var choices: [Choice]                   // 2...6 choices, or empty for tile-selection exercises
+  public var selectCount: Int                    // tiles to select (passOne 1, passThree 3), else 0
+}
+public enum Choice: Hashable, Sendable { case text(String), tile(Tile), line(CardLine), number(Int), yesNo(Bool) }
+public struct Grade: Sendable { public var correct: Bool; public var correctAnswer: String; public var explanation: String }
+public enum Exercises {
+  public static func make(_ id: ExerciseID, card: Card) -> Exercise
+  public static func grade(_ exercise: Exercise, answer: Answer, card: Card) -> Grade   // Answer: .choice(Int) / .tiles([Int])
+}
+```
+
+| Type | Shows / asks | Correct when | Difficulty 1 → 3 |
+|---|---|---|---|
+| `nameTile` | One large tile. "What is this tile?" 4 text choices. | The tile's name. | Distractors: other kinds (1) → same suit, other number (2) → same number, other suit, or dragon vs matching suit (3). |
+| `findTile` | "Tap the Green Dragon." 6 tiles. | The named tile. | As above. |
+| `groupName` | A group of tiles (e.g. four 7 Dots, or 3 + a joker). "What is this group called?" Single/Pair/Pung/Kong/Quint/Sextet. | The group's name by size. | Plain (1) → with jokers (2) → flowers and quints/sextets (3). |
+| `matchesLine` | A card line (pattern view) and 14 tiles. "Does this hand match the line?" Yes/No. | Yes iff some target of the line matches the tiles exactly (`evaluate` distance 0). | Wrong hands differ by: a wrong number (1), suits swapped so two colours share a suit (2), a joker in a pair or the wrong dragon (3). Half the items are Yes. |
+| `whichHand` | A complete 14-tile winning hand. "Which hand is this?" Choices: 2 (d1), 3 (d2) or 4 (d3) card lines. | The line it was built from. | Distractors from other sections (1) → same section (3). Hands use a random binding and shift; d≥2 includes jokers in 3+ groups. |
+| `jokerLegal` | A 14-tile hand with jokers and its line. "Is this a legal Mahjong?" Yes/No. | No iff a joker stands in a single or a pair (otherwise Yes). | One joker (1) → several, including in quints (3). |
+| `howFar` | A line and 13 tiles. "How many tiles away is this hand?" 4 number choices. | `evaluate` distance. | Distances 1–3 (1) → up to 6 with jokers in the rack (3). Distractors are ±1, ±2. |
+| `neededTile` | A line and 13 tiles. "Which tile gets you closer?" 4 tile choices. | A tile whose addition lowers the distance. | One correct among obviously useless (1) → near misses: right number wrong suit (3). |
+| `pickHand` | 13 dealt tiles. "Which hand would you aim for?" d1: 3 line choices; d2: 5; d3: the whole card (scrolling list, like today's drill). | Today's Pick-a-Hand rule (top 3 or ties with the 3rd), restricted to the offered lines for d1/d2 (correct = among the closest offered). | Deal filter (§18.3.1): best line ≥ 2 tiles clearer than the 2nd-best section (1) → any deal (3). |
+| `passOne` | 13 tiles and the target line highlighted. "Pass one tile you don't need." Select 1. | Utility 0 for the target line (a tile it doesn't use). Jokers can't be selected. | Several useless tiles (1) → exactly one useless tile (3). |
+| `passThree` | 13 tiles. "Pass three tiles." Select 3. d1 also shows the 2 best lines as a hint. | Today's Charleston drill score = 3. Partial credit shown, but only 3/3 counts as correct. | d1 hint shown → d2 no hint → d3 deals where the obvious pass is a trap (a tile used by the 2nd-best line). |
+| `keepOrPass` | A target line and one tile at a time from a 13-tile deal. Keep / Pass buttons; 5 tiles per exercise. | All 5 right (each: Keep iff the target uses it). | Clear tiles (1) → near misses (3). |
+| `callIt` | My 13 tiles and my best line; "East discards the 6 Dot. Call it?" Yes/No. | `checkCall` returns an expose or Mahjong verdict for the shown line ↔ Yes. | Obvious (1) → concealed lines and pairs (only for Mahjong) (3). |
+
+Explanations reuse the engine's reason strings where they exist (passes, Pick-a-Hand) and otherwise use templates, e.g. `howFar`: "You hold 10 of the 14 tiles this hand needs, so it's 4 away. Missing: 7 Bam ×2, Red Dragon, Flower."
+
+**18.3.1 Deal filters.** Some exercises need deals with a property (e.g. a clear best line). Generate by rejection sampling: try `seed`, then `SplitMix64` successors, up to 300 attempts, and use the first deal that passes; if none passes, use the last. Deterministic for a given seed. Tests: every `(type, difficulty)` produces a gradable exercise for 500 seeds, generation is stable across runs, and the deal filters hold on ≥ 95% of seeds.
+
+### 18.4 The path
+
+A vertical, scrolling path of **units**; each unit is a row of **lesson nodes** ending in a **checkpoint** node. Nodes are circles on a gentle zig-zag; the next playable node pulses softly and has a "Start" bubble. Locked nodes are grey with a lock. Tapping a played node shows its stars and "Play again" / "Go gold".
+
+**Curriculum (`Practice/Curriculum.swift`, core).** Each lesson lists its exercise types and difficulty; `n` = number of exercises.
+
+| Unit | Title | Lessons (n each) | Exercise mix |
+|---|---|---|---|
+| 1 | Meet the tiles | 4 (8) | Numbers & suits; Winds & dragons; Flowers, jokers & Soap; Mixed. `nameTile`, `findTile` d1→2 |
+| 2 | Read the card | 4 (8) | Sets (`groupName`); Colours mean suits (`matchesLine` d1–2); Exposed vs concealed (`matchesLine` + C/X text questions); Which hand is this? (`whichHand` d1) |
+| 3 | Jokers | 3 (8) | `groupName` d2, `jokerLegal` d1→3, `whichHand` d2 |
+| 4 | How close am I? | 4 (8) | `howFar` d1→2, `neededTile` d1→2 |
+| 5 | Choose your hand | 4 (6) | `pickHand` d1 → d2, mixed with `howFar` |
+| 6 | Charleston basics | 4 (6) | `passOne` d1→3, `keepOrPass` d1→2 |
+| 7 | The whole card | 4 (5) | `pickHand` d2 → d3 |
+| 8 | Real Charlestons | 4 (5) | `passThree` d1 → d3 |
+| 9 | At the table | 3 (6) | `callIt` d1→3, `neededTile` d3 |
+| 10 | Mastery | 5 (8) | Interleaved: every type at d3 |
+
+- **Checkpoints:** 10 exercises: 7 from the unit's types at its highest difficulty plus 3 from earlier units (interleaving). Passing a checkpoint (≥ 7/10 first try) unlocks the next unit.
+- **Testing out:** each locked unit has "Test out" on its checkpoint: pass it (≥ 8/10) and the unit and everything before it are unlocked and marked *tested out*.
+- **Stars per lesson** (best attempt kept): ★★★ = every exercise right first time with no hint; ★★ = at most 2 misses; ★ = finished. A lesson is always finishable; finishing it unlocks the next node.
+- **Gold:** a unit whose lessons all have ★★★ shows "Go gold": the same lessons at difficulty +1 (max 3), no hints, ≥ 90% first-try right. A gold unit's nodes turn gold.
+- **Review node:** after Unit 2, every unit has a review node in its middle (a dumbbell icon) built from the review queue (§18.6); if the queue is empty it mixes the unit's exercises.
+
+### 18.5 The lesson player
+
+- Top bar: ✕ (close; asks "Quit this lesson? Your progress in it will be lost." only if ≥ 1 answer was given), a progress bar that fills per exercise, and the combo counter when ≥ 3.
+- The exercise area renders by type (tiles use `TileView` in the chosen tile style; lines use `HandPatternView`). Answer controls are big (≥ 56 pt), thumb-reachable, and a **Check** button commits the answer (single-tap types like Yes/No and Keep/Pass commit immediately).
+- **Hint** (lightbulb, path lessons only, not checkpoints or gold): one per exercise, type-specific (e.g. `howFar`: highlights tiles that already fit; `pickHand`: removes half the wrong choices; `passThree`: shows the top 2 lines). A hinted correct answer counts as right but not "first time without hint".
+- **Feedback sheet** slides up from the bottom immediately: green with "Nice!" / "Exactly!" / "You've got it" (random of 6) and +XP, or orange (not red) "Not quite" with the correct answer shown and the explanation. One button: **Continue**.
+- **Mistakes come back:** each missed exercise is re-asked once at the end of the lesson ("Let's try those again"), with a new seed of the same type and difficulty. Answering it right gives half XP.
+- **Lesson complete screen:** stars animate in one by one, XP total counts up, accuracy %, time taken, "New best!" if stars improved, combo best, and buttons **Continue** (back to path, scrolled to the next node) and **Play again**. If the daily goal was just met, the streak/goal celebration (§18.6) follows.
+
+### 18.6 Progress systems (MahjongCore `Practice/Progress.swift`, pure; persisted by the app)
+
+**XP.** First-try correct 10; correct after hint 5; re-asked item right 5; lesson finished +15; ★★★ lesson +10; checkpoint passed +30; gold lesson +20; Daily Deal +25 per part; Speed Round 2 per right answer. **Combo:** every 5 in a row in one lesson +5 (shown "🔥 5 in a row!").
+
+**Player level.** XP to go from level L to L+1 = `100 + 25 × (L − 1)`. Titles (shown under the level badge; original wording): 1 Newcomer · 3 Tile Spotter · 6 Card Reader · 10 Charleston Cadet · 15 Joker Wrangler · 20 Pattern Pro · 30 Card Shark · 40 Mahj Maven · 50 Mahjong Master. Level-up shows a full-screen celebration with the new level and title (once per level).
+
+**Daily goal and streak.**
+- Daily goal options (Settings → Practice, and asked once after the first lesson): **Casual** 1 lesson · **Regular** 2 · **Serious** 4. Lessons, checkpoints, gold lessons, review nodes, Daily Deal (counts as 1) and a Speed Round (counts as 1) all count.
+- A **day** is the user's local calendar day (`Calendar.current`, so time zones and DST are handled). The streak grows by 1 on each day the goal is met.
+- **Streak freezes:** the user holds 0–2. One is earned every 7-day streak milestone (max 2 held). A missed day with a freeze held uses it automatically ("Your streak freeze kept your 12-day streak safe"). A missed day without one resets the streak to 0, with copy that never shames: "New streak, same skills. You've played 34 days in total."
+- **Milestones:** 3, 7, 14, 30, 50, 100, 200, 365 days → a celebration screen and a badge.
+- Logic is a pure function over a list of `(day, goalMet)` facts so it is fully unit-tested (time zone change, DST, two freezes, freeze earned and used the same week, long gaps, a lesson exactly at midnight).
+
+**Badges (achievements).** Shown in a grid on the profile; locked ones show their goal. Each awards +20 XP once. Exact list:
+
+| Badge | Earned when |
+|---|---|
+| First Steps | Finish any lesson |
+| Tile Whisperer | Finish Unit 1 |
+| Card Reader | Finish Unit 2 |
+| Joker's Wild | Finish Unit 3 |
+| Charleston Champ | 10 `passThree` right first time |
+| Sharp Eye | 20 `pickHand` right first time |
+| Perfectionist | 10 lessons with ★★★ |
+| Gold Rush | Any unit gold |
+| On Fire | 15 in a row in one lesson |
+| Week Warrior | 7-day streak |
+| Monthly Regular | 30-day streak |
+| Early Bird / Night Owl | A lesson before 8:00 / after 22:00 local |
+| Daily Dealer | 7 Daily Deals completed |
+| Speed Demon | 25+ in one Speed Round |
+| Comeback | Answer a re-asked mistake right 25 times |
+| Graduate | Finish Unit 10 |
+
+**Profile** (tap the level badge): level, title, XP to next level, total XP, current/longest streak, freezes held, a 12-week calendar heat map of days played, lessons finished, accuracy by skill (tiles, card reading, jokers, distance, choosing, Charleston, calling), and the badge grid.
+
+**Review queue (spaced).** Every missed exercise adds its `ExerciseID` with `due = today + 1 day`. Answered right in a review → next due +3, then +7, then removed. Answered wrong → back to +1. Review nodes and the "Review mistakes" free-play button draw the most overdue items first (max 10 per session).
+
+### 18.7 Feel: animation, haptics and sound
+
+- **Right answer:** the chosen control pops (scale 1 → 1.08 → 1, 0.2 s spring), a check mark draws in, success haptic, "ding" sound, XP "+10" floats up and fades.
+- **Wrong answer:** a short horizontal shake (3 cycles, 0.3 s), warning haptic, soft "bonk" sound; the correct answer gently highlights.
+- **Combo:** at 3+ the counter appears with a flame; each step bumps it; at 5/10/15 a brighter burst.
+- **Stars:** each star scales in with a bounce and a rising chime, 0.25 s apart.
+- **Level up / milestone / badge:** confetti (tiles and flowers falling, drawn in SwiftUI Canvas, ~1.5 s), a big badge reveal, success haptic, a short fanfare.
+- **Path:** the next node pulses (scale 1 ↔ 1.05, 1.2 s); unlocking a node does a quick "unlock" pop.
+- **Reduce Motion** on: no confetti, shakes or pulses; use fades and colour changes only. **Haptics** follow the existing Settings switch (`Haptics` gate).
+- **Sound:** a new Settings switch **Sound effects** (default on). Sounds are short (< 0.6 s), original, generated by a script `tools/make_sounds.py` (pure Python, writes WAV/CAF from simple synthesised tones; the files are committed under `App/Resources/Sounds/`). Play with `AVAudioSession` category `.ambient` so the silent switch mutes them and other audio keeps playing. No permission is needed.
+
+### 18.8 Daily Deal, Speed Round and free play
+
+- **Daily Deal** (Wordle-style, offline): one Pick-a-Hand (full Practice Card, d3 rules) and one Charleston `passThree` from the same deal. The seed is the local date: `seed = SplitMix64(daysSince(2026-01-01) xor 0x4D4A)`, so everyone gets the same deal on the same date with no server. One scored attempt per day (replays allowed, marked "practice"). Difficulty: Monday easiest → Sunday hardest (deal filters by weekday). Result screen: both answers with explanations, XP, and **Share** (text via `ShareLink`):
+  ```
+  Mahjong Mania Daily #289 🀄
+  Pick: ✅ (best hand, 3 away)
+  Pass: 🟩🟩🟨
+  🔥 12-day streak
+  ```
+  (🟩 = as good as the engine's pick, 🟨 = acceptable but worse, 🟥 = keeps a needed tile.) A "Played today ✓" state with a countdown to the next deal.
+- **Speed Round** (unlocked after Unit 6): 60 seconds of `keepOrPass` single-tile decisions against rotating targets (d2), then `nameTile`/`groupName` bonus items. +1 s per right answer, −2 s per wrong. Shows a personal best and "New best!". A Settings accessibility option **"No timer in Speed Round"** turns it into 30 untimed questions.
+- **Free play** (always open): **Pick-a-Hand** and **Charleston Pass** (today's drills, now with the new feedback and XP) with a card choice: Practice Card or the active card (experienced players practising on their own card), and difficulty Easy/Normal/Hard. Plus **Review mistakes** (§18.6). Existing best streaks move here and keep their values.
+
+### 18.9 Persistence
+
+New store `PracticeStore` with file `practice.json` (`version: 1`): `placement` (new/basics/regular/nil), `lessons: [lessonID: {stars, gold, testedOut, bestAccuracy, plays}]`, `units: [unitID: {checkpointPassed, gold}]`, `xp`, `levelsCelebrated`, `dayLog: [day: {lessons, goalMet}]` (last 400 days), `streak: {current, longest, freezes, lastDay}`, `dailyGoal`, `dailyDeals: [day: {pickResult, passScore, completed}]`, `speedBest`, `badges: [id: date]`, `reviewQueue: [{exerciseID, due, step}]`, `counters` (per badge), `freePlay: {pickStreakBest, charlestonStreakBest}` (migrated from `settings.bestStreaks`). Settings gains `soundEffects` (default true) and `speedRoundNoTimer` (default false). **Reset all data** clears practice too; Settings → Practice adds **"Reset practice progress"** (confirm) and lets the user change the daily goal.
+
+### 18.10 UI tests and screenshots
+
+- Onboarding: "I'm new" lands on Practice with Lesson 1 pulsing; "I play regularly" lands on Game with Units 1–6 tested out.
+- Play Unit 1 Lesson 1 end to end with a fixed seed (`-UITestPracticeSeed <n>`): answer the first wrong and the rest right; see the feedback sheet, the re-asked item, the completion screen with ★★, XP and the next node unlocked.
+- Test out of Unit 1 (seeded checkpoint) and see Unit 2 unlocked.
+- Daily Deal with a fixed date argument (`-UITestToday 2026-11-02`): play, see the share text, see "Played today".
+- Speed Round with "No timer" on.
+- Streak: launch arguments to inject a day log (`-UITestDayLog …`) and check the flame count, a freeze being used, and the milestone screen.
+- Screenshots of every new screen in light, dark and AX5, with Reduce Motion both on and off for the celebration screens.
+
+### 18.11 Release 1.2
+
+- `MARKETING_VERSION` → `"1.2"`; `TestFlight/WhatToTest.txt` rewritten for 1.2 (the Practice tab, the path, Daily Deal, Speed Round, what to try); a 1.2 section in `docs/RELEASE_HANDOFF.md`.
+- **When every 1.2 phase is committed and merged to `main`, the agent ships it:** from a clean, up-to-date `main`, `zsh -ic 'tools/upload_testflight.sh --dry-run'`, validate the exported `.ipa` with `xcrun altool --validate-app` (AGENTS.md), then the real upload `zsh -ic 'tools/upload_testflight.sh'`, then confirm in App Store Connect that the build has processed (state VALID). The owner has authorised this upload for 1.2.
+
+### 18.12 Implementation plan for 1.2 (one PR per phase)
+
+Same rules as §17.9 (local `tools/test.sh` is the gate; look at every changed screen in the simulator in light, dark and AX5; record deviations in DECISIONS.md; tick boxes in the same PR).
+
+#### Phase 21: Exercise engine (MahjongCore)
+- [ ] `ExerciseType`, `ExerciseID`, `Exercise`, `Choice`, `Answer`, `Grade`; `Exercises.make`/`grade` for all 13 types and 3 difficulties; explanations.
+- [ ] Deal filters (§18.3.1); tests: 500 seeds per type × difficulty are gradable, deterministic, filters hold ≥ 95%; `pickHand`/`passThree` grading matches today's drills.
+
+#### Phase 22: Progress logic (MahjongCore)
+- [ ] `Curriculum` (units, lessons, checkpoints, gold rules) exactly as §18.4.
+- [ ] XP, levels and titles; streak and freezes over local days; badges; review queue scheduling; Daily Deal seed and weekday difficulty.
+- [ ] Tests for every rule in §18.6 (including time zone/DST/freeze cases) and the curriculum's structure.
+
+#### Phase 23: Practice tab, path and lesson player
+- [ ] `PracticeStore` + `practice.json` (§18.9) with migration of drill best streaks; Reset clears it.
+- [ ] Practice tab, header strip, path with locked/next/played/gold nodes, lesson player for all exercise types, hints, feedback sheet, mistakes-come-back, completion screen, checkpoints and test-out.
+- [ ] Onboarding placement page; Learn link card; drills removed from Learn.
+- [ ] UI tests from §18.10 for onboarding, a lesson and test-out.
+
+#### Phase 24: Feel
+- [ ] Animations, haptics and celebrations per §18.7; Reduce Motion variants.
+- [ ] `tools/make_sounds.py`, committed sounds, the Sound effects setting, `.ambient` audio session.
+- [ ] Screenshots of celebrations with Reduce Motion on and off.
+
+#### Phase 25: Daily goal, streaks, badges, profile
+- [ ] Daily goal choice (after first lesson and in Settings), streak flame, freezes, milestone screens, break copy.
+- [ ] Badges with XP, profile screen with heat map and per-skill accuracy, review nodes and the review queue.
+- [ ] UI tests with injected day logs.
+
+#### Phase 26: Daily Deal, Speed Round, free play
+- [ ] Daily Deal with weekday difficulty, one scored attempt per day, share text, "Played today" countdown.
+- [ ] Speed Round (+ "No timer" option) with personal best.
+- [ ] Free play: Pick-a-Hand and Charleston on the Practice or active card at three difficulties; Review mistakes.
+- [ ] UI tests from §18.10.
+
+#### Phase 27: 1.2 QA and release
+- [ ] Simulator QA: a fresh install played as a beginner through Unit 2 and as an experienced player via test-out; every 1.2 screen in light/dark/AX5 and with Reduce Motion; existing §13 and §17 checks still pass.
+- [ ] Version 1.2, What to Test, handoff notes.
+- [ ] `--dry-run`, `altool --validate-app`, the real upload, and the build processed in App Store Connect (§18.11).
