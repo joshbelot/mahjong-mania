@@ -84,6 +84,10 @@ struct AppSettings: VersionedDocument, Equatable {
   var activeCardID = AppSettings.practiceCardID
   var cardNoticeSeen = false
   var bestStreaks = BestStreaks()
+  /// Short sounds in Practice (SPEC §18.7).
+  var soundEffects = true
+  /// Speed Round without the clock: 30 untimed questions (SPEC §18.8).
+  var speedRoundNoTimer = false
 
   init() {}
 
@@ -103,6 +107,8 @@ struct AppSettings: VersionedDocument, Equatable {
     activeCardID = try c.decodeIfPresent(String.self, forKey: .activeCardID) ?? Self.practiceCardID
     cardNoticeSeen = try c.decodeIfPresent(Bool.self, forKey: .cardNoticeSeen) ?? false
     bestStreaks = try c.decodeIfPresent(BestStreaks.self, forKey: .bestStreaks) ?? BestStreaks()
+    soundEffects = try c.decodeIfPresent(Bool.self, forKey: .soundEffects) ?? true
+    speedRoundNoTimer = try c.decodeIfPresent(Bool.self, forKey: .speedRoundNoTimer) ?? false
   }
 }
 

@@ -48,6 +48,10 @@ final class LessonSession {
   /// Set when a joker was tapped, to shake it.
   private(set) var jokerShakes = 0
   private(set) var message: String?
+  /// Counts every answer, and the wrong ones, so the screen can react (shake, sound, haptic).
+  private(set) var answerCount = 0
+  private(set) var wrongCount = 0
+  private(set) var lastCorrect = false
 
   var choice: Int?
   var selectedTiles: [Int] = []
@@ -189,6 +193,9 @@ final class LessonSession {
     }
     let result = Exercises.grade(exercise, answer: answer, analyzer: analyzer)
     grade = result
+    answerCount += 1
+    lastCorrect = result.correct
+    if !result.correct { wrongCount += 1 }
     let reask = currentItem?.isReask ?? false
     let record = AnswerRecord(exercise: exercise.id, correct: result.correct, usedHint: hintUsed, isReask: reask)
     records.append(record)

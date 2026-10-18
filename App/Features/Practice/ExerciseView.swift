@@ -42,7 +42,7 @@ struct ChoiceButtonStyle: ButtonStyle {
 /// Renders one question and its answer controls. All state lives in the session.
 struct ExerciseView: View {
   @Environment(\.theme) private var theme
-  @Environment(\.accessibilityReduceMotion) private var reduceMotion
+  @Environment(\.reduceMotion) private var reduceMotion
   let session: LessonSession
   let exercise: Exercise
 
@@ -82,6 +82,7 @@ struct ExerciseView: View {
           .accessibilityIdentifier("lesson.message")
       }
       controls
+        .shake(session.wrongCount)
     }
     .frame(maxWidth: .infinity, alignment: .leading)
   }
@@ -114,6 +115,7 @@ struct ExerciseView: View {
   private var tilesView: some View {
     if exercise.selectCount > 0 {
       rack(selectable: true)
+        .shake(session.wrongCount)
     } else if exercise.id.type == .nameTile, let tile = exercise.tiles.first {
       TileView(tile: tile, size: .large)
         .scaleEffect(1.5)
@@ -250,6 +252,7 @@ struct ExerciseView: View {
       label()
     }
     .buttonStyle(ChoiceButtonStyle(mark: mark(for: index), dimmed: removed))
+    .pop(trigger: session.answerCount, enabled: session.phase == .feedback && session.choice == index && session.grade?.correct == true)
     .disabled(!answering || removed)
     .accessibilityValue(accessibilityValue(index))
     .accessibilityAddTraits(session.choice == index ? .isSelected : [])

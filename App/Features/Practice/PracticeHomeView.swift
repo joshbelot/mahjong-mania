@@ -21,7 +21,11 @@ struct PracticeHomeView: View {
   @State private var play: ActivePlay?
   @State private var detail: PathNode?
   @State private var testOutUnit: Int?
+  @State private var nextBeforePlay: String?
   @State private var scrollTarget: String?
+  @State private var popNodeID: String?
+  @State private var popTick = 0
+  @Environment(\.soundsEnabled) private var soundsEnabled
 
   private var progress: PracticeProgress { practice.progress }
 
@@ -32,7 +36,7 @@ struct PracticeHomeView: View {
           if typeSize.isAccessibilitySize { HeaderStrip() }
           PathView(
             nodes: progress.nodes(), progress: progress,
-            onTap: { handleTap($0) }, onTestOut: { testOutUnit = $0 })
+            onTap: { handleTap($0) }, onTestOut: { testOutUnit = $0 }, popNodeID: popNodeID, popTick: popTick)
           freePlay
         }
       }
@@ -71,8 +75,18 @@ struct PracticeHomeView: View {
       LessonView(
         session: active.session,
         onClose: {
+          let before = nextBeforePlay
           play = nil
-          scrollTarget = progress.nextNode.map { "node.\($0.id)" }
+          let next = progress.nextNode
+          scrollTarget = next.map { "node.\($0.id)" }
+          if let next, next.id != before {
+            popNodeID = next.id
+            Task { @MainActor in
+              try? await Task.sleep(for: .milliseconds(500))
+              popTick += 1
+              if soundsEnabled { SoundPlayer.shared.play(.unlock) }
+            }
+          }
         },
         onReplay: {
           let node = active.session.node
@@ -127,6 +141,7 @@ struct PracticeHomeView: View {
     let first = (progress.lessons[node.id]?.plays ?? 0) == 0 && LaunchOptions.playNode() == nil
     let session = LessonSession(
       node: node, gold: gold, testOut: testOut, seed: seed, review: review, showIntro: first)
+    nextBeforePlay = progress.nextNode?.id
     play = ActivePlay(session: session)
   }
 

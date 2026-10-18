@@ -9,6 +9,9 @@ struct PathView: View {
   let progress: PracticeProgress
   let onTap: (PathNode) -> Void
   let onTestOut: (Int) -> Void
+  /// The node that just unlocked, which pops once per `popTick`.
+  var popNodeID: String?
+  var popTick = 0
 
   var body: some View {
     VStack(alignment: .leading, spacing: Spacing.xl) {
@@ -28,7 +31,9 @@ struct PathView: View {
         canTestOut: progress.canTestOut(unit.id), onTestOut: { onTestOut(unit.id) })
       VStack(spacing: Spacing.lg) {
         ForEach(Array(unitNodes.enumerated()), id: \.element.id) { entry in
-          NodeButton(node: entry.element, offset: offset(entry.offset)) { onTap(entry.element) }
+          NodeButton(
+            node: entry.element, offset: offset(entry.offset), popTick: entry.element.id == popNodeID ? popTick : 0
+          ) { onTap(entry.element) }
             .id("node.\(entry.element.id)")
         }
       }
@@ -92,9 +97,10 @@ struct UnitHeader: View {
 /// One circular node of the path.
 struct NodeButton: View {
   @Environment(\.theme) private var theme
-  @Environment(\.accessibilityReduceMotion) private var reduceMotion
+  @Environment(\.reduceMotion) private var reduceMotion
   let node: PathNode
   let offset: CGFloat
+  var popTick = 0
   let action: () -> Void
   @State private var pulse = false
 
@@ -122,6 +128,7 @@ struct NodeButton: View {
         }
         .frame(width: 68, height: 68)
         .scaleEffect(isNext && pulse && !reduceMotion ? 1.05 : 1)
+        .pop(trigger: popTick, enabled: popTick > 0)
         if node.status == .done && node.spec.kind == .lesson {
           StarsView(count: node.stars, size: 14)
         }

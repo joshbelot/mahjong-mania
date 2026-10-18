@@ -117,6 +117,8 @@ public struct PlayOutcome: Sendable {
   public var unitGold: Int?
   public var seconds = 0
   public var improvedStars: Bool { stars > previousStars }
+
+  public init(node: LessonSpec?) { self.node = node }
 }
 
 /// Everything the Practice game remembers (SPEC §18.9) and the rules that change it. Pure value type:

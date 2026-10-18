@@ -207,3 +207,11 @@ The spec title "<Right>'s exposed sets" gives "Across's exposed sets", which rea
 - **UI-test hooks** (all need `-UITestResetData`): `-UITestPracticeSeed`, `-UITestRevealAnswers` (choice buttons get the value "correct" or "wrong"), `-UITestPlacement`, `-UITestToday`, `-UITestHour`, `-UITestPlayNode <id>` (opens a lesson at once, without its intro, for simulator checks). `-UITestTab practice` is accepted.
 - The two drills stay as they were in 1.1, moved into Practice → Free play; Phase 26 rebuilds them on the exercise engine.
 
+## 2026-10-17, §18.7 (Phase 24): feel
+
+- **Sounds** come from `tools/make_sounds.py` (eight tones, 0.16–0.58 s, 16-bit mono WAV, standard library only) and play through `AVAudioPlayer` on an `.ambient` session with `mixWithOthers`. The new setting is Settings → Appearance and feel → Sound effects (default on). The silent switch mutes them.
+- **Reduce Motion** is read from an app-level `\.reduceMotion` (the system setting, or `-UITestReduceMotion`) so both versions can be screenshotted by UI tests: it turns off confetti, shakes, pops, the next-node pulse, the floating XP and the combo burst; stars and celebrations fade in instead, and the check mark appears already drawn.
+- **Celebrations** are full-screen, one at a time, after the completion screen: level up, each new badge, then the daily goal or a streak milestone. Both Continue and Play again go through them first, so a level-up is never skipped. The completion screen no longer lists them.
+- **Combo.** A right answer that earns the combo bonus plays the combo arpeggio instead of the ding; the flame in the top bar bumps on every step and rings at 5, 10 and 15.
+- **UI-test note.** XCUITest waits for the app to be idle, which includes the 2.2 s confetti, so a screenshot taken after waiting for a celebration screen usually misses the confetti; one taken straight after a tap catches it.
+
