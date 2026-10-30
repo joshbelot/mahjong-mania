@@ -261,14 +261,21 @@ struct SpeedRoundView: View {
       .padding(.vertical, Spacing.sm)
       VStack(spacing: Spacing.sm) {
         ForEach(Array(exercise.choices.enumerated()), id: \.offset) { entry in
-          if case .text(let text) = entry.element {
-            Button { model.answerChoice(entry.offset) } label: {
-              Text(text).font(Typography.body.weight(.semibold)).foregroundStyle(theme.text)
-                .frame(maxWidth: .infinity, alignment: .leading)
+          Button { model.answerChoice(entry.offset) } label: {
+            Group {
+              switch entry.element {
+              case .text(let text): Text(text)
+              case .number(let n): Text("\(n)")
+              case .yesNo(let yes): Text(yes ? "Yes" : "No")
+              case .tile(let tile): TileView(tile: tile, size: .medium)
+              case .line(let line): Text(line.displayName)
+              }
             }
-            .buttonStyle(ChoiceButtonStyle())
-            .accessibilityIdentifier("speed.choice.\(entry.offset)")
+            .font(Typography.body.weight(.semibold)).foregroundStyle(theme.text)
+            .frame(maxWidth: .infinity, alignment: .leading)
           }
+          .buttonStyle(ChoiceButtonStyle())
+          .accessibilityIdentifier("speed.choice.\(entry.offset)")
         }
       }
     }

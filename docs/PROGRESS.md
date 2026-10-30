@@ -24,7 +24,7 @@ Plan: `docs/SPEC.md` §19 (first App Store release). v1.2 build 4 is on TestFlig
 
 | Phase | Status | PR |
 |---|---|---|
-| 28 Harder, fairer questions | in PR (tests running) | claude/harder-questions |
+| 28 Harder, fairer questions | merged | PR_PLACEHOLDER |
 | 29 Cheat sheet and practice polish | not started | |
 | 30 Bug squash | not started | |
 | 31 Compliance in the app and the website | not started | |
