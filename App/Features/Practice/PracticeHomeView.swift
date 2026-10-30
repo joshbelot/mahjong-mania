@@ -44,7 +44,7 @@ struct PracticeHomeView: View {
         VStack(alignment: .leading, spacing: Spacing.lg) {
           if typeSize.isAccessibilitySize { HeaderStrip() }
           StreakBanners()
-          DailyDealCard { startDaily() }
+          TodaysDealNode { startDaily() }
           PathView(
             nodes: progress.nodes(), progress: progress, reviewDue: progress.reviewQueue.dueCount(today: practice.today),
             onTap: { handleTap($0) }, onTestOut: { testOutUnit = $0 }, popNodeID: popNodeID, popTick: popTick)

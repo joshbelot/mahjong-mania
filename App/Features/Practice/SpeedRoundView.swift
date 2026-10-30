@@ -17,6 +17,8 @@ final class SpeedRoundModel {
   private(set) var lastCorrect = false
   private(set) var outcome: PlayOutcome?
   private(set) var newBest = false
+  /// Tiles of the current rack already judged, so the rack can dim them.
+  private(set) var judged: [Tile] = []
   @ObservationIgnored private var stream: SpeedStream
   @ObservationIgnored private var timer: Task<Void, Never>?
   let seed: UInt64
@@ -66,7 +68,15 @@ final class SpeedRoundModel {
     if clock.isOver {
       finish()
     } else {
+      let previous = question
       question = stream.next()
+      if case .keepPass(_, let oldRack, let oldTile, _, _)? = previous, case .keepPass(_, let newRack, _, _, _)? = question,
+        oldRack == newRack
+      {
+        judged.append(oldTile)
+      } else {
+        judged = []
+      }
     }
   }
 
@@ -231,6 +241,7 @@ struct SpeedRoundView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(theme.surface, in: RoundedRectangle(cornerRadius: Radius.md))
         .overlay(RoundedRectangle(cornerRadius: Radius.md).strokeBorder(theme.border, lineWidth: 1))
+      rackView(rack: rack, current: tile)
       Text("Keep it or pass it?").font(Typography.h2).foregroundStyle(theme.text)
       TileView(tile: tile, size: .large)
         .scaleEffect(1.4)
@@ -247,6 +258,48 @@ struct SpeedRoundView: View {
           .accessibilityIdentifier("speed.pass")
       }
     }
+  }
+
+  /// The player's 13 tiles with the one being judged lifted and outlined and the ones already judged dimmed,
+  /// so Keep or Pass is decided in context (SPEC §19.3).
+  private func rackView(rack: [Tile], current: Tile) -> some View {
+    var remaining = model.judged
+    var liftedFound = false
+    let states: [(dim: Bool, lifted: Bool)] = rack.map { tile in
+      if let at = remaining.firstIndex(of: tile) {
+        remaining.remove(at: at)
+        return (true, false)
+      }
+      if !liftedFound && tile == current {
+        liftedFound = true
+        return (false, true)
+      }
+      return (false, false)
+    }
+    return FlowLayout(spacing: 3, lineSpacing: 8) {
+      ForEach(Array(rack.enumerated()), id: \.offset) { entry in
+        let state = states[entry.offset]
+        TileView(tile: entry.element, size: .small)
+          .opacity(state.dim ? 0.35 : 1)
+          .overlay {
+            if state.lifted {
+              RoundedRectangle(cornerRadius: 6).strokeBorder(theme.primary, lineWidth: 3)
+            }
+          }
+          .offset(y: state.lifted ? -6 : 0)
+          .accessibilityElement(children: .ignore)
+          .accessibilityLabel(entry.element.name)
+          .accessibilityValue(state.lifted ? "being judged" : state.dim ? "already judged" : "")
+          .accessibilityIdentifier("speed.rack.\(entry.offset)")
+      }
+    }
+    .padding(Spacing.md)
+    .padding(.top, 6)
+    .frame(maxWidth: .infinity, alignment: .leading)
+    .background(theme.surfaceAlt, in: RoundedRectangle(cornerRadius: Radius.lg))
+    .overlay(RoundedRectangle(cornerRadius: Radius.lg).strokeBorder(theme.border, lineWidth: 1))
+    .accessibilityElement(children: .contain)
+    .accessibilityIdentifier("speed.rack")
   }
 
   private func bonus(_ exercise: Exercise) -> some View {

@@ -9,6 +9,13 @@ struct CompletionView: View {
   let outcome: PlayOutcome
   let onContinue: () -> Void
   let onReplay: () -> Void
+  @Environment(PracticeStore.self) private var practice
+  @Environment(\.dynamicTypeSize) private var typeSize
+  @State private var fanfare = 0
+  @State private var flash = false
+
+  /// A three-star lesson: the big finish (SPEC §19.3).
+  private var perfect: Bool { kind == .lesson && !session.gold && outcome.stars == 3 }
 
   private var kind: NodeKind { session.node.kind }
   private var title: String {
@@ -26,6 +33,9 @@ struct CompletionView: View {
   var body: some View {
     ScrollView {
       VStack(spacing: Spacing.xl) {
+        if !typeSize.isAccessibilitySize && kind != .review {
+          SunnyView(expression: outcome.passed && (kind != .lesson || outcome.stars >= 2 || session.gold) ? .cheering : .hello, size: 84, animated: true)
+        }
         Text(title)
           .titleStyle()
           .foregroundStyle(theme.text)
@@ -34,6 +44,7 @@ struct CompletionView: View {
           .accessibilityIdentifier("complete.title")
         if kind == .lesson && !session.gold {
           StarsView(count: outcome.stars, animated: true)
+            .background { if perfect { PerfectGlow(flash: flash) } }
             .accessibilityElement(children: .ignore)
             .accessibilityLabel("\(outcome.stars) of 3 stars")
             .accessibilityIdentifier("complete.stars")
@@ -48,6 +59,12 @@ struct CompletionView: View {
             .font(.system(size: 72))
             .foregroundStyle(outcome.passed ? theme.gold : theme.textMuted)
             .accessibilityHidden(true)
+        }
+        if perfect {
+          Label("\(practice.progress.counters.threeStarLessons) perfect \(practice.progress.counters.threeStarLessons == 1 ? "lesson" : "lessons") so far", systemImage: "star.circle.fill")
+            .font(Typography.body.weight(.semibold))
+            .foregroundStyle(theme.gold)
+            .accessibilityIdentifier("complete.perfectcount")
         }
         Text(subtitle)
           .font(Typography.body)
@@ -80,6 +97,15 @@ struct CompletionView: View {
       }
       .padding(Spacing.lg)
       .frame(maxWidth: .infinity)
+    }
+    .overlay { if perfect { ConfettiView(gold: true).ignoresSafeArea() } }
+    .sound(trigger: fanfare) { $0 > 0 && perfect ? .perfect : nil }
+    .hapticOnChange(trigger: fanfare) { $0 > 0 && perfect ? .success : nil }
+    .task {
+      guard perfect else { return }
+      try? await Task.sleep(for: .milliseconds(reduceMotion ? 100 : 700))
+      fanfare += 1
+      withAnimation(.easeOut(duration: 0.7)) { flash = true }
     }
   }
 
@@ -216,5 +242,27 @@ struct CountingText: View {
         }
         shown = target
       }
+  }
+}
+
+/// A ring that flashes out from behind the stars on a three-star finish; a still gold glow with Reduce Motion.
+struct PerfectGlow: View {
+  @Environment(\.theme) private var theme
+  @Environment(\.reduceMotion) private var reduceMotion
+  let flash: Bool
+
+  var body: some View {
+    ZStack {
+      Circle().fill(theme.gold.opacity(0.22)).blur(radius: 18).frame(width: 190, height: 190)
+      if !reduceMotion {
+        Circle()
+          .strokeBorder(theme.gold, lineWidth: 5)
+          .frame(width: 120, height: 120)
+          .scaleEffect(flash ? 2.4 : 0.6)
+          .opacity(flash ? 0 : 0.9)
+      }
+    }
+    .allowsHitTesting(false)
+    .accessibilityHidden(true)
   }
 }

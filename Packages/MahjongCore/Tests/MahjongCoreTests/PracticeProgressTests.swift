@@ -335,7 +335,7 @@ struct BadgeTests {
   }
 
   @Test func everyBadgeHasWordsAndAnIcon() {
-    #expect(BadgeID.allCases.count == 17)
+    #expect(BadgeID.allCases.count == 18)
     for badge in BadgeID.allCases {
       #expect(!badge.title.isEmpty && !badge.goal.isEmpty && !badge.symbol.isEmpty)
     }
@@ -437,5 +437,63 @@ struct DailyDealTests {
     #expect(text == "Mahjong Mania Daily #289 🀄\nPick: ✅ (best hand, 3 away)\nPass: 🟩🟩🟨\n🔥 12-day streak")
     let noStreak = DailyDeal.shareText(number: 5, result: .init(pick: .miss, pickDistance: 7, pass: [.red]), streak: 0)
     #expect(noStreak == "Mahjong Mania Daily #5 🀄\nPick: ❌ (7 away)\nPass: 🟥")
+  }
+}
+
+// MARK: Perfect Week (SPEC §19.3)
+
+struct PerfectWeekTests {
+  private func threeStarDay(_ p: inout PracticeProgress, _ node: String, on d: LocalDay) {
+    play(&p, node, right: 8, on: d)
+  }
+
+  private func run(days: Int, from start: LocalDay, skip: Set<Int> = [], twoStarOn: Int? = nil) -> PracticeProgress {
+    var p = PracticeProgress()
+    p.dailyGoal = .casual
+    let nodes = ["u1l1", "u1l2", "u1l3", "u2l1", "u2l2", "u2l3", "u2l4", "u3l1"]
+    for i in 0..<days where !skip.contains(i) {
+      let d = start.adding(days: i)
+      play(&p, nodes[i % nodes.count], right: i == twoStarOn ? 6 : 8, on: d)
+    }
+    return p
+  }
+
+  @Test func sevenPerfectDaysEarnItAndPayFiftyXP() {
+    var p = run(days: 6, from: today)
+    #expect(p.badges[BadgeID.perfectWeek.rawValue] == nil)
+    let before = p.xp
+    let last = play(&p, "u3l2", right: 8, on: today.adding(days: 6))
+    #expect(last.newBadges.contains(.perfectWeek))
+    #expect(BadgeID.perfectWeek.isRare && BadgeID.perfectWeek.xp == 50)
+    #expect(last.xp.badges >= 50 && p.xp > before + 50)
+  }
+
+  @Test func oneTwoStarLessonBreaksTheWeek() {
+    let p = run(days: 7, from: today, twoStarOn: 3)
+    #expect(p.badges[BadgeID.perfectWeek.rawValue] == nil)
+    #expect(p.dayLog[today.adding(days: 3).description]?.imperfect == true)
+  }
+
+  @Test func aMissedDayOrAFreezeDayBreaksIt() {
+    let missed = run(days: 7, from: today, skip: [4])
+    #expect(missed.badges[BadgeID.perfectWeek.rawValue] == nil)
+    // A freeze keeps the streak alive but the day has no goal, so it does not count.
+    var frozen = run(days: 7, from: today, skip: [2])
+    frozen.streak.freezes = 1
+    #expect(!frozen.hasPerfectWeek(endingOn: today.adding(days: 6)))
+  }
+
+  @Test func dailyDealSpeedRoundAndFreePlayDoNotCountAgainstIt() {
+    var p = run(days: 6, from: today)
+    let day = today.adding(days: 6)
+    _ = p.recordSpeedRound(right: 3, bestRun: 2, day: day)
+    _ = p.recordFreePlay(AnswerRecord(exercise: ExerciseID(type: .tileFact, seed: 1, difficulty: 1), correct: false), day: day)
+    #expect(p.dayLog[day.description]?.imperfect != true)
+    #expect(p.hasPerfectWeek(endingOn: day))
+  }
+
+  @Test func oldDayRecordsWithoutTheFieldStillLoad() throws {
+    let r = try JSONDecoder().decode(DayRecord.self, from: Data(#"{"lessons":2,"goalMet":true}"#.utf8))
+    #expect(r.lessons == 2 && r.goalMet && !r.imperfect)
   }
 }

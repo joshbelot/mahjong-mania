@@ -22,6 +22,7 @@ struct HeaderStrip: View {
         NavigationLink(value: PracticeRoute.profile) { streakBlock }
           .buttonStyle(.plain)
         goalBlock
+        TilesButton()
       }
     }
   }

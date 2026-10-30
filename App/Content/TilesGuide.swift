@@ -16,11 +16,7 @@ enum LearnTiles {
           ),
           .table(
             header: ["Suit", "Also called", "Colour", "Copies"],
-            rows: [
-              ["Cracks", "Craks, Characters", "Red", "36"],
-              ["Bams", "Bamboo", "Green", "36"],
-              ["Dots", "Circles", "Blue", "36"],
-            ]),
+            rows: TileCheatSheet.suits.map { [$0.name, $0.alsoCalled, $0.colour, "36"] }),
           .note("The 1 Bam is traditionally drawn as a bird, so it is easy to spot."),
         ]),
       LearnSection(
@@ -36,11 +32,7 @@ enum LearnTiles {
           .paragraph("There are three dragons, four copies each (12 tiles)."),
           .table(
             header: ["Dragon", "Nickname", "Goes with"],
-            rows: [
-              ["Red Dragon", "Red", "Cracks"],
-              ["Green Dragon", "Green", "Bams"],
-              ["White Dragon", "Soap, or zero", "Dots"],
-            ]),
+            rows: TileCheatSheet.dragons.map { [$0.tile == .dragon(.white) ? "White Dragon" : $0.tile.name, $0.nickname, $0.goesWith] }),
           .paragraph(
             "A dragon shown in a suit's colour on the card means the dragon that goes with that suit. That is called the matching dragon."
           ),

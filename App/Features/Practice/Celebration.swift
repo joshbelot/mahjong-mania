@@ -59,6 +59,8 @@ enum Celebrations {
 struct ConfettiView: View {
   @Environment(\.reduceMotion) private var reduceMotion
   @Environment(\.theme) private var theme
+  /// An all-gold burst for a three-star finish.
+  var gold = false
   @State private var start = Date()
 
   private struct Piece {
@@ -87,7 +89,7 @@ struct ConfettiView: View {
         let t = timeline.date.timeIntervalSince(start)
         Canvas { context, size in
           guard t < 2.2 else { return }
-          let palette = [theme.accent, theme.gold, theme.primary, theme.flower]
+          let palette = gold ? [theme.gold, theme.gold.opacity(0.8), theme.tileFace, theme.gold] : [theme.accent, theme.gold, theme.primary, theme.flower]
           for piece in pieces {
             let local = t - piece.delay
             guard local > 0 else { continue }
@@ -134,6 +136,7 @@ struct ConfettiView: View {
 struct CelebrationView: View {
   @Environment(\.theme) private var theme
   @Environment(\.reduceMotion) private var reduceMotion
+  @Environment(\.dynamicTypeSize) private var typeSize
   let item: CelebrationItem
   let isLast: Bool
   let onContinue: () -> Void
@@ -145,7 +148,7 @@ struct CelebrationView: View {
     case .levelUp(let level, let title):
       return ("arrow.up.circle.fill", theme.primary, "Level \(level)", title, "Keep going: every lesson earns XP.")
     case .badge(let badge):
-      return (badge.symbol, theme.gold, badge.title, "New badge", badge.goal + ". +\(XP.badge) XP")
+      return (badge.symbol, theme.gold, badge.title, badge.isRare ? "Rare badge" : "New badge", badge.goal + ". +\(badge.xp) XP")
     case .goalMet(let streak):
       return (
         "checkmark.seal.fill", theme.success, "Daily goal met",
@@ -181,9 +184,17 @@ struct CelebrationView: View {
             .font(.system(size: 64, weight: .bold))
             .foregroundStyle(theme.onPrimary)
         }
+        .overlay {
+          if case .badge(let badge) = item, badge.isRare {
+            Circle().strokeBorder(theme.gold, lineWidth: 6).frame(width: 206, height: 206)
+          }
+        }
         .scaleEffect(revealed || reduceMotion ? 1 : 0.4)
         .opacity(revealed || reduceMotion ? 1 : 0)
         .accessibilityHidden(true)
+        if !typeSize.isAccessibilitySize {
+          SunnyView(expression: sunnyExpression, size: 64, animated: true)
+        }
         VStack(spacing: Spacing.sm) {
           Text(c.title)
             .titleStyle()
@@ -228,6 +239,13 @@ struct CelebrationView: View {
     .hapticOnChange(trigger: cue) { _ in .success }
     .accessibilityElement(children: .contain)
     .accessibilityIdentifier("celebration.\(item.id)")
+  }
+
+  private var sunnyExpression: SunnyExpression {
+    switch item {
+    case .streakBroken, .freezeUsed: return .hello
+    default: return .cheering
+    }
   }
 
   private var celebratesWithConfetti: Bool {

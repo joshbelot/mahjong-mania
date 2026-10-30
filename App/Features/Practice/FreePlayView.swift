@@ -85,6 +85,9 @@ struct FreePlayView: View {
       count > 0 ? (session?.lastCorrect == true ? .success : .warning) : nil
     }
     .onAppear { if session == nil { newDeal() } }
+    .onChange(of: session?.answerCount ?? 0) { _, count in
+      if count > 0, let session { recordResult(session) }
+    }
     .onChange(of: difficulty) { newDeal() }
     .onChange(of: useActiveCard) { newDeal() }
   }
@@ -130,13 +133,13 @@ struct FreePlayView: View {
           FeedbackBar(
             feedback: feedback, continueTitle: "Next deal", secondaryTitle: "Try again",
             onSecondary: { tryAgain() }, onContinue: { newDeal() })
-        } else if session.canCheck {
-          Button("Check") { check(session) }
+        } else if session.canCheck && !session.commitsOnTap {
+          Button("Check") { withAnimation(.snappy(duration: 0.25)) { session.check() } }
             .buttonStyle(PrimaryButton(.primary, size: .large))
             .padding(.horizontal, Spacing.lg)
             .padding(.vertical, Spacing.md)
             .accessibilityIdentifier("lesson.check")
-        } else if session.exercise?.selectCount ?? 0 > 0 || mode == .pickAHand {
+        } else if session.exercise?.selectCount ?? 0 > 0 {
           Button("Check") {}
             .buttonStyle(PrimaryButton(.primary, size: .large))
             .disabled(true)
@@ -170,8 +173,8 @@ struct FreePlayView: View {
     session = LessonSession(title: mode.title, ids: [id], card: card, seed: seed)
   }
 
-  private func check(_ session: LessonSession) {
-    withAnimation(.snappy(duration: 0.25)) { session.check() }
+  /// Called when the session reaches feedback, however the answer was committed (tap or Check).
+  private func recordResult(_ session: LessonSession) {
     guard session.phase == .feedback, let record = session.records.last, firstAttempt else { return }
     firstAttempt = false
     streak = record.correct ? streak + 1 : 0

@@ -32,9 +32,21 @@ public struct UnitProgress: Hashable, Codable, Sendable {
 public struct DayRecord: Hashable, Codable, Sendable {
   public var lessons = 0
   public var goalMet = false
-  public init(lessons: Int = 0, goalMet: Bool = false) {
+  /// A path lesson finished that day with fewer than three stars (it breaks a Perfect Week).
+  public var imperfect = false
+  public init(lessons: Int = 0, goalMet: Bool = false, imperfect: Bool = false) {
     self.lessons = lessons
     self.goalMet = goalMet
+    self.imperfect = imperfect
+  }
+
+  private enum CodingKeys: String, CodingKey { case lessons, goalMet, imperfect }
+
+  public init(from decoder: Decoder) throws {
+    let c = try decoder.container(keyedBy: CodingKeys.self)
+    lessons = try c.decodeIfPresent(Int.self, forKey: .lessons) ?? 0
+    goalMet = try c.decodeIfPresent(Bool.self, forKey: .goalMet) ?? false
+    imperfect = try c.decodeIfPresent(Bool.self, forKey: .imperfect) ?? false
   }
 }
 
@@ -327,11 +339,21 @@ public struct PracticeProgress: Codable, Equatable, Sendable {
     return position
   }
 
+  /// Seven local days in a row ending on `day`, each with the daily goal met and no path lesson under three
+  /// stars. A day with no goal (a missed day, or one a freeze covered) breaks the run.
+  public func hasPerfectWeek(endingOn day: LocalDay) -> Bool {
+    (0..<7).allSatisfy { back in
+      guard let record = dayLog[day.adding(days: -back).description] else { return false }
+      return record.goalMet && !record.imperfect
+    }
+  }
+
   /// Awards badges earned by the current state; returns them and the XP they paid.
   mutating func awardBadges(on day: LocalDay) -> [BadgeID] {
     counters.threeStarLessons = lessons.values.filter { $0.stars == 3 }.count
     let earned = Badges.earned(
-      counters: counters, finishedUnits: finishedUnits, goldUnits: goldUnits, streak: streak)
+      counters: counters, finishedUnits: finishedUnits, goldUnits: goldUnits, streak: streak,
+      perfectWeek: hasPerfectWeek(endingOn: day))
     let fresh = BadgeID.allCases.filter { earned.contains($0) && badges[$0.rawValue] == nil }
     for badge in fresh { badges[badge.rawValue] = day }
     return fresh
@@ -405,6 +427,11 @@ public struct PracticeProgress: Codable, Equatable, Sendable {
     lesson.bestAccuracy = max(lesson.bestAccuracy, outcome.accuracy)
     lessons[node.id] = lesson
     if node.kind == .lesson { counters.lessonsFinished += 1 }
+    if node.kind == .lesson && !result.gold && outcome.stars < 3 {
+      var record = dayLog[result.day.description] ?? DayRecord()
+      record.imperfect = true
+      dayLog[result.day.description] = record
+    }
 
     // Review queue: misses come back tomorrow; reviewed items follow the spaced steps.
     for record in records {
@@ -421,7 +448,7 @@ public struct PracticeProgress: Codable, Equatable, Sendable {
     outcome.goalJustMet = activity.goalJustMet
 
     outcome.newBadges = awardBadges(on: result.day)
-    breakdown.badges = outcome.newBadges.count * XP.badge
+    breakdown.badges = XP.badges(outcome.newBadges)
     outcome.xp = breakdown
     outcome.levelUp = addXP(breakdown.total)
     return outcome
@@ -440,7 +467,7 @@ public struct PracticeProgress: Codable, Equatable, Sendable {
     var gained = record.correct ? XP.freePlayRight : 0
     if !record.correct && queueMiss { reviewQueue.recordMiss(record.exercise, today: day) }
     let badges = awardBadges(on: day)
-    gained += badges.count * XP.badge
+    gained += XP.badges(badges)
     return (gained, addXP(gained), badges)
   }
 
@@ -465,7 +492,7 @@ public struct PracticeProgress: Codable, Equatable, Sendable {
     outcome.lessonsToday = activity.lessonsToday
     outcome.goalJustMet = activity.goalJustMet
     outcome.newBadges = awardBadges(on: day)
-    breakdown.badges = outcome.newBadges.count * XP.badge
+    breakdown.badges = XP.badges(outcome.newBadges)
     outcome.xp = breakdown
     outcome.levelUp = addXP(breakdown.total)
     return outcome
@@ -502,7 +529,7 @@ public struct PracticeProgress: Codable, Equatable, Sendable {
     outcome.newBadges = awardBadges(on: day)
     var breakdown = XPBreakdown()
     breakdown.answers = amount
-    breakdown.badges = outcome.newBadges.count * XP.badge
+    breakdown.badges = XP.badges(outcome.newBadges)
     outcome.xp = breakdown
     outcome.levelUp = addXP(breakdown.total)
     return outcome

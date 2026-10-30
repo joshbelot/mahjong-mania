@@ -12,11 +12,13 @@ struct ChoiceButtonStyle: ButtonStyle {
     configuration.label
       .padding(Spacing.md)
       .frame(maxWidth: .infinity, minHeight: 56)
-      .background(background, in: RoundedRectangle(cornerRadius: Radius.md))
-      .overlay(RoundedRectangle(cornerRadius: Radius.md).strokeBorder(border, lineWidth: mark == .none ? 1 : 2))
+      .background(configuration.isPressed && mark == .none ? theme.primarySoft : background, in: RoundedRectangle(cornerRadius: Radius.md))
+      .overlay(
+        RoundedRectangle(cornerRadius: Radius.md).strokeBorder(
+          configuration.isPressed && mark == .none ? theme.primary : border, lineWidth: mark == .none && !configuration.isPressed ? 1 : 2))
       .opacity(dimmed ? 0.35 : 1)
       .scaleEffect(configuration.isPressed ? 0.98 : 1)
-      .animation(.snappy(duration: 0.12), value: configuration.isPressed)
+      .animation(.easeOut(duration: 0.15), value: configuration.isPressed)
       .contentShape(RoundedRectangle(cornerRadius: Radius.md))
   }
 
@@ -64,13 +66,17 @@ struct ExerciseView: View {
         .accessibilityIdentifier("lesson.prompt")
       linesView
       if let hint = session.hint, !hint.text.isEmpty {
-        Label(hint.text, systemImage: "lightbulb.fill")
+        HStack(alignment: .top, spacing: Spacing.sm) {
+          SunnyView(expression: .thinking, size: 34).frame(width: 46, height: 40)
+          Text(hint.text)
           .font(Typography.small.weight(.medium))
           .foregroundStyle(theme.text)
+        }
           .padding(Spacing.md)
           .frame(maxWidth: .infinity, alignment: .leading)
           .background(theme.gold.opacity(0.18), in: RoundedRectangle(cornerRadius: Radius.md))
           .fixedSize(horizontal: false, vertical: true)
+          .accessibilityElement(children: .combine)
           .accessibilityIdentifier("lesson.hint")
       }
       tilesView

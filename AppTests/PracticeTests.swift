@@ -376,3 +376,66 @@ struct FeelTests {
     #expect(Celebrations.items(for: up!).contains(.levelUp(level: 3, title: "Tile Spotter")))
   }
 }
+
+@MainActor
+struct Phase29Tests {
+  @Test func everySingleChoiceCommitsOnTapAndSelectionsKeepCheck() {
+    var commits = 0
+    var keeps = 0
+    for type in ExerciseType.allCases {
+      let id = ExerciseID(type: type, seed: 3, difficulty: 2)
+      let session = LessonSession(title: "t", ids: [id], seed: 1)
+      guard let exercise = session.exercise else { continue }
+      if exercise.selectCount > 0 {
+        #expect(!session.commitsOnTap, "\(type) keeps Check")
+        keeps += 1
+      } else if !exercise.choices.isEmpty || type == .keepOrPass {
+        #expect(session.commitsOnTap, "\(type) commits on tap")
+        commits += 1
+      }
+    }
+    #expect(commits >= 8 && keeps == 2)
+  }
+
+  @Test func tappingAChoiceChecksAtOnce() {
+    let session = LessonSession(title: "t", ids: [ExerciseID(type: .tileFact, seed: 3, difficulty: 1)], seed: 1)
+    session.select(choice: 0)
+    #expect(session.phase == .feedback && session.grade != nil)
+  }
+
+  @Test func cheatSheetListsEveryGroupAndOnlyShowsBlanksWhenOn() {
+    let off = TileCheatSheet.groups(blanks: false).map(\.heading)
+    #expect(off == ["Suits", "Winds", "Dragons", "Flowers", "Jokers", "Sets"])
+    #expect(TileCheatSheet.groups(blanks: true).map(\.heading).contains("Blanks"))
+    let dragons = TileCheatSheet.groups(blanks: false).first { $0.id == "dragons" }!
+    #expect(dragons.rows.first { $0.name == "Green Dragon" }?.spoken == "Green Dragon. Goes with Bams. 4 in a set.")
+    let sets = TileCheatSheet.groups(blanks: false).first { $0.id == "sets" }!
+    #expect(sets.rows.map(\.tiles.count) == [1, 2, 3, 4, 5, 6])
+  }
+
+  @Test func theTileGuideAndTheCheatSheetShareTheirFacts() {
+    for fact in TileCheatSheet.suits {
+      let found = LearnTiles.topic.sections.flatMap(\.blocks).contains { block in
+        if case .table(_, let rows) = block { return rows.contains { $0.first == fact.name && $0.contains(fact.alsoCalled) } }
+        return false
+      }
+      #expect(found, "\(fact.name) is in both")
+    }
+  }
+
+  @Test func theCheatSheetIsHiddenInGoldLessonsAndTheScoredDeal() {
+    let gold = LessonSession(node: Curriculum.node(id: "u1l1")!, gold: true, seed: 1, showIntro: false)
+    #expect(!gold.cheatSheetAllowed)
+    let normal = LessonSession(node: Curriculum.node(id: "u1l1")!, seed: 1, showIntro: false)
+    #expect(normal.cheatSheetAllowed)
+    let analyzer = Analyzer.cached(for: PracticeCard.card)
+    let scored = DailyDealPlay(day: today, analyzer: analyzer, scored: true).session()
+    #expect(!scored.cheatSheetAllowed)
+    let replay = DailyDealPlay(day: today, analyzer: analyzer, scored: false).session()
+    #expect(replay.cheatSheetAllowed)
+  }
+
+  @Test func todaysDealDifficultyFollowsTheWeekday() {
+    #expect((1...7).map(TodaysDealNode.difficulty(isoWeekday:)) == [1, 1, 1, 2, 2, 3, 3])
+  }
+}

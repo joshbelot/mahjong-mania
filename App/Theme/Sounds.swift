@@ -3,7 +3,7 @@ import SwiftUI
 
 /// The Practice sound effects (SPEC §18.7), written by `tools/make_sounds.py`.
 enum Sound: String, CaseIterable, Sendable {
-  case right, wrong, combo, star1, star2, star3, fanfare, unlock
+  case right, wrong, combo, star1, star2, star3, fanfare, unlock, perfect
 }
 
 /// Plays the effects on an ambient audio session: the silent switch mutes them and other audio keeps playing.

@@ -24,7 +24,9 @@ final class DailyDealPlay {
   var number: Int { DailyDeal.number(for: day) }
 
   func session() -> LessonSession {
-    LessonSession(title: "Daily Deal #\(number)", exercises: [pick, pass])
+    let session = LessonSession(title: "Daily Deal #\(number)", exercises: [pick, pass])
+    session.cheatSheetBlocked = scored
+    return session
   }
 
   /// Turns the session's two answers into the result and records it when this is the scored attempt.
@@ -141,61 +143,110 @@ struct DailyDealResultView: View {
   }
 }
 
-/// The Daily Deal card on the Practice home.
-struct DailyDealCard: View {
+/// "Today's Deal": a pinned node at the top of the path (SPEC §19.3). One tap starts the Daily Deal; once
+/// it has been played the node shows a tick and the result emojis, and the countdown to the next one.
+struct TodaysDealNode: View {
   @Environment(\.theme) private var theme
+  @Environment(\.reduceMotion) private var reduceMotion
   @Environment(PracticeStore.self) private var practice
   let onPlay: () -> Void
+  @State private var pulse = false
 
   private var day: LocalDay { practice.today }
   private var played: DealRecord? { practice.progress.dailyDeals[day.description] }
 
-  private static let weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-
-  private var weekdayNote: String {
-    let name = Self.weekdays[(day.isoWeekday - 1) % 7]
-    switch day.isoWeekday {
-    case 1: return "\(name): the easiest deal of the week"
-    case 7: return "\(name): the hardest deal of the week"
-    default: return name
+  /// 1 to 3 dots: Monday to Wednesday are easy, Thursday and Friday normal, the weekend hard.
+  static func difficulty(isoWeekday: Int) -> Int {
+    switch isoWeekday {
+    case 1...3: return 1
+    case 4, 5: return 2
+    default: return 3
     }
+  }
+
+  private var level: Int { Self.difficulty(isoWeekday: day.isoWeekday) }
+
+  private var results: String {
+    guard let played else { return "" }
+    let pick: String
+    switch played.pick {
+    case .best, .good: pick = "\u{2705}"
+    case .miss: pick = "\u{274C}"
+    }
+    return pick + played.pass.map { mark in
+      switch mark {
+      case .green: return "\u{1F7E9}"
+      case .yellow: return "\u{1F7E8}"
+      case .red: return "\u{1F7E5}"
+      }
+    }.joined()
   }
 
   var body: some View {
     Button(action: onPlay) {
-      VStack(alignment: .leading, spacing: Spacing.sm) {
-        HStack(alignment: .firstTextBaseline) {
-          Label("Daily Deal #\(DailyDeal.number(for: day))", systemImage: "rectangle.stack.fill")
-            .font(Typography.h2)
-            .foregroundStyle(theme.text)
-          Spacer(minLength: Spacing.sm)
-          if played != nil {
-            Label("Played today", systemImage: "checkmark.circle.fill")
-              .font(Typography.small.weight(.semibold))
-              .foregroundStyle(theme.success)
-              .accessibilityIdentifier("deal.played")
+      VStack(spacing: Spacing.xs) {
+        if played == nil {
+          Text("New today")
+            .font(Typography.small.weight(.bold))
+            .foregroundStyle(theme.gold)
+            .padding(.horizontal, Spacing.md)
+            .padding(.vertical, 4)
+            .background(theme.surface, in: Capsule())
+            .overlay(Capsule().strokeBorder(theme.gold, lineWidth: 1.5))
+            .accessibilityHidden(true)
+        }
+        ZStack {
+          Circle().fill(played == nil ? theme.gold : theme.primarySoft)
+          Circle().strokeBorder(played == nil ? theme.gold.opacity(0.4) : theme.primary, lineWidth: played == nil ? 4 : 2)
+          Image(systemName: played == nil ? "calendar" : "checkmark")
+            .font(.system(size: 28, weight: .bold))
+            .foregroundStyle(played == nil ? Color(white: 0.12) : theme.primary)
+        }
+        .frame(width: 72, height: 72)
+        .scaleEffect(played == nil && pulse && !reduceMotion ? 1.05 : 1)
+        HStack(spacing: 4) {
+          ForEach(0..<3, id: \.self) { dot in
+            Circle()
+              .fill(dot < level ? theme.gold : theme.border)
+              .frame(width: 8, height: 8)
           }
         }
-        Text(played == nil ? "One hand to choose and three tiles to pass. Everyone gets the same deal today." : "Come back for tomorrow's deal. You can play today's again for practice.")
-          .font(Typography.small)
-          .foregroundStyle(theme.textMuted)
-          .multilineTextAlignment(.leading)
-          .fixedSize(horizontal: false, vertical: true)
-        HStack {
-          Text(weekdayNote).font(Typography.tiny).foregroundStyle(theme.gold)
-          Spacer()
-          if played != nil { NextDealCountdown() }
+        .accessibilityHidden(true)
+        Text("Today's Deal")
+          .font(Typography.body.weight(.semibold))
+          .foregroundStyle(theme.text)
+        if played != nil {
+          Text(results)
+            .font(.title3)
+            .accessibilityHidden(true)
+          NextDealCountdown()
+        } else {
+          Text("Deal #\(DailyDeal.number(for: day)) \u{00B7} the same for everyone")
+            .font(Typography.small)
+            .foregroundStyle(theme.textMuted)
         }
       }
-      .padding(Spacing.lg)
-      .frame(maxWidth: .infinity, alignment: .leading)
-      .background(theme.surface, in: RoundedRectangle(cornerRadius: Radius.lg))
-      .overlay(RoundedRectangle(cornerRadius: Radius.lg).strokeBorder(played == nil ? theme.gold : theme.border, lineWidth: played == nil ? 2 : 1))
-      .contentShape(RoundedRectangle(cornerRadius: Radius.lg))
+      .frame(maxWidth: .infinity, minHeight: 88)
+      .padding(.vertical, Spacing.sm)
+      .contentShape(Rectangle())
     }
     .buttonStyle(.plain)
-    .accessibilityElement(children: .contain)
+    .onAppear {
+      guard played == nil else { return }
+      withAnimation(.easeInOut(duration: 1.2).repeatForever(autoreverses: true)) { pulse = true }
+    }
+    .accessibilityElement(children: .ignore)
+    .accessibilityLabel("Today's Deal, number \(DailyDeal.number(for: day))")
+    .accessibilityValue(
+      played == nil
+        ? "Not played yet. Difficulty \(level) of 3." : "Played today. Tap to play again for practice.")
+    .accessibilityAddTraits(.isButton)
     .accessibilityIdentifier("daily.card")
+    .overlay(alignment: .topTrailing) {
+      if played != nil {
+        Color.clear.frame(width: 1, height: 1).accessibilityIdentifier("deal.played")
+      }
+    }
   }
 }
 

@@ -3,7 +3,7 @@ import Foundation
 public enum BadgeID: String, Codable, CaseIterable, Sendable {
   case firstSteps, tileWhisperer, cardReader, jokersWild, charlestonChamp, sharpEye, perfectionist,
     goldRush, onFire, weekWarrior, monthlyRegular, earlyBird, nightOwl, dailyDealer, speedDemon,
-    comeback, graduate
+    comeback, graduate, perfectWeek
 
   public var title: String {
     switch self {
@@ -24,6 +24,7 @@ public enum BadgeID: String, Codable, CaseIterable, Sendable {
     case .speedDemon: return "Speed Demon"
     case .comeback: return "Comeback"
     case .graduate: return "Graduate"
+    case .perfectWeek: return "Perfect Week"
     }
   }
 
@@ -47,6 +48,7 @@ public enum BadgeID: String, Codable, CaseIterable, Sendable {
     case .speedDemon: return "Answer 25 in one Speed Round"
     case .comeback: return "Get a repeated mistake right 25 times"
     case .graduate: return "Finish Unit 10"
+    case .perfectWeek: return "Meet your daily goal 7 days in a row, with every lesson at three stars"
     }
   }
 
@@ -69,8 +71,15 @@ public enum BadgeID: String, Codable, CaseIterable, Sendable {
     case .speedDemon: return "bolt.fill"
     case .comeback: return "arrow.counterclockwise"
     case .graduate: return "graduationcap.fill"
+    case .perfectWeek: return "sparkles"
     }
   }
+
+  /// The one rare badge, shown with a gold frame.
+  public var isRare: Bool { self == .perfectWeek }
+
+  /// XP paid when it is earned.
+  public var xp: Int { self == .perfectWeek ? XP.perfectWeek : XP.badge }
 }
 
 /// Running totals that badges and the profile read.
@@ -137,7 +146,8 @@ public struct PracticeCounters: Hashable, Codable, Sendable {
 public enum Badges {
   /// Every badge the player has earned by now.
   public static func earned(
-    counters: PracticeCounters, finishedUnits: Set<Int>, goldUnits: Set<Int>, streak: StreakState
+    counters: PracticeCounters, finishedUnits: Set<Int>, goldUnits: Set<Int>, streak: StreakState,
+    perfectWeek: Bool = false
   ) -> Set<BadgeID> {
     var result = Set<BadgeID>()
     if counters.lessonsFinished >= 1 { result.insert(.firstSteps) }
@@ -157,6 +167,7 @@ public enum Badges {
     if counters.speedBest >= 25 { result.insert(.speedDemon) }
     if counters.reaskRight >= 25 { result.insert(.comeback) }
     if finishedUnits.contains(10) { result.insert(.graduate) }
+    if perfectWeek { result.insert(.perfectWeek) }
     return result
   }
 }
