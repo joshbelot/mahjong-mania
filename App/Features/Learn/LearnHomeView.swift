@@ -11,6 +11,7 @@ enum LearnRoute: Hashable {
 struct LearnHomeView: View {
   @Environment(SettingsStore.self) private var settings
   @Environment(\.tabSwitcher) private var tabSwitcher
+  @State private var showTiles = false
 
   var body: some View {
     ScreenContainer {
@@ -18,6 +19,16 @@ struct LearnHomeView: View {
         CoachTipBanner(screen: "learn.home")
         SectionCard("Read") {
           VStack(spacing: 0) {
+            Button {
+              showTiles = true
+            } label: {
+              LearnRow(
+                symbol: "rectangle.grid.3x2", title: "Tiles cheat sheet",
+                subtitle: "Every tile, what it is called and how many there are. Also in Practice and the Helper.")
+            }
+            .buttonStyle(.plain)
+            .accessibilityIdentifier("learn.tiles.cheat")
+            Divider()
             ForEach(LearnContent.topics) { topic in
               NavigationLink(value: LearnRoute.topic(topic.id)) {
                 LearnRow(symbol: topic.symbol, title: topic.title, subtitle: topic.summary)
@@ -56,6 +67,7 @@ struct LearnHomeView: View {
         }
       }
     }
+    .sheet(isPresented: $showTiles) { TileCheatSheetView() }
     .navigationTitle("Learn")
     .settingsToolbar()
     .navigationDestination(for: LearnRoute.self) { route in

@@ -55,6 +55,7 @@ struct PathView: View {
 
 struct UnitHeader: View {
   @Environment(\.theme) private var theme
+  @Environment(\.dynamicTypeSize) private var typeSize
   let unit: UnitSpec
   let done: Int
   let total: Int
@@ -80,6 +81,7 @@ struct UnitHeader: View {
             .fixedSize(horizontal: false, vertical: true)
         }
         Spacer(minLength: Spacing.sm)
+        if !typeSize.isAccessibilitySize { UnitArt(unit: unit.id, size: .small) }
         if canTestOut {
           Button("Test out", action: onTestOut)
             .buttonStyle(PrimaryButton(.ghost))

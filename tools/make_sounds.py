@@ -96,3 +96,14 @@ write(
 
 # A node unlocking: a quick pop.
 write("unlock", tone(520, 0.16, 0.5, decay=8, partials=((1, 1.0), (2, 0.3)), glide=1.8))
+
+# A three-star finish: three bright notes up and a sparkle on top, different from the star chimes.
+write(
+    "perfect",
+    mix(
+        tone(G5, 0.22, 0.4, decay=4),
+        delay(tone(C6, 0.22, 0.4, decay=4), 0.12),
+        delay(tone(E6, 0.3, 0.45, decay=4), 0.24),
+        delay(tone(C7, 0.28, 0.2, decay=7, partials=((1, 1.0),)), 0.3),
+    ),
+)

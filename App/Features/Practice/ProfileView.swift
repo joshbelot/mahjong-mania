@@ -190,10 +190,15 @@ struct ProfileView: View {
                 .foregroundStyle(earned ? theme.onPrimary : theme.textFaint)
             }
             .frame(width: 56, height: 56)
+            .overlay { if badge.isRare { Circle().strokeBorder(theme.gold, lineWidth: 3).padding(-5) } }
+            .padding(badge.isRare ? 5 : 0)
             Text(badge.title)
               .font(Typography.small.weight(.semibold))
               .foregroundStyle(earned ? theme.text : theme.textMuted)
               .multilineTextAlignment(.center)
+            if badge.isRare {
+              Text("Rare").tinyStyle().foregroundStyle(theme.gold)
+            }
             Text(badge.goal)
               .font(Typography.tiny)
               .foregroundStyle(theme.textFaint)
@@ -202,7 +207,7 @@ struct ProfileView: View {
           }
           .frame(maxWidth: .infinity)
           .accessibilityElement(children: .ignore)
-          .accessibilityLabel("\(badge.title). \(badge.goal)")
+          .accessibilityLabel("\(badge.title)\(badge.isRare ? ", rare" : ""). \(badge.goal)")
           .accessibilityValue(earned ? "Earned" : "Locked")
           .accessibilityIdentifier("profile.badge.\(badge.rawValue)")
         }

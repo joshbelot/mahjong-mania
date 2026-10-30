@@ -23,8 +23,7 @@ final class PracticeDealTests: PracticeUITestCase {
     }
     XCTAssertTrue(opened, "The deal did not open")
     if let shots { attach("\(shots)-1-pick") }
-    tap(app, "lesson.choice.0")
-    tap(app, "lesson.check")
+    tap(app, "lesson.choice.0")  // a single choice commits on tap: there is no Check
     XCTAssertTrue(element(app, "lesson.feedback").waitForExistence(timeout: 10))
     if let shots { attach("\(shots)-2-pick-feedback") }
     tap(app, "lesson.continue")

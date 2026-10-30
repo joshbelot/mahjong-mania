@@ -111,12 +111,19 @@ final class LessonSession {
   var isReask: Bool { currentItem?.isReask ?? false }
   var hintAvailable: Bool { hintsAllowed && !hintUsed && phase == .answering }
 
-  /// Multiple-choice answers that commit as soon as they are tapped (Yes/No).
+  /// Single-choice answers (text, tile, number, line, yes/no) commit as soon as they are tapped. Only
+  /// tile selections (pass one, pass three) keep a Check step (SPEC §19.3).
   var commitsOnTap: Bool {
     guard let exercise else { return false }
     if exercise.id.type == .keepOrPass { return true }
-    return !exercise.choices.isEmpty && exercise.choices.allSatisfy { if case .yesNo = $0 { return true } else { return false } }
+    return exercise.selectCount == 0 && !exercise.choices.isEmpty
   }
+
+  /// Set for the Daily Deal's scored attempt, which hides the Tiles cheat sheet.
+  var cheatSheetBlocked = false
+
+  /// The Tiles button is hidden in gold lessons and the scored Daily Deal (the Speed Round is its own screen).
+  var cheatSheetAllowed: Bool { !gold && !cheatSheetBlocked }
 
   var canCheck: Bool {
     guard let exercise, phase == .answering else { return false }

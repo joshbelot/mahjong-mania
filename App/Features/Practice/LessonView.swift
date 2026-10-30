@@ -129,6 +129,9 @@ struct LessonView: View {
           .accessibilityLabel("\(session.combo) in a row")
           .accessibilityIdentifier("lesson.combo")
       }
+      if session.cheatSheetAllowed && session.phase != .intro && session.phase != .finished {
+        TilesButton()
+      }
       if session.hintsAllowed && session.phase != .intro {
         Button {
           session.useHint()
@@ -216,7 +219,14 @@ struct LessonView: View {
           .font(Typography.body)
           .foregroundStyle(theme.text)
           .fixedSize(horizontal: false, vertical: true)
+        HStack(spacing: Spacing.lg) {
+          SunnyView(expression: .hello, size: 72)
+          UnitArt(unit: session.node.unit)
+        }
         LessonIllustration(nodeID: session.node.id)
+        if session.node.unit == 1 {
+          TilesButton(style: .label)
+        }
         Text("\(session.node.count) quick questions. Mistakes are fine; they come back at the end.")
           .font(Typography.small)
           .foregroundStyle(theme.textMuted)
@@ -253,6 +263,7 @@ struct ProgressBar: View {
 /// "Nice!" or "Not quite" with the right answer and why, and one Continue button.
 struct FeedbackBar: View {
   @Environment(\.theme) private var theme
+  @Environment(\.dynamicTypeSize) private var typeSize
   let feedback: LessonSession.Feedback
   var continueTitle = "Continue"
   var secondaryTitle: String?
@@ -269,6 +280,10 @@ struct FeedbackBar: View {
             .font(.title2)
             .foregroundStyle(theme.warning)
             .accessibilityHidden(true)
+        }
+        if !typeSize.isAccessibilitySize {
+          SunnyView(expression: feedback.correct ? .cheering : .oops, size: 30)
+            .frame(width: 40, height: 36)
         }
         Text(feedback.title)
           .font(Typography.h2)

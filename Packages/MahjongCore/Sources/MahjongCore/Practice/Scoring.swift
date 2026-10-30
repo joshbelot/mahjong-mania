@@ -33,6 +33,9 @@ public enum XP {
   public static let comboBonus = 5
   public static let comboEvery = 5
   public static let badge = 20
+  /// The rare Perfect Week badge.
+  public static let perfectWeek = 50
+  public static func badges(_ list: [BadgeID]) -> Int { list.map(\.xp).reduce(0, +) }
   /// A free-play question right first time.
   public static let freePlayRight = 5
 

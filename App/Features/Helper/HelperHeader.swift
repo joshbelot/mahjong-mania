@@ -22,6 +22,7 @@ struct HelperHeader: View {
       .accessibilityHint("Choose a different card")
       .accessibilityIdentifier("helper.card")
       if !typeSize.isAccessibilitySize { Spacer(minLength: Spacing.sm) }
+      TilesButton(style: .label)
       Menu {
         ForEach(Self.levels, id: \.self) { level in
           Button {
