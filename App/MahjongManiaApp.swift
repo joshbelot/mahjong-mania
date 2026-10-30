@@ -53,6 +53,14 @@ struct MahjongManiaApp: App {
         .preferredColorScheme(
           LaunchOptions.forcedColorScheme ?? stores.settings.settings.theme.colorScheme
         )
+        .alert(
+          "Some data was reset",
+          isPresented: Binding(get: { stores.recoveredMessage != nil }, set: { if !$0 { stores.recovered = [] } })
+        ) {
+          Button("OK", role: .cancel) {}.accessibilityIdentifier("recovered.ok")
+        } message: {
+          Text(stores.recoveredMessage ?? "")
+        }
         .onOpenURL { links.receive($0) }
         .task {
           if let url = LaunchOptions.openURL { links.receive(url) }

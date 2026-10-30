@@ -151,7 +151,7 @@ struct NodeButton: View {
         }
         Text(node.spec.title)
           .font(Typography.small.weight(.medium))
-          .foregroundStyle(node.status == .locked ? theme.textFaint : theme.text)
+          .foregroundStyle(node.status == .locked ? theme.textMuted : theme.text)
           .multilineTextAlignment(.center)
           .lineLimit(2)
           .frame(maxWidth: 180)
