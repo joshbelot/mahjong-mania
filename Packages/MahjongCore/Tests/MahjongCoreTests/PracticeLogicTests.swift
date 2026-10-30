@@ -8,7 +8,7 @@ private func day(_ y: Int, _ m: Int, _ d: Int) -> LocalDay { LocalDay(year: y, m
 private func recordSet(_ right: Int, of total: Int, hints: Int = 0) -> [AnswerRecord] {
   (0..<total).map { i in
     AnswerRecord(
-      exercise: ExerciseID(type: .nameTile, seed: UInt64(i), difficulty: 1), correct: i < right,
+      exercise: ExerciseID(type: .tileFact, seed: UInt64(i), difficulty: 1), correct: i < right,
       usedHint: i < hints)
   }
 }
@@ -300,7 +300,7 @@ struct ReviewQueueTests {
   @Test func mostOverdueFirstAndCappedAtTen() {
     var q = ReviewQueue()
     for n in 0..<15 {
-      q.recordMiss(ExerciseID(type: .nameTile, seed: UInt64(n), difficulty: 1), today: day(2026, 10, 1).adding(days: n))
+      q.recordMiss(ExerciseID(type: .tileFact, seed: UInt64(n), difficulty: 1), today: day(2026, 10, 1).adding(days: n))
     }
     let due = q.due(today: day(2026, 12, 1))
     #expect(due.count == 10)
@@ -322,7 +322,7 @@ struct ReviewQueueTests {
 struct CurriculumTests {
   @Test func structureMatchesTheSpec() {
     #expect(Curriculum.units.map(\.id) == Array(1...10))
-    #expect(Curriculum.units.map { $0.lessons.count } == [4, 4, 3, 4, 4, 4, 4, 4, 3, 5])
+    #expect(Curriculum.units.map { $0.lessons.count } == [3, 4, 3, 4, 4, 4, 4, 4, 3, 5])
     #expect(Curriculum.units.map { $0.lessons[0].count } == [8, 8, 8, 8, 6, 6, 5, 5, 6, 8])
     for unit in Curriculum.units {
       #expect(unit.lessons.allSatisfy { $0.count == unit.lessons[0].count })
@@ -335,14 +335,14 @@ struct CurriculumTests {
     }
     let ids = Curriculum.allNodes.map(\.id)
     #expect(Set(ids).count == ids.count)
-    #expect(Curriculum.allNodes.count == 39 + 10 + 8)
+    #expect(Curriculum.allNodes.count == 38 + 10 + 8)
   }
 
   @Test func exerciseMixPerUnit() {
     func types(_ unit: Int) -> Set<ExerciseType> {
       Set(Curriculum.lessons(inUnit: unit).flatMap(\.parts).flatMap(\.types))
     }
-    #expect(types(1) == [.nameTile, .findTile])
+    #expect(types(1) == [.tileFact])
     #expect(types(2) == [.groupName, .matchesLine, .whichHand])
     #expect(types(3) == [.groupName, .jokerLegal, .whichHand])
     #expect(types(4) == [.howFar, .neededTile])
@@ -364,8 +364,8 @@ struct CurriculumTests {
       #expect(ids == Curriculum.exercises(for: lesson, seed: 7))
       #expect(ids != Curriculum.exercises(for: lesson, seed: 8))
     }
-    let winds = Curriculum.node(id: "u1l2")!
-    #expect(Curriculum.exercises(for: winds, seed: 1).allSatisfy { $0.focus == ExerciseFocus.windsAndDragons })
+    let winds = Curriculum.node(id: "u1l1")!
+    #expect(Curriculum.exercises(for: winds, seed: 1).allSatisfy { $0.focus == ExerciseFocus.suitsAndDragons })
   }
 
   @Test func goldRaisesDifficultyUpToThree() {
@@ -405,7 +405,7 @@ struct CurriculumTests {
     let ids = Curriculum.exercises(for: review, seed: 1, review: due)
     #expect(ids.count == 8 && Array(ids.prefix(3)) == due)
     #expect(Curriculum.exercises(for: review, seed: 1).count == 8)
-    let many = (0..<20).map { ExerciseID(type: .nameTile, seed: UInt64($0), difficulty: 1) }
+    let many = (0..<20).map { ExerciseID(type: .tileFact, seed: UInt64($0), difficulty: 1) }
     #expect(Curriculum.exercises(for: review, seed: 1, review: many) == Array(many.prefix(8)))
   }
 

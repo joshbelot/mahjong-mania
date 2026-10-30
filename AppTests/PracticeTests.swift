@@ -372,7 +372,7 @@ struct FeelTests {
   @Test func levelsAreCelebratedOncePerLevel() {
     var p = PracticeProgress()
     p.xp = 99
-    let up = p.apply(PlayResult(nodeID: "u1l1", records: (0..<8).map { AnswerRecord(exercise: ExerciseID(type: .nameTile, seed: UInt64($0), difficulty: 1), correct: true) }, day: today))
+    let up = p.apply(PlayResult(nodeID: "u1l1", records: (0..<8).map { AnswerRecord(exercise: ExerciseID(type: .tileFact, seed: UInt64($0), difficulty: 1), correct: true) }, day: today))
     #expect(Celebrations.items(for: up!).contains(.levelUp(level: 3, title: "Tile Spotter")))
   }
 }

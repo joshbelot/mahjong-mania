@@ -1840,9 +1840,9 @@ Everything the owner needs to paste or upload, in a new folder `AppStore/` (comm
 Same rules as §18.12. Each UI phase: look at the changed screens in the simulator in light, dark and AX5 (and Reduce Motion where animated); record deviations in DECISIONS.md; tick boxes in the same PR.
 
 #### Phase 28: Harder, fairer questions (19.1)
-- [ ] `tileFact` type in core with tests; `nameTile`/`findTile` removed from every lesson, checkpoint, review and the Speed Round.
-- [ ] New Unit 1 "Tile facts"; `groupName` d1 adjustments; the "not answerable from a label" tests.
-- [ ] Difficulty-1 audit of every lesson, findings fixed and listed in DECISIONS.md. Existing practice progress keeps working (Unit 1 lesson IDs that disappear keep their stars on the closest new lesson or are dropped without breaking the path; test with a v1.2 `practice.json` fixture).
+- [x] `tileFact` type in core with tests; `nameTile`/`findTile` removed from every lesson, checkpoint, review and the Speed Round.
+- [x] New Unit 1 "Tile facts"; `groupName` d1 adjustments; the "not answerable from a label" tests.
+- [x] Difficulty-1 audit of every lesson, findings fixed and listed in DECISIONS.md. Existing practice progress keeps working (Unit 1 lesson IDs that disappear keep their stars on the closest new lesson or are dropped without breaking the path; test with a v1.2 `practice.json` fixture).
 
 #### Phase 29: Cheat sheet and practice polish (19.2, 19.3)
 - [ ] Tile cheat sheet everywhere listed, shared content with the Tile guide, gating rules.

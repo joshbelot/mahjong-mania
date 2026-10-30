@@ -28,32 +28,25 @@ extension Curriculum {
       1, "Meet the tiles", "The suits, winds, dragons, flowers and jokers.", count: 8, review: false,
       lessons: [
         lesson(
-          1, 1, "Numbers & suits", count: 8,
-          intro: "Three suits have the numbers 1 to 9: Cracks (characters), Bams (bamboo) and Dots (circles). Learn to name them.",
-          [LessonPart([.nameTile, .findTile], 1, focus: ExerciseFocus.numbers)]),
+          1, 1, "Suits and dragons", count: 8,
+          intro: "Three suits have the numbers 1 to 9: Cracks (characters, in red), Bams (bamboo, in green) and Dots (circles, in blue). Each suit has a matching dragon: Red goes with Cracks, Green with Bams and Soap, the White Dragon, with Dots.",
+          [LessonPart([.tileFact], 1, focus: ExerciseFocus.suitsAndDragons)]),
         lesson(
-          1, 2, "Winds & dragons", count: 8,
-          intro: "North, East, West and South are the Winds. Red and Green are Dragons. There are four of each.",
-          [
-            LessonPart([.nameTile, .findTile], 1, focus: ExerciseFocus.windsAndDragons),
-            LessonPart([.nameTile, .findTile], 2, focus: ExerciseFocus.windsAndDragons),
-          ]),
+          1, 2, "Flowers, jokers and Soap", count: 8,
+          intro: "A set has 152 tiles. Eight Flowers all count as one tile, and eight Jokers stand in for other tiles, but only in sets of three or more. Soap is the White Dragon, and it is also the zero in year hands.",
+          [LessonPart([.tileFact], 1, focus: ExerciseFocus.flowersJokersSoap)]),
         lesson(
-          1, 3, "Flowers, jokers & Soap", count: 8,
-          intro: "Flowers all count as one tile. Jokers stand in for other tiles. Soap is the White Dragon, and it's also zero.",
-          [LessonPart([.nameTile, .findTile], 1, focus: ExerciseFocus.flowersJokersSoap)]),
-        lesson(
-          1, 4, "Mixed", count: 8,
-          intro: "Every kind of tile together. Take your time; speed doesn't matter.",
-          [LessonPart([.nameTile, .findTile], 2)]),
+          1, 3, "Mixed", count: 8,
+          intro: "Everything about the tiles together, plus a few more facts: nicknames for the suits and how the deal starts. Take your time; speed doesn't matter.",
+          [LessonPart([.tileFact], 2)]),
       ]),
     unit(
       2, "Read the card", "Sets, colours and the two kinds of hand.", count: 8, review: false,
       lessons: [
         lesson(
           2, 1, "Sets", count: 8,
-          intro: "Hands are made of groups. Two the same is a Pair, three a Pung, four a Kong, five a Quint, and six a Sextet.",
-          [LessonPart([.groupName], 1), LessonPart([.groupName], 2)]),
+          intro: "Hands are made of groups. Two the same is a Pair, three a Pung, four a Kong, five a Quint, and six a Sextet. A joker counts as the tile it stands in for, so count it too.",
+          [LessonPart([.groupName], 2)]),
         lesson(
           2, 2, "Colours mean suits", count: 8,
           intro: "On the card, each colour is a suit. Different colours must be different suits, but which suit is up to you.",
@@ -78,7 +71,7 @@ extension Curriculum {
         lesson(
           3, 1, "Jokers in sets", count: 8,
           intro: "A joker counts as whichever tile the group needs. Count it as part of the group.",
-          [LessonPart([.groupName], 2)]),
+          [LessonPart([.groupName], 2), LessonPart([.groupName], 3)]),
         lesson(
           3, 2, "Is it legal?", count: 8,
           intro: "Jokers may only stand in groups of three or more. Never in a pair or a single.",
@@ -186,7 +179,7 @@ extension Curriculum {
       lessons: [
         lesson(
           10, 1, "Tiles and groups", count: 8, intro: "Tiles, sets and card reading, all at the hardest level.",
-          [LessonPart([.nameTile, .findTile, .groupName, .matchesLine], 3)]),
+          [LessonPart([.tileFact, .groupName, .matchesLine], 3)]),
         lesson(
           10, 2, "Jokers and distance", count: 8, intro: "Which hand, which jokers, how far.",
           [LessonPart([.whichHand, .jokerLegal, .howFar, .neededTile], 3)]),

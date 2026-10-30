@@ -2,8 +2,23 @@ import Foundation
 
 /// The kinds of question the Practice game asks (SPEC §18.3).
 public enum ExerciseType: String, Codable, CaseIterable, Sendable {
-  case nameTile, findTile, groupName, matchesLine, whichHand, jokerLegal,
+  case tileFact, groupName, matchesLine, whichHand, jokerLegal,
     howFar, neededTile, pickHand, passOne, passThree, keepOrPass, callIt
+
+  /// v1.2 saved `nameTile` and `findTile` (review queue entries). Their questions were answered by the
+  /// label on the screen and are gone (SPEC §19.1); old entries become tile facts.
+  public init(from decoder: Decoder) throws {
+    let raw = try decoder.singleValueContainer().decode(String.self)
+    switch raw {
+    case "nameTile", "findTile": self = .tileFact
+    default:
+      guard let type = ExerciseType(rawValue: raw) else {
+        throw DecodingError.dataCorrupted(
+          .init(codingPath: decoder.codingPath, debugDescription: "Unknown exercise type '\(raw)'"))
+      }
+      self = type
+    }
+  }
 }
 
 /// Everything needed to rebuild an exercise: `(type, seed, difficulty)` plus an optional `focus` that
@@ -35,10 +50,9 @@ public struct ExerciseID: Hashable, Codable, Sendable {
 
 /// The lesson-level restrictions a `focus` value can ask for.
 public enum ExerciseFocus {
-  /// `nameTile` / `findTile`
-  public static let numbers = 1
-  public static let windsAndDragons = 2
-  public static let flowersJokersSoap = 3
+  /// `tileFact`: suits, dragons and counts; flowers, jokers, Soap and set size. 0 mixes both.
+  public static let suitsAndDragons = 1
+  public static let flowersJokersSoap = 2
   /// `matchesLine`
   public static let colours = 1
   public static let exposedConcealed = 2
@@ -80,6 +94,8 @@ public struct Exercise: Sendable {
   public var discard: Tile?
   /// A short sentence shown as a caption under the prompt (for example "Your target: …").
   public var caption: String?
+  /// The sentence the lightbulb shows for question types that have their own (tile facts).
+  var hintText = ""
   let key: ExerciseKey
 
   public var line: CardLine? { lines.first }

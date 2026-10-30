@@ -11,33 +11,38 @@ public enum Exercises {
     return index &* 0x9E37_79B9_7F4A_7C15
   }
 
-  public static func make(_ id: ExerciseID, card: Card) -> Exercise {
-    make(id, analyzer: Analyzer.cached(for: card.lines.isEmpty ? PracticeCard.card : card))
+  /// `rules` is the player's rule book: hard tile facts may ask about it. Without it they stick to the
+  /// standard facts, which is what the Daily Deal and the Speed Round do.
+  public static func make(_ id: ExerciseID, card: Card, rules: RuleSet? = nil) -> Exercise {
+    make(id, analyzer: Analyzer.cached(for: card.lines.isEmpty ? PracticeCard.card : card), rules: rules)
   }
 
-  public static func make(_ id: ExerciseID, analyzer: Analyzer) -> Exercise {
-    makeWithStatus(id, analyzer: analyzer).exercise
+  public static func make(_ id: ExerciseID, analyzer: Analyzer, rules: RuleSet? = nil) -> Exercise {
+    makeWithStatus(id, analyzer: analyzer, rules: rules).exercise
   }
 
   /// The exercise and whether it passed the deal filter (false = the last attempt was used anyway).
-  static func makeWithStatus(_ id: ExerciseID, analyzer: Analyzer) -> (exercise: Exercise, passedFilter: Bool) {
+  static func makeWithStatus(
+    _ id: ExerciseID, analyzer: Analyzer, rules: RuleSet? = nil
+  ) -> (exercise: Exercise, passedFilter: Bool) {
     var last: Built?
     var seed = id.seed
     var generator = SeededRandom(seed: id.seed)
     for attempt in 0..<maxAttempts {
       if attempt > 0 { seed = generator.next() }
       var rng = SeededRandom(seed: seed ^ salt(id.type) ^ (UInt64(id.difficulty) << 56))
-      let built = build(id, analyzer: analyzer, seed: seed, rng: &rng)
+      let built = build(id, analyzer: analyzer, rules: rules, seed: seed, rng: &rng)
       if built.ok { return (built.exercise, true) }
       last = built
     }
     return (last?.exercise ?? Exercise(id: id, prompt: "", key: .none), false)
   }
 
-  private static func build(_ id: ExerciseID, analyzer: Analyzer, seed: UInt64, rng: inout SeededRandom) -> Built {
+  private static func build(
+    _ id: ExerciseID, analyzer: Analyzer, rules: RuleSet?, seed: UInt64, rng: inout SeededRandom
+  ) -> Built {
     switch id.type {
-    case .nameTile: return TileExercises.nameTile(id, rng: &rng)
-    case .findTile: return TileExercises.findTile(id, rng: &rng)
+    case .tileFact: return TileFacts.make(id, rules: rules, rng: &rng)
     case .groupName: return TileExercises.groupName(id, rng: &rng)
     case .matchesLine: return CardReadingExercises.matchesLine(id, analyzer: analyzer, rng: &rng)
     case .whichHand: return CardReadingExercises.whichHand(id, analyzer: analyzer, rng: &rng)
@@ -149,12 +154,8 @@ public enum Exercises {
       var hint = empty
       hint.removeChoices = removal(wrong: wrong)
       switch exercise.id.type {
-      case .nameTile:
-        hint.text = exercise.tiles.first.map { "It's one of the \($0.familyName) tiles." } ?? ""
-      case .findTile:
-        if let index = correct.first, case .tile(let tile) = exercise.choices[index] {
-          hint.text = "Look for a \(tile.familyName) tile."
-        }
+      case .tileFact:
+        hint.text = exercise.hintText
       case .groupName:
         hint.text = "Count the tiles: there are \(exercise.tiles.count)."
       case .matchesLine:

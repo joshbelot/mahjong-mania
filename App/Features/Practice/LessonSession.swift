@@ -30,6 +30,8 @@ final class LessonSession {
   let seed: UInt64
   @ObservationIgnored private let analyzer: Analyzer
   @ObservationIgnored private let fixed: [Exercise]?
+  /// The player's rule book, for hard tile facts about their own table.
+  @ObservationIgnored private let rules: RuleSet?
   @ObservationIgnored private var rng: SeededRandom
   @ObservationIgnored private let startedAt = Date()
 
@@ -63,7 +65,11 @@ final class LessonSession {
   private var hintUsed = false
 
   /// - Parameter review: due review exercises (review nodes only).
-  init(node: LessonSpec, gold: Bool = false, testOut: Bool = false, seed: UInt64, review: [ExerciseID] = [], showIntro: Bool) {
+  init(
+    node: LessonSpec, gold: Bool = false, testOut: Bool = false, seed: UInt64, review: [ExerciseID] = [],
+    rules: RuleSet? = nil, showIntro: Bool
+  ) {
+    self.rules = rules
     self.node = node
     self.gold = gold
     self.testOut = testOut
@@ -85,6 +91,7 @@ final class LessonSession {
     testOut = false
     self.seed = seed
     fixed = exercises
+    rules = nil
     // A card with no hands yet can't make questions; fall back to the Practice Card.
     analyzer = Analyzer.cached(for: card.lines.isEmpty ? PracticeCard.card : card)
     rng = SeededRandom(seed: seed ^ 0x5E55)
@@ -144,7 +151,7 @@ final class LessonSession {
     if let fixed, fixed.indices.contains(index) {
       exercise = fixed[index]
     } else {
-      exercise = Exercises.make(item.id, analyzer: analyzer)
+      exercise = Exercises.make(item.id, analyzer: analyzer, rules: rules)
     }
     resetAnswerState()
   }

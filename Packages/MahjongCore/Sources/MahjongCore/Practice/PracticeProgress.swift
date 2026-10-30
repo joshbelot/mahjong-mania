@@ -142,6 +142,10 @@ public struct PracticeProgress: Codable, Equatable, Sendable {
   public var reviewQueue = ReviewQueue()
   public var counters = PracticeCounters()
   public var freePlay = FreePlayBests()
+  /// 1 (or absent) is the 1.0-1.2 layout, whose Unit 1 had four lessons; 2 is the 1.3 layout (SPEC §19.1).
+  public var schema = PracticeProgress.currentSchema
+
+  public static let currentSchema = 2
 
   public init() {}
 
@@ -153,7 +157,7 @@ public struct PracticeProgress: Codable, Equatable, Sendable {
 
   private enum CodingKeys: String, CodingKey {
     case placement, lessons, units, xp, levelsCelebrated, dayLog, streak, dailyGoal, goalChosen, dailyDeals,
-      speedBest, badges, reviewQueue, counters, freePlay
+      speedBest, badges, reviewQueue, counters, freePlay, schema
   }
 
   public init(from decoder: Decoder) throws {
@@ -173,6 +177,31 @@ public struct PracticeProgress: Codable, Equatable, Sendable {
     reviewQueue = try c.decodeIfPresent(ReviewQueue.self, forKey: .reviewQueue) ?? ReviewQueue()
     counters = try c.decodeIfPresent(PracticeCounters.self, forKey: .counters) ?? PracticeCounters()
     freePlay = try c.decodeIfPresent(FreePlayBests.self, forKey: .freePlay) ?? FreePlayBests()
+    let stored = try c.decodeIfPresent(Int.self, forKey: .schema) ?? 1
+    if stored < 2 { migrateUnitOne() }
+    schema = Self.currentSchema
+  }
+
+  /// Version 1.3 replaced Unit 1's four lessons with three (SPEC §19.1). Stars and gold move to the
+  /// closest new lesson: old 1 and 2 (numbers; winds and dragons) to "Suits and dragons", old 3
+  /// (flowers, jokers, Soap) to "Flowers, jokers and Soap", old 4 (mixed) to "Mixed".
+  mutating func migrateUnitOne() {
+    let mapping: [(old: String, new: String)] = [("u1l1", "u1l1"), ("u1l2", "u1l1"), ("u1l3", "u1l2"), ("u1l4", "u1l3")]
+    let old = lessons
+    for key in mapping.map(\.old) { lessons[key] = nil }
+    for (from, to) in mapping {
+      guard let source = old[from] else { continue }
+      guard var target = lessons[to] else {
+        lessons[to] = source
+        continue
+      }
+      target.stars = max(target.stars, source.stars)
+      target.gold = target.gold || source.gold
+      target.testedOut = target.testedOut && source.testedOut
+      target.bestAccuracy = max(target.bestAccuracy, source.bestAccuracy)
+      target.plays += source.plays
+      lessons[to] = target
+    }
   }
 
   public var level: Levels.Position { Levels.position(totalXP: xp) }

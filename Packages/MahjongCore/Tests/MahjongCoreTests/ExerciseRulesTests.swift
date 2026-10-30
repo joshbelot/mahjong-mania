@@ -17,8 +17,8 @@ struct ExerciseIDTests {
     #expect(try JSONDecoder().decode(ExerciseID.self, from: data) == id)
     let old = Data(#"{"type":"passThree","seed":5,"difficulty":3}"#.utf8)
     #expect(try JSONDecoder().decode(ExerciseID.self, from: old).focus == 0)
-    #expect(ExerciseID(type: .nameTile, seed: 1, difficulty: 9).difficulty == 3)
-    #expect(ExerciseID(type: .nameTile, seed: 1, difficulty: -1).difficulty == 1)
+    #expect(ExerciseID(type: .tileFact, seed: 1, difficulty: 9).difficulty == 3)
+    #expect(ExerciseID(type: .tileFact, seed: 1, difficulty: -1).difficulty == 1)
   }
 
   @Test func sameIDSameQuestionDifferentSeedDifferentQuestion() {
@@ -31,29 +31,82 @@ struct ExerciseIDTests {
 }
 
 struct TileExerciseTests {
-  @Test func focusKeepsAnswersInThePool() {
-    for seed in seeds {
-      let numbers = make(.nameTile, seed, 1, focus: ExerciseFocus.numbers)
-      #expect(numbers.tiles.first?.numberValue != nil)
-      let honours = make(.nameTile, seed, 2, focus: ExerciseFocus.windsAndDragons)
-      #expect(TileExercises.pool(focus: ExerciseFocus.windsAndDragons).contains(honours.tiles[0]))
-      let odd = make(.findTile, seed, 1, focus: ExerciseFocus.flowersJokersSoap)
-      if case .choices(let correct, _, _) = odd.key, case .tile(let tile) = odd.choices[correct.first!] {
-        #expect([Tile.flower, .joker, .dragon(.white)].contains(tile))
+  @Test func tileFactsStayInTheirFocusAndHaveFourDistinctChoices() {
+    for difficulty in 1...3 {
+      for focus in [0, ExerciseFocus.suitsAndDragons, ExerciseFocus.flowersJokersSoap] {
+        for seed in seeds {
+          let e = make(.tileFact, seed, difficulty, focus: focus)
+          #expect(Set(e.choices).count == e.choices.count)
+          let yesNo = e.choices.allSatisfy { if case .yesNo = $0 { return true } else { return false } }
+          #expect(e.choices.count == (yesNo ? 2 : 4))
+          #expect(e.tiles.isEmpty && !e.prompt.isEmpty)
+          if case .choices(let correct, _, _) = e.key { #expect(correct.count == 1) }
+          if difficulty == 1 {
+            let facts = TileFacts.pool(difficulty: 1, focus: focus)
+            #expect(!facts.contains(.nickname(.bams)) && !facts.contains(.dealer))
+          }
+        }
       }
     }
   }
 
-  @Test func choicesAreDistinctAndIncludeTheAnswer() {
-    for type in [ExerciseType.nameTile, .findTile] {
-      for difficulty in 1...3 {
-        for seed in seeds {
-          let e = make(type, seed, difficulty)
-          #expect(Set(e.choices).count == e.choices.count)
-          #expect(e.choices.count == (type == .nameTile ? 4 : 6))
-        }
+  @Test func oldNameTileAndFindTileDecodeAsTileFacts() throws {
+    for raw in ["nameTile", "findTile"] {
+      let data = Data(#"{"type":"\#(raw)","seed":5,"difficulty":1,"focus":3}"#.utf8)
+      #expect(try JSONDecoder().decode(ExerciseID.self, from: data).type == .tileFact)
+    }
+    #expect(throws: (any Error).self) {
+      try JSONDecoder().decode(ExerciseID.self, from: Data(#"{"type":"bogus","seed":5,"difficulty":1}"#.utf8))
+    }
+  }
+
+  @Test func lessonsDoNotRepeatATileFact() {
+    for node in Curriculum.allNodes where node.kind == .lesson {
+      for part in node.parts where part.types == [.tileFact] {
+        let ids = Curriculum.exercises(for: node, seed: 77)
+        let facts = ids.map { TileFacts.factIndex(seed: $0.seed, difficulty: $0.difficulty, focus: $0.focus) }
+        #expect(Set(facts).count == facts.count, "\(node.id) repeats a fact")
       }
     }
+  }
+
+  @Test func houseRuleFactsOnlyAppearForTheRulesThatAreOn() {
+    var blankRule = RuleSet(id: "x", name: "x")
+    #expect(!TileFacts.houseFacts(blankRule).contains(.blankSwap), "blanks are off by default")
+    if let i = blankRule.rules.firstIndex(where: { $0.id == RuleID.blanks }) {
+      blankRule.rules[i].isEnabled = true
+      blankRule.rules[i].blanks = BlankOptions(count: 4)
+    }
+    #expect(TileFacts.houseFacts(blankRule).contains(.blankSet))
+    #expect(TileFacts.houseFacts(nil).isEmpty)
+    var sawWhole = false
+    for seed in UInt64(0)..<200 {
+      let e = Exercises.make(
+        ExerciseID(type: .tileFact, seed: seed, difficulty: 3), analyzer: practice, rules: blankRule)
+      if e.prompt.contains("blanks, how many") {
+        sawWhole = true
+        if case .choices(_, let answer, _) = e.key { #expect(answer == "156") }
+      }
+    }
+    #expect(sawWhole)
+    // Without a rule book nothing mentions "your".
+    for seed in UInt64(0)..<200 {
+      let e = Exercises.make(ExerciseID(type: .tileFact, seed: seed, difficulty: 3), analyzer: practice)
+      #expect(!e.prompt.lowercased().contains("your table"))
+    }
+  }
+
+  @Test func groupNameAnswerIsNotInTheOrderOfTheCount() {
+    // In order, "the third choice for three tiles" would answer it without knowing any names.
+    var positional = 0
+    var total = 0
+    for seed in seeds {
+      let e = make(.groupName, seed, 1)
+      guard case .choices(let correct, _, _) = e.key else { continue }
+      total += 1
+      if correct == [e.tiles.count - 1] { positional += 1 }
+    }
+    #expect(positional < total * 2 / 3, "choices must be shuffled")
   }
 
   @Test func groupNameMatchesSizeAndJokersStayOutOfSinglesAndPairs() {
@@ -62,7 +115,7 @@ struct TileExerciseTests {
         let e = make(.groupName, seed, difficulty)
         guard case .choices(let correct, let name, _) = e.key else { continue }
         #expect(name == groupNoun(e.tiles.count))
-        #expect(correct == [e.tiles.count - 1])
+        #expect(correct.count == 1 && e.choices.indices.contains(correct.first ?? -1))
         if e.tiles.count <= 2 { #expect(!e.tiles.contains(.joker)) }
         if difficulty == 1 { #expect(e.choices.count == 4 && !e.tiles.contains(.joker)) }
       }
@@ -312,5 +365,79 @@ struct HintTests {
 
   @Test func passThreeHintShowsTwoLines() {
     #expect(Exercises.hint(for: make(.passThree, 4, 2), analyzer: practice).lines.count == 2)
+  }
+}
+
+// MARK: Nothing is answered by what is printed on the screen (SPEC §19.1)
+
+struct NotAnswerableFromTheScreenTests {
+  private func text(of choice: Choice) -> String? {
+    switch choice {
+    case .text(let value): return value
+    case .tile(let tile): return tile.name
+    case .line(let line): return line.displayName
+    case .number, .yesNo: return nil
+    }
+  }
+
+  private func words(_ string: String) -> String {
+    " " + string.lowercased().split { !$0.isLetter && !$0.isNumber }.joined(separator: " ") + " "
+  }
+
+  /// Everything readable on the question screen apart from the choices themselves.
+  private func visibleText(_ e: Exercise) -> String {
+    var parts = [e.prompt, e.caption ?? ""]
+    parts += e.tiles.map(\.name) + e.queue.map(\.name) + (e.discard.map { [$0.name] } ?? [])
+    return words(parts.joined(separator: " "))
+  }
+
+  @Test func theRightChoiceIsNeverPrintedOnTheQuestion() {
+    for type in ExerciseType.allCases {
+      for difficulty in 1...3 {
+        for focus in 0...2 {
+          for seed in seeds.prefix(25) {
+            let e = make(type, seed, difficulty, focus: focus)
+            guard case .choices(let correct, _, _) = e.key, let index = correct.first,
+              e.choices.indices.contains(index), let right = text(of: e.choices[index])
+            else { continue }
+            let shown = visibleText(e)
+            // Tile choices (neededTile) are allowed to be in the rack; text and lines are not.
+            if case .tile = e.choices[index], type != .tileFact { continue }
+            if type == .whichHand || type == .matchesLine { continue }
+            #expect(!shown.contains(words(right)), "\(type) d\(difficulty) f\(focus) seed \(seed): \"\(e.prompt)\" shows \"\(right)\"")
+          }
+        }
+      }
+    }
+  }
+
+  @Test func numberAnswersAreNeverInThePrompt() {
+    for type in ExerciseType.allCases {
+      for difficulty in 1...3 {
+        for seed in seeds.prefix(25) {
+          let e = make(type, seed, difficulty)
+          guard case .choices(let correct, _, _) = e.key, let index = correct.first,
+            e.choices.indices.contains(index), case .number(let n) = e.choices[index]
+          else { continue }
+          #expect(!words(e.prompt).contains(words("\(n)")), "\(type): \"\(e.prompt)\"")
+        }
+      }
+    }
+  }
+
+  @Test func theLessonsOfUnitOneNeverShowTilesOrLabels() {
+    for node in Curriculum.lessons(inUnit: 1) {
+      for id in Curriculum.exercises(for: node, seed: 5) {
+        let e = Exercises.make(id, analyzer: practice)
+        #expect(e.tiles.isEmpty && e.groups.isEmpty && e.queue.isEmpty, "\(node.id): nothing to read the answer from")
+      }
+    }
+  }
+
+  @Test func nameTheTileAndFindTheTileAreGone() {
+    #expect(!ExerciseType.allCases.map(\.rawValue).contains("nameTile"))
+    #expect(!ExerciseType.allCases.map(\.rawValue).contains("findTile"))
+    let types = Set(Curriculum.allNodes.flatMap(\.parts).flatMap(\.types))
+    #expect(types.isSubset(of: Set(ExerciseType.allCases)))
   }
 }

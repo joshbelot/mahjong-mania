@@ -51,7 +51,7 @@ final class PracticeQATests: PracticeUITestCase {
 
   func testBeginnerPlaysThroughUnitTwo() {
     let app = launch(flags)
-    for lesson in 1...4 {
+    for lesson in 1...3 {
       play(app, node: "u1l\(lesson)", mistakes: lesson == 2 ? 2 : 0, useHint: lesson == 3, shot: "qa-u1l\(lesson)")
     }
     // The checkpoint unlocks Unit 2.

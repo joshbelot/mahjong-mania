@@ -125,14 +125,27 @@ public enum Curriculum {
   ) -> [ExerciseID] {
     guard !parts.isEmpty, count > 0 else { return [] }
     var result: [ExerciseID] = []
+    // Tile facts in one play ask about different facts, as far as the pool allows.
+    var usedFacts: [Int: Set<Int>] = [:]
     for (index, part) in parts.enumerated() {
       let share = count / parts.count + (index < count % parts.count ? 1 : 0)
       for i in 0..<share {
         let type = part.types[i % part.types.count]
-        result.append(
-          ExerciseID(
-            type: type, seed: rng.next(), difficulty: min(3, part.difficulty + (gold ? 1 : 0)),
-            focus: part.focus))
+        let difficulty = min(3, part.difficulty + (gold ? 1 : 0))
+        var seed = rng.next()
+        if type == .tileFact {
+          let key = part.focus * 10 + difficulty
+          let size = TileFacts.poolSize(difficulty: difficulty, focus: part.focus)
+          var tries = 0
+          while usedFacts[key, default: []].contains(TileFacts.factIndex(seed: seed, difficulty: difficulty, focus: part.focus)),
+            usedFacts[key, default: []].count < size, tries < 400
+          {
+            seed = rng.next()
+            tries += 1
+          }
+          usedFacts[key, default: []].insert(TileFacts.factIndex(seed: seed, difficulty: difficulty, focus: part.focus))
+        }
+        result.append(ExerciseID(type: type, seed: seed, difficulty: difficulty, focus: part.focus))
       }
     }
     return result
@@ -162,7 +175,7 @@ public enum Curriculum {
 
   public static func skill(of type: ExerciseType) -> Skill {
     switch type {
-    case .nameTile, .findTile, .groupName: return .tiles
+    case .tileFact, .groupName: return .tiles
     case .matchesLine, .whichHand: return .cardReading
     case .jokerLegal: return .jokers
     case .howFar, .neededTile: return .distance
