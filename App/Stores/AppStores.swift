@@ -75,6 +75,8 @@ final class AppStores {
       directory: base.appendingPathComponent("MahjongMania", isDirectory: true),
       resetFirst: LaunchOptions.resetData || LaunchOptions.showOnboarding,
       showOnboarding: LaunchOptions.showOnboarding)
+    if LaunchOptions.demoData { stores.seedDemoData() }
+    if LaunchOptions.edgeCases { stores.seedEdgeCases() }
     stores.applyHelperLaunchOptions()
     if let placement = LaunchOptions.placement() { stores.practice.applyPlacement(placement) }
     stores.practice.applyLaunchOptions()

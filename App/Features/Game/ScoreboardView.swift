@@ -177,7 +177,7 @@ struct ScoreboardView: View {
         Text(name)
           .font(Typography.h2)
           .foregroundStyle(theme.text)
-          .lineLimit(typeSize.isAccessibilitySize ? nil : 1)
+          .lineLimit(typeSize.isAccessibilitySize ? 4 : 1)
         if isLeader {
           Image(systemName: "crown.fill")
             .font(.footnote)
@@ -260,7 +260,7 @@ struct ScoreboardView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
       } else {
         HStack(spacing: Spacing.md) {
-          numberText.frame(width: 30, alignment: .leading)
+          numberText.fixedSize().frame(minWidth: 30, alignment: .leading)
           leadingIcon(for: hand)
           details
           Spacer(minLength: Spacing.sm)
