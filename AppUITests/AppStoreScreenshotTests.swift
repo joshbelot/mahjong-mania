@@ -12,7 +12,7 @@ final class AppStoreScreenshotTests: XCTestCase {
     let app = XCUIApplication()
     app.launchArguments += [
       "-UITestResetData", "-UITestDemoData", "-UITestTab", tab, "-UITestToday", "2026-10-30", "-UITestHour", "12",
-      "-UITestPracticeSeed", "5", "-UITestDayLog", "2026-10-25,2026-10-26,2026-10-27,2026-10-28,2026-10-29",
+      "-UITestPracticeSeed", "5", "-UITestRevealAnswers", "-UITestDayLog", "2026-10-25,2026-10-26,2026-10-27,2026-10-28,2026-10-29",
     ] + extra
     app.launch()
     return app
@@ -37,7 +37,11 @@ final class AppStoreScreenshotTests: XCTestCase {
     let app = launch("practice")
     XCTAssertTrue(element(app, "path.node.u2l2").waitForExistence(timeout: 20))
     Thread.sleep(forTimeInterval: 1)
+    app.swipeDown()
+    app.swipeDown()
+    Thread.sleep(forTimeInterval: 0.6)
     shot("01-practice-path")
+    while !element(app, "path.node.u2l2").isHittable { app.swipeUp() }
     element(app, "path.node.u2l2").tap()
     XCTAssertTrue(element(app, "lesson.start").waitForExistence(timeout: 5))
     element(app, "lesson.start").tap()
@@ -61,9 +65,15 @@ final class AppStoreScreenshotTests: XCTestCase {
   func testHelperWithSuggestions() {
     let app = launch(
       "helper",
-      ["-UITestHelperRack", "2C,2C,2C,2B,2B,4B,4B,2D,2D,2D,2D,5C,F", "-UITestHelperMode", "playing", "-UITestAssist", "coach"])
+      ["-UITestHelperRack", "1C,3C,6C,2B,5B,5B,8B,3D,5D,9D,N,E,J", "-UITestHelperMode", "playing", "-UITestAssist", "peek"])
     XCTAssertTrue(app.navigationBars.firstMatch.waitForExistence(timeout: 20))
-    Thread.sleep(forTimeInterval: 1.5)
+    let reveal = element(app, "helper.results.reveal")
+    XCTAssertTrue(reveal.waitForExistence(timeout: 10))
+    reveal.tap()
+    Thread.sleep(forTimeInterval: 1.0)
+    // Fold the tile picker away so the closest hands have the screen.
+    app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.64)).tap()
+    Thread.sleep(forTimeInterval: 1.0)
     shot("04-helper")
   }
 
@@ -78,7 +88,12 @@ final class AppStoreScreenshotTests: XCTestCase {
     element(app, "game.history").tap()
     XCTAssertTrue(element(app, "history.session").waitForExistence(timeout: 10))
     element(app, "history.session").tap()
+    XCTAssertTrue(element(app, "score.menu").waitForExistence(timeout: 10))
+    element(app, "score.menu").tap()
+    XCTAssertTrue(element(app, "menu.summary").waitForExistence(timeout: 5))
+    element(app, "menu.summary").tap()
     XCTAssertTrue(element(app, "settle.line.0").waitForExistence(timeout: 10) || element(app, "settle.none").exists)
+    app.swipeUp()
     shot("06-settle-up")
   }
 

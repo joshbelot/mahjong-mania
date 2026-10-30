@@ -11,11 +11,11 @@ xcodegen generate >/dev/null
 xcrun simctl boot "$UDID" 2>/dev/null || true
 xcrun simctl bootstatus "$UDID" -b >/dev/null
 xcrun simctl ui "$UDID" appearance light
-xcrun simctl status_bar "$UDID" override --time 9:41 --batteryState charged --batteryLevel 100 \
+xcrun simctl status_bar "$UDID" override --time 9:41 --batteryState discharging --batteryLevel 100 \
   --cellularMode active --cellularBars 4 --wifiMode active --wifiBars 3 --operatorName ""
+trap 'xcrun simctl status_bar "$UDID" clear' EXIT
 TEST_RUNNER_SCREENSHOT_DIR="$OUT" xcodebuild test -project MahjongMania.xcodeproj -scheme MahjongMania \
   -destination "id=$UDID" -only-testing:MahjongManiaUITests/AppStoreScreenshotTests CODE_SIGNING_ALLOWED=NO
-xcrun simctl status_bar "$UDID" clear
 OUT65="$PWD/AppStore/screenshots/6.5"
 rm -rf "$OUT65"; mkdir -p "$OUT65"
 for f in "$OUT"/*.png; do
