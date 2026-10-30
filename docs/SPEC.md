@@ -1845,9 +1845,9 @@ Same rules as §18.12. Each UI phase: look at the changed screens in the simulat
 - [x] Difficulty-1 audit of every lesson, findings fixed and listed in DECISIONS.md. Existing practice progress keeps working (Unit 1 lesson IDs that disappear keep their stars on the closest new lesson or are dropped without breaking the path; test with a v1.2 `practice.json` fixture).
 
 #### Phase 29: Cheat sheet and practice polish (19.2, 19.3)
-- [ ] Tile cheat sheet everywhere listed, shared content with the Tile guide, gating rules.
-- [ ] Commit-on-tap; Today's Deal node; Speed Round rack; unit art; Sunny with four expressions; ★★★ fanfare; Perfect Week badge with core tests.
-- [ ] UI tests: open the cheat sheet mid-lesson and continue; a single-choice answer commits on tap; Today's Deal from the path; Speed Round shows 13 tiles.
+- [x] Tile cheat sheet everywhere listed, shared content with the Tile guide, gating rules.
+- [x] Commit-on-tap; Today's Deal node; Speed Round rack; unit art; Sunny with four expressions; ★★★ fanfare; Perfect Week badge with core tests.
+- [x] UI tests: open the cheat sheet mid-lesson and continue; a single-choice answer commits on tap; Today's Deal from the path; Speed Round shows 13 tiles.
 
 #### Phase 30: Bug squash (19.4)
 - [ ] All seven steps of §19.4 done; the 1.3 bug log filled in `docs/PROGRESS.md`; a test for every fix; zero runtime warnings in the UI suite's console.

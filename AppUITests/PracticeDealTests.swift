@@ -144,13 +144,13 @@ final class PracticeDealTests: PracticeUITestCase {
         position += 1
       }
     }
-    tap(app, "lesson.check")
+    if id != "pick" { tap(app, "lesson.check") }  // a single choice commits on tap
     XCTAssertTrue(element(app, "lesson.feedback").waitForExistence(timeout: 10), "No feedback")
     attach("free-\(id)-\(tag)-2-feedback")
     // Try again replays the same deal.
     tap(app, "lesson.secondary")
     XCTAssertEqual(element(app, "free.seed").label, "Deal #3", "Try again changed the deal")
-    XCTAssertTrue(element(app, "lesson.check").waitForExistence(timeout: 5))
+    XCTAssertTrue(element(app, id == "pick" ? "lesson.choice.0" : "lesson.check").waitForExistence(timeout: 5))
     // Answer again and go to the next deal.
     if id == "pick" {
       tap(app, "lesson.choice.1")
@@ -163,7 +163,7 @@ final class PracticeDealTests: PracticeUITestCase {
         position += 1
       }
     }
-    tap(app, "lesson.check")
+    if id != "pick" { tap(app, "lesson.check") }
     XCTAssertTrue(element(app, "lesson.feedback").waitForExistence(timeout: 10))
     tap(app, "lesson.continue")
     XCTAssertNotEqual(element(app, "free.seed").label, "Deal #3", "Next deal kept the same deal")
