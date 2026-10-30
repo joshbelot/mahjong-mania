@@ -26,7 +26,7 @@ Plan: `docs/SPEC.md` §19 (first App Store release). v1.2 build 4 is on TestFlig
 |---|---|---|
 | 28 Harder, fairer questions | merged | [#44](https://github.com/joshbelot/mahjong-mania/pull/44) |
 | 29 Cheat sheet and practice polish | merged | [#45](https://github.com/joshbelot/mahjong-mania/pull/45) |
-| 30 Bug squash | not started | |
+| 30 Bug squash | in PR | claude/bug-squash |
 | 31 Compliance in the app and the website | not started | |
 | 32 App Store listing package | not started | |
 | 33 1.3 QA and TestFlight upload | not started | |
@@ -35,6 +35,34 @@ Plan: `docs/SPEC.md` §19 (first App Store release). v1.2 build 4 is on TestFlig
 
 | Area | Symptom | Cause | Fix | PR |
 |---|---|---|---|---|
+| Practice, Speed Round | A bonus question with number or Yes/No choices showed no buttons | the bonus view drew only text choices | draws every choice type (`testSpeedRoundWithoutTheTimer`) | [#44](https://github.com/joshbelot/mahjong-mania/pull/44) |
+| Practice, free play | Pick-a-Hand free play still waited for Check after commit-on-tap landed | the result was recorded inside the Check handler | recorded when the session reaches feedback (`PracticePolishTests`, `PracticeDealTests`) | [#45](https://github.com/joshbelot/mahjong-mania/pull/45) |
+| Data | A corrupt store file was set aside and the app reset that data without telling the user | the quarantine only logged | an alert names the data that was reset (`CorruptStoreTests`) | PR_PLACEHOLDER |
+| Game, scoreboard | The number of hand 100 and up wrapped ("#20" over "0") | fixed 30 pt width | `fixedSize` with a minimum width (`EdgeCaseSweepTests` checks hand 200) | PR_PLACEHOLDER |
+| Game, scoreboard | A 60-character name at the largest text size filled the whole screen | no line limit at accessibility sizes | at most 4 lines (`EdgeCaseSweepTests`, AX5) | PR_PLACEHOLDER |
+| Practice, path | Locked node titles failed the contrast audit (about 2.5:1) | `textFaint` used for text | `textMuted` (`ContrastTests`) | PR_PLACEHOLDER |
+| Settings | Section headers and footers were grey on cream and failed the contrast audit | system default colours on a custom background | `textMuted` | PR_PLACEHOLDER |
+| Cards, QR | A pasted link could carry a zlib bomb (80 MB from a few KB) | no size limit on incoming links | links over 20,000 characters and cards over 500,000 bytes are refused (`CardQRFuzzTests`); found by reading, hardening | PR_PLACEHOLDER |
+
+Checked and found no bug (each has a test that stays): parser and card import fuzz (10,000 random lines, 10,000 random files, hostile long input); the QR decoder fuzz (10,000 random strings, 10,000 random payloads); every store file corrupt (alone and all six together); a 1.1 settings file and a 1.2 `practice.json` load with the same totals; Reset all data; atomic saves leave no temporary file; 3- and 4-player sessions of 40 random hands stay balanced to zero and settle up clears everyone; a 200-hand session totals twenty times in well under a second; blanks switched on mid-session change nothing; an empty card, and a rack of blanks and jokers, never crash the engine or Practice; changing the daily goal on a day already met; a time-zone change between two lessons; a Daily Deal that finishes after midnight. No `try!`, `as!`, `fatalError`, `precondition` or `print` in app or core; the few `[0]` are previews and the Debug gallery.
+
+#### 1.3 bug squash: steps and results
+
+1. **Runtime warnings.** The full UI suite's build result has 0 warnings and 0 runtime warnings (`xcresulttool get build-results`), and its console has no "Publishing changes from within view updates", AttributeGraph, "Modifying state during view update", Main Thread Checker or constraint messages.
+2. **Crash sweep.** As above: fuzz tests for the notation parser, card import and QR decoder; search for force unwraps, `try!`, `as!` and unchecked indexing found none in reachable code.
+3. **Data integrity.** `CorruptStoreTests`, `DataIntegrityTests` (a 1.1 settings file, a 1.2 practice file, Reset all data, atomic saves). A 1.0 session is covered by `V1FixtureTests`.
+4. **Edge cases.** The tests above, plus `EdgeCaseSweepTests` on the iPhone 17e (the smallest) in light, dark and AX5 with a three-player night, a 60-character name, an emoji name, a right-to-left name, a 200-hand night, an empty card with a 95-character name, and a night whose card was deleted.
+5. **Layout.** Every tab, Settings, a lesson intro and a question on the iPhone 17e (smallest), the iPhone 17 Pro Max (largest), and the iPad Pro 11-inch simulator, in light, dark and AX5 (`AccessibilityAuditTests` screenshots). Nothing was clipped; the findings are in the table.
+6. **Accessibility.** `AccessibilityAuditTests` runs the Xcode accessibility audit (element description, hit region, contrast, element detection, traits) on each main screen. Fixed: the two contrast findings above. Left, with reasons, in known issues.
+7. **Performance.** Release build, core: the Practice Card's analyzer builds in 4 ms; the slowest question of every type, difficulty and 150 seeds takes 18 ms (a hard Pass-three); a Helper tap was 4.4 ms in 1.0. On the simulator (Debug) `PerformanceTests` measures cold launch to the first screen and starting a lesson; the numbers are in the PR.
+
+#### Known issues (deliberately not fixed)
+
+- The Accessibility Inspector audit flags disabled controls (the greyed tile keyboard when the rack is full, the disabled Check button) for contrast. Disabled controls are exempt from the contrast rule, so these are left.
+- The audit reports the Sort and Clear buttons in the Helper rack header and the lesson progress bar as "hit area too small". The buttons have a 44 pt minimum height; the audit measures their text. The progress bar is not interactive.
+- At the largest text size a hand log row with two very long names takes a whole screen. The names are complete on purpose (VoiceOver and large-text readers need them); the scoreboard rows are limited to four lines.
+- The VoiceOver name of the X/C badge ("Exposed hand", "Concealed hand") says in words what the Practice question "Can you call discards for this hand?" asks. A sighted player sees only X or C. Left because hiding the badge's meaning from VoiceOver users would be worse.
+- Yes/No questions can always be guessed (50%).
 
 ### Open questions for the owner (1.3)
 
