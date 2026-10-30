@@ -15,6 +15,10 @@ enum CardQRCode {
   static let version = 1
   /// Longer links are not offered as a QR code: they scan badly.
   static let maxURLLength = 2000
+  /// Links that arrive from outside (a pasted URL, another app) are refused above this length, and a card
+  /// that unpacks to more than `maxCardBytes` is refused, so a crafted link cannot exhaust memory.
+  static let maxIncomingLength = 20_000
+  static let maxCardBytes = 500_000
 
   enum DecodeError: Error, Equatable {
     /// Not a link made by this app, or damaged.
@@ -44,7 +48,8 @@ enum CardQRCode {
 
   /// The card file text inside a link.
   static func cardText(from url: URL) throws -> String {
-    guard url.scheme?.lowercased() == scheme, url.host?.lowercased() == host,
+    guard url.absoluteString.count <= maxIncomingLength, url.scheme?.lowercased() == scheme,
+      url.host?.lowercased() == host,
       let items = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems,
       let versionText = items.first(where: { $0.name == "v" })?.value, let linkVersion = Int(versionText)
     else { throw DecodeError.notACard }
@@ -52,7 +57,7 @@ enum CardQRCode {
     guard linkVersion == version, let payload = items.first(where: { $0.name == "d" })?.value,
       let compressed = data(fromBase64URL: payload),
       let raw = try? (compressed as NSData).decompressed(using: .zlib) as Data,
-      let text = String(data: raw, encoding: .utf8), !text.isEmpty
+      raw.count <= maxCardBytes, let text = String(data: raw, encoding: .utf8), !text.isEmpty
     else { throw DecodeError.notACard }
     return text
   }

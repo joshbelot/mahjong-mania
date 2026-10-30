@@ -87,3 +87,62 @@ struct EmptyCardEdgeCaseTests {
     #expect(analyzer.suggestPasses(view, count: 3).passes.allSatisfy { $0.tile != .joker })
   }
 }
+
+// MARK: Practice across goals, time zones and midnight (SPEC §19.4 step 4)
+
+struct PracticeEdgeCaseTests {
+  private func day(_ y: Int, _ m: Int, _ d: Int) -> LocalDay { LocalDay(year: y, month: m, day: d) }
+
+  private func lesson(_ p: inout PracticeProgress, _ node: String, on d: LocalDay) {
+    let ids = Curriculum.exercises(for: Curriculum.node(id: node)!, seed: 1)
+    let records = ids.map { AnswerRecord(exercise: $0, correct: true) }
+    _ = p.apply(PlayResult(nodeID: node, records: records, day: d))
+  }
+
+  @Test func changingTheGoalOnADayItWasMetKeepsTodayMet() {
+    var p = PracticeProgress()
+    p.dailyGoal = .casual
+    let d = day(2026, 11, 2)
+    lesson(&p, "u1l1", on: d)
+    #expect(p.goalMet(on: d) && p.streak.current == 1)
+    p.dailyGoal = .serious
+    #expect(p.goalMet(on: d), "today stays met")
+    lesson(&p, "u1l2", on: d)
+    #expect(p.streak.current == 1, "a second lesson does not add a second day")
+    lesson(&p, "u1l3", on: day(2026, 11, 3))
+    #expect(!p.goalMet(on: day(2026, 11, 3)), "the new goal applies from tomorrow")
+  }
+
+  @Test func aTimeZoneChangeBetweenTwoLessonsNeverBreaksOrDoublesTheStreak() {
+    // A lesson late on 2 Nov in Los Angeles, the next one on the morning of 4 Nov in Tokyo (one calendar day
+    // later than the second would be at home). Going forward in days never loses the streak.
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = TimeZone(identifier: "America/Los_Angeles")!
+    let first = Date(timeIntervalSince1970: 1_793_600_000)  // 2026-11-02 evening in LA
+    var tokyo = Calendar(identifier: .gregorian)
+    tokyo.timeZone = TimeZone(identifier: "Asia/Tokyo")!
+    let second = first.addingTimeInterval(14 * 3600)
+    let d1 = LocalDay(first, calendar: calendar)
+    let d2 = LocalDay(second, calendar: tokyo)
+    var p = PracticeProgress()
+    lesson(&p, "u1l1", on: d1)
+    lesson(&p, "u1l2", on: d2)
+    #expect(d2 >= d1)
+    #expect(p.streak.current >= 1 && p.streak.current <= 2)
+    // And travelling back west (an earlier local day) changes nothing.
+    var back = p
+    lesson(&back, "u1l3", on: d1.adding(days: -1))
+    #expect(back.streak.current >= 1)
+  }
+
+  @Test func aDailyDealStartedBeforeMidnightIsRecordedOnTheDayItStarted() {
+    let analyzer = Analyzer.cached(for: PracticeCard.card)
+    let start = day(2026, 11, 2)
+    let deal = DailyDeal.exercises(for: start, analyzer: analyzer)
+    let result = DailyDeal.result(hand: deal.pick.tiles, pickedLine: deal.pick.lines.first ?? PracticeCard.card.lines[0], passSelection: [0, 1, 2], analyzer: analyzer)
+    var p = PracticeProgress()
+    #expect(p.recordDailyDeal(day: start, result: result) != nil)
+    #expect(p.dailyDeals[start.description] != nil && p.dailyDeals[start.adding(days: 1).description] == nil)
+    #expect(p.recordDailyDeal(day: start, result: result) == nil, "a replay is practice")
+  }
+}
