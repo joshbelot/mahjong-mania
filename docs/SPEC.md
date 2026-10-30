@@ -17,7 +17,7 @@
 6. When the spec gives an exact algorithm, signature, string, or number, use it exactly. When it says "suggested", you may adjust as long as the acceptance criteria still hold. Algorithms in §9–§10 are written as language-neutral pseudocode. The Swift API they must have is fixed in §7.
 7. Do not ship the official NMJL card's hands or branding anywhere in the app (see §2.4). The built-in card is the **original Practice Card** in §9.6.
 8. Keep a running checklist: tick the boxes in §13 in the same PR that completes them.
-9. **Version 1.1** is planned in §17 (phases 13–20) and **version 1.2** in §18 (phases 21–27). Each builds on everything before it.
+9. **Version 1.1** is planned in §17 (phases 13–20) **version 1.2** in §18 (phases 21–27) and **version 1.3** (first App Store release) in §19 (phases 28–33). Each builds on everything before it.
 10. The app ships through **TestFlight**. §16 is the release process. Phase 0 sets up the project so a TestFlight build is possible from day one, and Phase 12 adds the upload script.
 
 ---
@@ -1732,3 +1732,135 @@ Same rules as §17.9 (local `tools/test.sh` is the gate; look at every changed s
 - [ ] Simulator QA: a fresh install played as a beginner through Unit 2 and as an experienced player via test-out; every 1.2 screen in light/dark/AX5 and with Reduce Motion; existing §13 and §17 checks still pass.
 - [x] Version 1.2, What to Test, handoff notes.
 - [ ] `--dry-run`, `altool --validate-app`, the real upload, and the build processed in App Store Connect (§18.11).
+
+---
+
+## 19. Version 1.3: sharper practice, a cheat sheet, bug squash, and App Store release
+
+v1.2 shipped to TestFlight on 2026-10-18 (build 4). v1.3 is the **first App Store release**. It does four things, in this order: fix what the owner found too easy in Practice and add a tile cheat sheet; apply the practice improvements below; run a structured bug-squash pass; and make the app and its listing compliant with the App Store Review Guidelines, then ship 1.3 to TestFlight with everything ready for the owner to press **Submit for Review**.
+
+Everything in §0–§18 still applies unless this section says otherwise. Work the phases in §19.9 in order, one PR each.
+
+### 19.1 No more dead-obvious questions
+
+Owner feedback: "Which tile is the 3 Crak?" is answered by the 3 printed on the tile, and "Which tile is the Joker?" by the word JOKER. Questions whose answer is printed on the screen teach nothing.
+
+- **Rule:** no exercise may be answerable by reading a label that is visible on the question screen (a numeral, the word JOKER, a wind letter, "F", a section name). Apply it to every exercise type at every difficulty and in every tile style. Add a core test per type that checks it where it can be checked mechanically (e.g. the correct choice's text must not appear in the prompt or on any shown tile's label).
+- **Remove `nameTile` and `findTile`** from the curriculum, Checkpoints, review and the Speed Round. Keep the code only if another type reuses it.
+- **New type `tileFact`** (MahjongCore, deterministic like the others) replaces them. Facts a beginner can't read off the tile; 4 text or tile choices:
+  - Matching dragons: "Which dragon goes with Bams?" (Green), "…with Dots?" (Soap), "Which suit does the Red Dragon go with?"
+  - Soap as zero: "In 2026 on a card, what tile is the 0?" (Soap / White Dragon).
+  - Counts in a set: "How many 5 Dots are in a set?" (4), "How many Flowers?" (8), "How many Jokers?" (8), "How many tiles are in the whole set?" (152, or 152 + blanks when blanks are on).
+  - Jokers: "Can a joker be part of a pair?" (No), "Can you pass a joker in the Charleston?" (No), "What's the smallest set a joker can join?" (Pung, 3).
+  - Flowers: "Are all Flowers the same for making a hand?" (Yes).
+  - Dealing: "Who starts with 14 tiles?" (East), "Which way is the first Charleston pass?" (Right).
+  - Suit names and nicknames (only where the tile isn't labelled with the answer): "Bams are also called…" (Bamboo), "Craks are also called…" (Characters), "Dots are also called…" (Circles).
+  - Blanks (only when the blanks house rule is on): "What can you swap a blank for?" (a discarded tile).
+  Difficulty: 1 = the core facts above; 2 = adds nicknames and dealing; 3 = mixes in house-rule facts from the user's rule book.
+- **Unit 1 becomes "Tile facts"** (3 lessons of 8: Suits and dragons; Flowers, jokers and Soap; Mixed) using `tileFact`, with the cheat sheet (§19.2) offered on its intro card. Units 1–2 `groupName` items at difficulty 1 that show a labelled count are moved to difficulty ≥ 2 (jokers mixed in) so they can't be answered by counting the label.
+- **Audit the rest:** play every lesson of every unit at difficulty 1 and list any other question that is answerable without mahjong knowledge; fix or raise it. Record the list in DECISIONS.md.
+
+### 19.2 Tile cheat sheet
+
+A **"Tiles" cheat sheet** newcomers can open any time.
+
+- **Where:** a "Tiles" button (SF Symbol `rectangle.grid.3x2`) in the lesson top bar, the Practice header, the Helper header, and Learn home; also offered on Unit 1's intro.
+- **What:** a sheet (medium and large detents) in the current tile style, grouped: **Craks** (also called Characters; red; numbers 1–9), **Bams** (Bamboo; green; the 1 Bam is a bird), **Dots** (Circles; blue), **Winds** (North, East, West, South), **Dragons** (Red goes with Craks, Green with Bams, Soap/White with Dots; Soap also counts as zero), **Flowers** (8, all interchangeable), **Jokers** (8; only in sets of 3 or more; can't be passed), **Blanks** (only when on; what they do), and **Sets** (Single, Pair, Pung 3, Kong 4, Quint 5, Sextet 6). Each row shows the tile(s) with its name and copies in a set.
+- **Rules:** opening it never costs XP or stars in lessons and checkpoints. It is hidden during gold lessons, the Daily Deal's scored attempt and the Speed Round. Opening it pauses nothing (lessons are untimed).
+- Content comes from one source (`App/Content/TileCheatSheet.swift`) shared with Learn's Tile guide, so the two never disagree. VoiceOver reads each row as one element ("Green Dragon. Goes with Bams. 4 in a set.").
+
+### 19.3 Practice improvements
+
+1. **Single-choice questions commit on tap.** Any question with one answer chosen from choices (text, tile, number, line, yes/no) checks immediately on tap; the tapped choice shows the right/wrong state, then the feedback sheet. **Check** stays only for multi-select (`passThree`) and for tile-selection questions where the user may change their mind before committing (`passOne` keeps a confirm step). Add a 150 ms tap-down highlight so a mis-tap is visible.
+2. **Daily challenge on the path.** A pinned **"Today's Deal"** node at the top of the path (calendar icon, the weekday's difficulty as 1–3 dots). One tap starts the Daily Deal; after playing it shows ✓ and the result emojis. It replaces the separate Daily Deal card on Practice home (the share and countdown stay on the result screen).
+3. **Speed Round shows the rack.** The player's 13-tile rack is shown above the target line throughout, with the tile being judged lifted and outlined, so Keep/Pass is judged in context. Tiles already judged dim. A new rack is dealt with each new target.
+4. **Unit art and a mascot.** Each unit gets a header illustration (a large tile or small group of tiles drawn in SwiftUI, in the current tile style) shown on its path banner and lesson intros. Add an original mascot, **"Sunny"**, a friendly Soap (white dragon) tile with a simple face, drawn in SwiftUI shapes, with four expressions: *hello* (intros), *thinking* (hints), *cheering* (right answers, completion), *oops* (wrong answers, gentle). Sunny appears on lesson intros, the feedback sheet (small), the completion screen and celebrations. Original artwork only; no resemblance to any existing mascot.
+5. **More fanfare for ★★★.** On a three-star finish: the stars burst in with a ring flash, Sunny cheers, a gold confetti burst (tiles and flowers), a distinct three-note chime, a success haptic, and the banner reads **"Perfect!"** with the number of perfect lessons so far. Reduce Motion: a gold glow and the chime only.
+6. **Rare "Perfect Week" badge.** Earned when the daily goal is met on 7 consecutive local days **and** every lesson finished on those days was ★★★ (Daily Deal, Speed Round and free play don't count against it). Shown in the badge grid with a special gold frame and "Rare" tag; +50 XP. Core tests: a 7-day run qualifies; one ★★ lesson breaks it; a freeze day breaks it; a missed day breaks it.
+
+### 19.4 Bug squash
+
+A structured pass to make the app solid before strangers use it. Every bug found gets a test that fails without the fix (AGENTS.md), and a one-line entry in a new **"1.3 bug log"** table in `docs/PROGRESS.md` (area, symptom, cause, fix, PR).
+
+Method, in this order:
+1. **Runtime warnings:** run every UI test with the Xcode console captured; fix every SwiftUI runtime warning ("Publishing changes from within view updates", AttributeGraph cycles, "Modifying state during view update", constraint warnings), every main-thread-checker warning, and every `print` left in code.
+2. **Crash sweep:** search for `!` force unwraps, `try!`, `as!`, unchecked array indexing, `fatalError`/`precondition` in user-reachable paths; replace with safe handling. Fuzz the notation parser and card import with 10,000 random strings (core test) and the QR decoder with random URLs (app test): no crash, always an error message.
+3. **Data integrity:** corrupt each JSON store file and relaunch (the file is moved aside and the app starts clean with a notice, per §7.5); a v1.0, v1.1 and v1.2 data fixture each loads with identical totals, cards, rules and practice progress; Reset all data really clears every store; force-quit during a save leaves a readable file.
+4. **Edge cases per area:** 3-player game nights; a 200-hand session (scroll and totals speed); very long player, card and rule names; emoji names; a user card with 0 valid lines; deleting the active card; deleting a card used by past sessions; blanks on/off mid-session; switching tile style mid-lesson; time zone change between two lessons; the Daily Deal across midnight; changing the daily goal on a day it was already met.
+5. **Layout:** every screen at the smallest iPhone supported by the simulator list, the largest, AX5 text, dark mode, and **on an iPad simulator** (the app is iPhone-only, but App Review often runs iPhone apps on iPad in compatibility mode; it must work and look right there).
+6. **Accessibility sweep:** every interactive element has a VoiceOver label, the order makes sense, nothing is announced as an unlabeled image, and every action is possible with VoiceOver (run the Xcode Accessibility Inspector audit on each main screen and fix its findings).
+7. **Performance:** cold launch to the first screen < 1 s on the simulator; no visible hitch when opening Practice, starting a lesson, or tapping a tile in the Helper (measure; anything > 100 ms on the main thread gets fixed).
+
+Output: the bug log, and a short "known issues" list for anything deliberately not fixed (with why).
+
+### 19.5 App Store compliance (in the app)
+
+Research summary (sources in §19.8). Apply these, and re-check against the current [App Review Guidelines](https://developer.apple.com/app-store/review/guidelines/) before submitting:
+
+| Area | Requirement | What to do |
+|---|---|---|
+| Privacy policy (5.1.1) | A privacy policy URL is required for every app, even one that collects nothing, in App Store Connect **and** reachable inside the app. | Publish a privacy page (§19.6) and add **Settings → About → Privacy Policy** and **Support** links (open in Safari). |
+| Privacy label & manifest | Label must match behaviour. | Label stays **Data Not Collected** (no network, no analytics, no tracking). Re-audit `PrivacyInfo.xcprivacy`: declare exactly the required-reason APIs the code uses (remove `UserDefaults` if no code uses it any more, or keep it if any does), no tracking domains. |
+| Gambling (5.3) and age rating (2.3.6) | Real-money gaming needs licences; simulated gambling raises the rating. The app never takes, holds or moves money; it only converts points to amounts people settle in person. | Rename "Play for money" to **"Show amounts in money"** with the subtitle **"The app only does the maths. No money is handled here."**; same wording in the rule book. In the age-rating questionnaire answer Gambling: No, Simulated Gambling: None, and explain in the review notes. Expected rating: **4+**. |
+| Age rating questionnaire (2025–2026 changes) | New tiers (4+, 9+, 13+, 16+, 18+) and new questions, including social-media capabilities (mandatory from Sept 2026). | Answer honestly: no user-generated content shared with others, no chat, no social media features, no web access, no ads, no purchases. Card QR sharing is person-to-person and offline; mention it in review notes. |
+| Intellectual property (5.2) | Don't use others' trademarks or content without permission. | Keep the About disclaimer; the built-in card stays original; **never** use "NMJL", "National Mah Jongg League" or "official card" in the name, subtitle, keywords, description or screenshots (other than the "not affiliated" disclaimer); screenshots use only the Practice Card. |
+| Completeness (2.1) and accurate metadata (2.3) | No placeholder text, no "coming soon", no debug screens, everything in the screenshots exists. | Remove `ComingSoonView` uses if any remain; confirm the component gallery is debug-only (it is); search the app for "TODO", "Lorem", "placeholder", "coming soon". |
+| iPhone app on iPad (2.4.1) | iPhone apps should run on iPad. | Covered by the iPad layout check in §19.4. In App Store Connect, untick "Make this app available on Mac (Apple silicon)" unless it has been tested there (owner step). |
+| Export compliance | Encryption declaration. | `ITSAppUsesNonExemptEncryption = false` is already set; keep it. |
+| Build | Built with the current SDK. | Xcode 27 / iOS 27 SDK satisfies the "Xcode 26+ SDK" upload requirement. |
+
+### 19.6 Support and privacy website
+
+App Store Connect needs a public **Support URL** and **Privacy Policy URL** (real web pages, not a PDF or a shared doc).
+
+- Create static pages in a new orphan branch **`gh-pages`** of this repo (plain HTML + one CSS file, light/dark, readable on phones): `index.html` (what the app is, a link to the App Store once live), `privacy.html`, `support.html`.
+- **privacy.html** (plain English, dated): Mahjong Mania collects no personal data; everything stays on your device in the app's own storage; no accounts, analytics, ads, tracking or network access; card QR codes are shared only when you choose to show or share one; deleting the app or "Reset all data" removes everything; contact via the support page.
+- **support.html:** how to get help (a link to this repo's GitHub Issues, "New issue" — no personal email published), a short FAQ (where data lives, how to share a card, how to reset, house rules), and the not-affiliated disclaimer.
+- Enable GitHub Pages for the `gh-pages` branch (`gh api -X POST repos/{owner}/{repo}/pages -f "source[branch]=gh-pages" -f "source[path]=/"`), then check both URLs load: `https://joshbelot.github.io/mahjong-mania/privacy.html` and `/support.html`. The owner has authorised publishing these pages.
+- The in-app links (§19.5) point at those URLs.
+
+### 19.7 App Store listing package
+
+Everything the owner needs to paste or upload, in a new folder `AppStore/` (committed):
+
+- `metadata.md`: **Name** "Mahjong Mania: Companion" (matches the App Store Connect record); **Subtitle** (≤ 30 chars, e.g. "Score, practise & get hints"); **Promotional text** (≤ 170); **Description** (≤ 4000, plain, honest, features in short paragraphs, the disclaimer at the end); **Keywords** (≤ 100 chars, comma-separated, no trademarks, no competitor names, no words already in the name); **Primary category** Games → Board, **secondary** Education; **Copyright** "2026 Josh Belot"; **Support URL**, **Privacy Policy URL**; **Price** Free.
+- `review-notes.md`: for App Review: no sign-in needed; how to see each feature in 2 minutes (Practice → Lesson 1; Helper → "Deal me a random hand"; Game → New game night with 4 sample names; Cards → Practice Card → Show QR is for user cards: duplicate first); the money explanation (§19.5); the not-affiliated note; the app makes no network requests.
+- `age-rating.md` and `app-privacy.md`: the exact answers to give in each App Store Connect questionnaire, question by question.
+- `screenshots/6.9/`: 6–8 PNGs at **1320 × 2868** (iPhone 17 Pro Max simulator), produced by a UI test (`AppStoreScreenshotTests`) with demo data and a fixed clock, light mode, status bar cleaned (`xcrun simctl status_bar … override` 9:41, full battery). Suggested set: Practice path; a lesson with Sunny and feedback; ★★★ completion; Helper with suggestions; Game Night scoreboard; Settle-up summary; Cards with a pattern; House rules. Only the Practice Card appears. Optionally a matching `screenshots/6.5/` set at 1284 × 2778.
+- `checklist.md`: the owner's submission steps in order (below), with checkboxes.
+
+**Owner-only steps** (the agent prepares, the owner does these in App Store Connect): answer the EU Digital Services Act **trader status** (a free hobby app with no revenue may declare non-trader; a trader must publish contact details; the owner decides); set price (Free) and availability; untick Mac availability unless tested; paste metadata, upload screenshots, fill App Privacy and Age Rating from the files above; attach build **1.3**; add review notes; **Submit for Review**.
+
+### 19.8 Sources for §19
+
+[App Review Guidelines](https://developer.apple.com/app-store/review/guidelines/) · [Updated age ratings (Apple)](https://developer.apple.com/news/?id=ks775ehf) · [Age rating social media questions (Apple)](https://developer.apple.com/news/?id=tlur8uvi) · [DSA trader requirements (Apple)](https://developer.apple.com/help/app-store-connect/manage-compliance-information/manage-eu-digital-services-act-compliance-information) · [Simulated gambling 17+ (MacRumors)](https://www.macrumors.com/2019/08/20/apple-simulated-gambling-apps-17-plus-rating/) · [5.3 rejection thread (Apple forums)](https://developer.apple.com/forums/thread/86242) · [Mahjong Scorer, a comparable approved app](https://apps.apple.com/us/app/-/id6736632044) · [Listing requirements guide](https://screenshot-maker.pages.dev/blog/app-store-connect-guide).
+
+### 19.9 Implementation plan for 1.3 (one PR per phase)
+
+Same rules as §18.12. Each UI phase: look at the changed screens in the simulator in light, dark and AX5 (and Reduce Motion where animated); record deviations in DECISIONS.md; tick boxes in the same PR.
+
+#### Phase 28: Harder, fairer questions (19.1)
+- [ ] `tileFact` type in core with tests; `nameTile`/`findTile` removed from every lesson, checkpoint, review and the Speed Round.
+- [ ] New Unit 1 "Tile facts"; `groupName` d1 adjustments; the "not answerable from a label" tests.
+- [ ] Difficulty-1 audit of every lesson, findings fixed and listed in DECISIONS.md. Existing practice progress keeps working (Unit 1 lesson IDs that disappear keep their stars on the closest new lesson or are dropped without breaking the path; test with a v1.2 `practice.json` fixture).
+
+#### Phase 29: Cheat sheet and practice polish (19.2, 19.3)
+- [ ] Tile cheat sheet everywhere listed, shared content with the Tile guide, gating rules.
+- [ ] Commit-on-tap; Today's Deal node; Speed Round rack; unit art; Sunny with four expressions; ★★★ fanfare; Perfect Week badge with core tests.
+- [ ] UI tests: open the cheat sheet mid-lesson and continue; a single-choice answer commits on tap; Today's Deal from the path; Speed Round shows 13 tiles.
+
+#### Phase 30: Bug squash (19.4)
+- [ ] All seven steps of §19.4 done; the 1.3 bug log filled in `docs/PROGRESS.md`; a test for every fix; zero runtime warnings in the UI suite's console.
+- [ ] Known issues listed.
+
+#### Phase 31: Compliance in the app and the website (19.5, 19.6)
+- [ ] Money wording, Privacy Policy and Support links in About, privacy manifest re-audited, placeholder search clean.
+- [ ] `gh-pages` site published; both URLs checked live.
+
+#### Phase 32: Listing package (19.7)
+- [ ] `AppStore/` with metadata, review notes, age-rating and privacy answers, the checklist, and screenshots generated by `AppStoreScreenshotTests` at 1320 × 2868 (and optionally 1284 × 2778). Check every character limit with a small script and include its output in the PR.
+
+#### Phase 33: 1.3 QA and release
+- [ ] Simulator QA: fresh-install beginner run through Unit 2, experienced test-out, a full game night, Helper, Cards incl. QR, on iPhone and iPad simulators; §13/§17/§18 checks still pass.
+- [ ] `MARKETING_VERSION` → "1.3", `TestFlight/WhatToTest.txt`, handoff notes with the owner's App Store steps.
+- [ ] When every 1.3 phase is committed and merged: from a clean, up-to-date `main`, `--dry-run`, `altool --validate-app`, the real upload, and the build processed (VALID) in App Store Connect. The owner has authorised this upload. **Do not submit for review**; that is the owner's step (§19.7).

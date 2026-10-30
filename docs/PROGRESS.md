@@ -18,7 +18,29 @@ Source of truth for where the build is. Updated by the lead on `main`.
 | 11 Learn | merged (11a content PR 10, 11b screens PR 13) | |
 | 12 Settings, polish, release | merged (12a PR 12, 12b PR 15, 12c PR 17); owner steps and QA remain, see backlog below | |
 
-## Version 1.2 (current work)
+## Version 1.3 (current work)
+
+Plan: `docs/SPEC.md` §19 (first App Store release). v1.2 build 4 is on TestFlight (2026-10-18). One PR per phase, in order; ship to TestFlight when all are merged; the owner submits for review.
+
+| Phase | Status | PR |
+|---|---|---|
+| 28 Harder, fairer questions | not started | |
+| 29 Cheat sheet and practice polish | not started | |
+| 30 Bug squash | not started | |
+| 31 Compliance in the app and the website | not started | |
+| 32 App Store listing package | not started | |
+| 33 1.3 QA and TestFlight upload | not started | |
+
+### 1.3 bug log
+
+| Area | Symptom | Cause | Fix | PR |
+|---|---|---|---|---|
+
+### Open questions for the owner (1.3)
+
+_None yet._
+
+## Version 1.2 (done)
 
 Plan: `docs/SPEC.md` §18 (Practice becomes a game). v1.1 build 3 is on TestFlight (2026-10-16). One PR per phase, in order; ship to TestFlight when all are merged (§18.11).
 
