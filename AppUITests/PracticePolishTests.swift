@@ -54,7 +54,7 @@ final class PracticePolishTests: PracticeUITestCase {
     card.tap()
     XCTAssertTrue(element(app, "lesson.prompt").waitForExistence(timeout: 10))
     // The cheat sheet is hidden in the scored Daily Deal.
-    XCTAssertFalse(element(app, "tiles.button").exists, "The cheat sheet must be hidden in the scored deal")
+    XCTAssertFalse(element(app, "tiles.button").isHittable, "The cheat sheet must be hidden in the scored deal")
   }
 
   func testSpeedRoundShowsThirteenTiles() {
