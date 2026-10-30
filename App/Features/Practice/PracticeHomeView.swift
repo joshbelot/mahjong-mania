@@ -149,7 +149,8 @@ struct PracticeHomeView: View {
     let seed = LaunchOptions.practiceSeed() ?? UInt64.random(in: 1...999_999_999)
     let first = (progress.lessons[node.id]?.plays ?? 0) == 0 && LaunchOptions.playNode() == nil
     let session = LessonSession(
-      node: node, gold: gold, testOut: testOut, seed: seed, review: review, showIntro: first)
+      node: node, gold: gold, testOut: testOut, seed: seed, review: review,
+      rules: settings.settings.defaultRules, showIntro: first)
     nextBeforePlay = progress.nextNode?.id
     play = ActivePlay(session: session)
   }

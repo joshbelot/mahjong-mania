@@ -31,7 +31,7 @@ public struct SpeedStream: Sendable {
     let isBonus = index >= Self.warmUp && (index - Self.warmUp) % 4 == 3
     if isBonus {
       var generator = SeededRandom(seed: seed &+ UInt64(index) &* 0x9E37_79B9)
-      let type: ExerciseType = ((index - Self.warmUp) / 4) % 2 == 0 ? .nameTile : .groupName
+      let type: ExerciseType = ((index - Self.warmUp) / 4) % 2 == 0 ? .tileFact : .groupName
       let exercise = Exercises.make(ExerciseID(type: type, seed: generator.next(), difficulty: 2), analyzer: analyzer)
       return .bonus(exercise)
     }
@@ -41,7 +41,7 @@ public struct SpeedStream: Sendable {
     }
     defer { keepIndex += 1 }
     guard let block, let line = block.line else {
-      return .bonus(Exercises.make(ExerciseID(type: .nameTile, seed: seed, difficulty: 2), analyzer: analyzer))
+      return .bonus(Exercises.make(ExerciseID(type: .tileFact, seed: seed, difficulty: 2), analyzer: analyzer))
     }
     let position = keepIndex % max(1, block.queue.count)
     let tile = block.queue[position]

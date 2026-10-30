@@ -42,7 +42,6 @@ struct PathTests {
     #expect(p.nextNode?.spec.id == "u1l2")
     play(&p, "u1l2", right: 8)
     play(&p, "u1l3", right: 6)
-    play(&p, "u1l4", right: 8)
     #expect(p.nextNode?.spec.id == "u1c")
     #expect(p.nodes().first { $0.id == "u1l2" }?.stars == 3)
   }
@@ -57,7 +56,7 @@ struct PathTests {
 
   @Test func checkpointNeedsSevenOfTenAndUnlocksTheNextUnit() {
     var p = PracticeProgress()
-    for l in 1...4 { play(&p, "u1l\(l)", right: 8) }
+    for l in 1...3 { play(&p, "u1l\(l)", right: 8) }
     let failed = play(&p, "u1c", right: 6)
     #expect(!failed.passed && p.nextNode?.spec.id == "u1c" && !p.isUnitFinished(1))
     let passed = play(&p, "u1c", right: 7)
@@ -115,14 +114,14 @@ struct PathTests {
 
   @Test func goldNeedsThreeStarsEverywhereThenNinetyPercent() {
     var p = PracticeProgress()
-    for l in 1...4 { play(&p, "u1l\(l)", right: l == 4 ? 7 : 8) }
+    for l in 1...3 { play(&p, "u1l\(l)", right: l == 3 ? 7 : 8) }
     #expect(!p.goldAvailable(1))
-    play(&p, "u1l4", right: 8)
+    play(&p, "u1l3", right: 8)
     #expect(p.goldAvailable(1))
     let weak = play(&p, "u1l1", right: 7, gold: true)  // 87.5%
     #expect(!weak.passed && p.lessons["u1l1"]?.gold != true)
     var unitGold: Int?
-    for l in 1...4 {
+    for l in 1...3 {
       let o = play(&p, "u1l\(l)", right: 8, gold: true)
       #expect(o.passed && o.xp.gold == 20)
       unitGold = o.unitGold ?? unitGold
@@ -197,6 +196,44 @@ struct ApplyTests {
     #expect(p.reviewQueue.items.first?.due == today.adding(days: 3))
   }
 
+  @Test func aV12SaveKeepsItsStarsOnTheClosestNewUnitOneLesson() throws {
+    // A 1.2 practice.json: Unit 1 had four lessons and no schema field.
+    let json = """
+      {"lessons":{
+        "u1l1":{"stars":2,"gold":false,"testedOut":false,"bestAccuracy":0.75,"plays":2},
+        "u1l2":{"stars":3,"gold":false,"testedOut":false,"bestAccuracy":1,"plays":1},
+        "u1l3":{"stars":1,"gold":false,"testedOut":false,"bestAccuracy":0.5,"plays":1},
+        "u1l4":{"stars":3,"gold":true,"testedOut":false,"bestAccuracy":1,"plays":3},
+        "u2l1":{"stars":2,"gold":false,"testedOut":false,"bestAccuracy":0.8,"plays":1}},
+       "units":{"1":{"checkpointPassed":true,"gold":false,"testedOut":false}},
+       "xp":500,"placement":"new"}
+      """
+    var p = try JSONDecoder().decode(PracticeProgress.self, from: Data(json.utf8))
+    #expect(p.xp == 500 && p.schema == PracticeProgress.currentSchema)
+    #expect(p.lessons["u1l1"]?.stars == 3, "numbers and winds merge: best stars")
+    #expect(p.lessons["u1l1"]?.plays == 3)
+    #expect(p.lessons["u1l2"]?.stars == 1, "flowers, jokers, Soap")
+    #expect(p.lessons["u1l3"]?.stars == 3 && p.lessons["u1l3"]?.gold == true, "mixed")
+    #expect(p.lessons["u1l4"] == nil)
+    #expect(p.lessons["u2l1"]?.stars == 2, "other units are untouched")
+    #expect(p.isUnitFinished(1))
+    #expect(p.nodes().filter { $0.spec.unit == 1 }.count == 4)
+    // Saving and loading again must not move anything a second time.
+    let again = try JSONDecoder().decode(PracticeProgress.self, from: JSONEncoder().encode(p))
+    #expect(again == p)
+    _ = play(&p, "u1l2", right: 8)
+    let third = try JSONDecoder().decode(PracticeProgress.self, from: JSONEncoder().encode(p))
+    #expect(third.lessons["u1l2"]?.stars == 3 && third.lessons["u1l1"]?.stars == 3)
+  }
+
+  @Test func aV12ReviewQueueOfNameTileQuestionsStillLoads() throws {
+    let json = """
+      {"reviewQueue":{"items":[{"exercise":{"type":"nameTile","seed":4,"difficulty":1,"focus":1},"due":"2026-10-17","step":0}]}}
+      """
+    let p = try JSONDecoder().decode(PracticeProgress.self, from: Data(json.utf8))
+    #expect(p.reviewQueue.items.first?.exercise.type == .tileFact)
+  }
+
   @Test func playsCountTowardTheDailyGoalAndStreak() {
     var p = PracticeProgress()
     p.dailyGoal = .regular
@@ -207,7 +244,7 @@ struct ApplyTests {
     let c = play(&p, "u1l3", right: 8)
     #expect(!c.goalJustMet && p.streak.current == 1)
     #expect(p.goalMet(on: today) && p.lessonsPlayed(on: today) == 3)
-    let next = play(&p, "u1l4", right: 8, on: today.adding(days: 1))
+    let next = play(&p, "u2l1", right: 8, on: today.adding(days: 1))
     #expect(next.lessonsToday == 1 && p.streak.current == 1)
   }
 
@@ -227,7 +264,7 @@ struct ApplyTests {
 
   @Test func unitBadgesAndGraduate() {
     var p = PracticeProgress()
-    for l in 1...4 { play(&p, "u1l\(l)", right: 8) }
+    for l in 1...3 { play(&p, "u1l\(l)", right: 8) }
     #expect(p.badges[BadgeID.tileWhisperer.rawValue] == nil)
     play(&p, "u1c", right: 9)
     #expect(p.badges[BadgeID.tileWhisperer.rawValue] != nil)

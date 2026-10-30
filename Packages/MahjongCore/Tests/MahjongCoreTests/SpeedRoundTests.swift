@@ -70,7 +70,7 @@ struct SpeedRoundTests {
         bonus += 1
         #expect(ea.tiles == eb.tiles && ea.choices == eb.choices)
         #expect(i >= SpeedStream.warmUp && (i - SpeedStream.warmUp) % 4 == 3)
-        #expect([ExerciseType.nameTile, .groupName].contains(ea.id.type))
+        #expect([ExerciseType.tileFact, .groupName].contains(ea.id.type))
       default:
         Issue.record("two streams with one seed disagreed")
       }

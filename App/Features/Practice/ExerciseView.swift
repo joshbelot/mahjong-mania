@@ -116,13 +116,6 @@ struct ExerciseView: View {
     if exercise.selectCount > 0 {
       rack(selectable: true)
         .shake(session.wrongCount)
-    } else if exercise.id.type == .nameTile, let tile = exercise.tiles.first {
-      TileView(tile: tile, size: .large)
-        .scaleEffect(1.5)
-        .frame(width: 52 * 1.5, height: 70 * 1.5)
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, Spacing.lg)
-        .accessibilityIdentifier("lesson.tile")
     } else if !exercise.groups.isEmpty {
       FlowLayout(spacing: Spacing.md, lineSpacing: Spacing.md) {
         ForEach(Array(exercise.groups.enumerated()), id: \.offset) { entry in

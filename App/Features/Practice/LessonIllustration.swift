@@ -17,18 +17,20 @@ struct LessonIllustration: View {
     switch nodeID {
     case "u1l1":
       return [
-        Example(caption: "Crack", tiles: tiles("3C")), Example(caption: "Bam", tiles: tiles("5B")),
-        Example(caption: "Dot", tiles: tiles("7D")),
+        Example(caption: "Cracks (red)", tiles: tiles("3C")), Example(caption: "Bams (green)", tiles: tiles("5B")),
+        Example(caption: "Dots (blue)", tiles: tiles("7D")),
+        Example(caption: "Goes with Cracks", tiles: tiles("R")), Example(caption: "Goes with Bams", tiles: tiles("G")),
+        Example(caption: "Goes with Dots (Soap)", tiles: tiles("0")),
       ]
     case "u1l2":
       return [
-        Example(caption: "Winds", tiles: tiles("N", "E", "W", "S")),
-        Example(caption: "Dragons", tiles: tiles("R", "G")),
+        Example(caption: "Flower: 8", tiles: tiles("F")), Example(caption: "Joker: 8", tiles: tiles("J")),
+        Example(caption: "Soap, also zero", tiles: tiles("0")),
       ]
     case "u1l3":
       return [
-        Example(caption: "Flower", tiles: tiles("F")), Example(caption: "Joker", tiles: tiles("J")),
-        Example(caption: "Soap", tiles: tiles("0")),
+        Example(caption: "Winds", tiles: tiles("N", "E", "W", "S")),
+        Example(caption: "Dragons", tiles: tiles("R", "G", "0")),
       ]
     case "u2l1":
       return [

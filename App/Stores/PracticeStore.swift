@@ -166,7 +166,7 @@ final class PracticeStore {
     let today = self.today
     update {
       for n in 0..<(review ?? 0) {
-        $0.reviewQueue.recordMiss(ExerciseID(type: .nameTile, seed: UInt64(n + 1), difficulty: 1), today: today.adding(days: -2))
+        $0.reviewQueue.recordMiss(ExerciseID(type: .tileFact, seed: UInt64(n + 1), difficulty: 1), today: today.adding(days: -2))
       }
       if let goal {
         $0.dailyGoal = goal

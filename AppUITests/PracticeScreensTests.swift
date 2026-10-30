@@ -6,7 +6,7 @@ import XCTest
 final class PracticeScreensTests: PracticeUITestCase {
   /// One lesson for each exercise type, and what the question looks like at a glance.
   private static let nodes: [(id: String, name: String)] = [
-    ("u1l1", "name-tile"), ("u1l2", "find-tile"), ("u2l1", "group-name"), ("u2l2", "matches-line-colours"),
+    ("u1l1", "tile-fact-suits"), ("u1l2", "tile-fact-flowers"), ("u1l3", "tile-fact-mixed"), ("u2l1", "group-name"), ("u2l2", "matches-line-colours"),
     ("u2l3", "matches-line-exposed"), ("u2l4", "which-hand"), ("u3l2", "joker-legal"), ("u4l1", "how-far"),
     ("u4l3", "needed-tile"), ("u5l1", "pick-hand-easy"), ("u5l3", "pick-hand-normal"), ("u7l3", "pick-hand-hard"),
     ("u6l1", "pass-one"), ("u6l2", "keep-or-pass"), ("u8l1", "pass-three-hint"), ("u8l2", "pass-three"),
