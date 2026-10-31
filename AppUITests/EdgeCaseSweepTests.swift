@@ -48,7 +48,7 @@ final class EdgeCaseSweepTests: PracticeUITestCase {
     rows.element(boundBy: rows.count - 1).tap()
     Thread.sleep(forTimeInterval: 1.5)
     attach("edge-\(tag)-8-old-night")
-    XCTAssertTrue(element(history, "log.row.1").waitForExistence(timeout: 10), "a night whose card was deleted must still open")
+    XCTAssertTrue(element(history, "score.menu").waitForExistence(timeout: 10), "a night whose card was deleted must still open")
     attach("edge-\(tag)-8-old-night")
   }
 
