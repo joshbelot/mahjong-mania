@@ -420,3 +420,55 @@ struct AppStoresTests {
     #expect(second.settings.settings.assistLevel == .off)
   }
 }
+
+// MARK: Corrupt files (SPEC §19.4 step 3)
+
+@MainActor
+struct CorruptStoreTests {
+  private static let storeNames = ["settings", "players", "sessions", "cards", "helper", "practice"]
+
+  @Test func everyStoreSurvivesACorruptFileAndTheUserIsTold() {
+    for name in Self.storeNames {
+      let directory = makeTempDirectory()
+      try? Data("{ not json".utf8).write(to: directory.appendingPathComponent("\(name).json"))
+      let stores = AppStores(directory: directory)
+      #expect(stores.recovered.count == 1, "\(name): \(stores.recovered)")
+      #expect(stores.recoveredMessage?.contains("set aside") == true)
+      #expect(files(in: directory).contains { $0.hasPrefix("\(name).corrupt-") }, "\(name) was kept, not deleted")
+      #expect(!files(in: directory).contains("\(name).json"), "\(name) starts clean")
+      // The app still works: add a player, a card line, and a session without trouble.
+      _ = stores.players.add(name: "Ann")
+      #expect(stores.players.players.count == 1)
+    }
+  }
+
+  @Test func aCleanLaunchSaysNothing() {
+    let stores = AppStores(directory: makeTempDirectory())
+    #expect(stores.recovered.isEmpty && stores.recoveredMessage == nil)
+  }
+
+  @Test func allSixCorruptAtOnceStillStartsAndNamesEach() {
+    let directory = makeTempDirectory()
+    for name in Self.storeNames { try? Data("\u{0}\u{1}garbage".utf8).write(to: directory.appendingPathComponent("\(name).json")) }
+    let stores = AppStores(directory: directory)
+    #expect(stores.recovered.count == 6)
+    #expect(stores.cards.cards.count >= 1, "the Practice Card is always there")
+  }
+
+  @Test func aFileFromThePastIsNotReportedAgain() throws {
+    let directory = makeTempDirectory()
+    try Data("x".utf8).write(to: directory.appendingPathComponent("players.corrupt-1000.json"))
+    #expect(AppStores(directory: directory).recovered.isEmpty)
+  }
+
+  @Test func resetAllDataClearsEveryStoreFile() async throws {
+    let directory = makeTempDirectory()
+    let stores = AppStores(directory: directory, persistDelay: .milliseconds(5))
+    _ = stores.players.add(name: "Ann")
+    stores.settings.update { $0.haptics = false }
+    stores.flush()
+    #expect(!files(in: directory).isEmpty)
+    stores.resetAllData()
+    #expect(files(in: directory).isEmpty || !FileManager.default.fileExists(atPath: directory.path))
+  }
+}

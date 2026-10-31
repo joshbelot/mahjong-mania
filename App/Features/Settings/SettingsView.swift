@@ -90,7 +90,7 @@ struct SettingsView: View {
       .pickerStyle(.segmented)
       .accessibilityIdentifier("settings.assist")
     } header: {
-      Text("Help")
+      Text("Help").foregroundStyle(theme.textMuted)
     } footer: {
       Text(
         "Off hides the Hand Helper. Peek shows help only when you ask. Coach shows suggestions and tips automatically."
@@ -100,7 +100,7 @@ struct SettingsView: View {
   }
 
   private var appearanceSection: some View {
-    Section("Appearance and feel") {
+    Section {
       Picker("Theme", selection: store.binding(\.theme)) {
         ForEach(AppTheme.allCases, id: \.self) { Text($0.title).tag($0) }
       }
@@ -117,6 +117,8 @@ struct SettingsView: View {
         .accessibilityIdentifier("settings.sound")
       Toggle("Keep screen awake during games", isOn: store.binding(\.keepAwake))
         .accessibilityIdentifier("settings.keepAwake")
+    } header: {
+      Text("Appearance and feel").foregroundStyle(theme.textMuted)
     }
     .listRowBackground(theme.surface)
   }
@@ -135,15 +137,15 @@ struct SettingsView: View {
       }
       .accessibilityIdentifier("settings.houseRules")
     } header: {
-      Text("Rules")
+      Text("Rules").foregroundStyle(theme.textMuted)
     } footer: {
-      Text("The rule book new game nights start with, and the one the Helper follows. Each game night keeps its own copy.")
+      Text("The rule book new game nights start with, and the one the Helper follows. Each game night keeps its own copy.").foregroundStyle(theme.textMuted)
     }
     .listRowBackground(theme.surface)
   }
 
   private var moneySection: some View {
-    Section("Money") {
+    Section {
       Toggle("Track money", isOn: store.binding(\.defaultRules.money.enabled))
         .accessibilityIdentifier("settings.money")
       Stepper(
@@ -158,15 +160,19 @@ struct SettingsView: View {
           .textInputAutocapitalization(.never)
           .autocorrectionDisabled()
       }
+    } header: {
+      Text("Money").foregroundStyle(theme.textMuted)
     }
     .listRowBackground(theme.surface)
   }
 
   private var helperSection: some View {
-    Section("Tiles") {
+    Section {
       Picker("Tile sort", selection: store.binding(\.tileSort)) {
         ForEach(TileSort.allCases, id: \.self) { Text($0.title).tag($0) }
       }
+    } header: {
+      Text("Tiles").foregroundStyle(theme.textMuted)
     }
     .listRowBackground(theme.surface)
   }
@@ -189,9 +195,9 @@ struct SettingsView: View {
       Button("Reset practice progress", role: .destructive) { confirmPracticeReset = true }
         .accessibilityIdentifier("settings.practice.reset")
     } header: {
-      Text("Practice")
+      Text("Practice").foregroundStyle(theme.textMuted)
     } footer: {
-      Text("A day counts when you finish this many lessons, reviews, checkpoints, the Daily Deal or a Speed Round (the last two count as one).")
+      Text("A day counts when you finish this many lessons, reviews, checkpoints, the Daily Deal or a Speed Round (the last two count as one).").foregroundStyle(theme.textMuted)
     }
     .listRowBackground(theme.surface)
   }
@@ -208,7 +214,7 @@ struct SettingsView: View {
         .font(Typography.small)
         .foregroundStyle(theme.textMuted)
     } header: {
-      Text("About")
+      Text("About").foregroundStyle(theme.textMuted)
     }
     .listRowBackground(theme.surface)
   }

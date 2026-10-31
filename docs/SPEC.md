@@ -1850,8 +1850,8 @@ Same rules as §18.12. Each UI phase: look at the changed screens in the simulat
 - [x] UI tests: open the cheat sheet mid-lesson and continue; a single-choice answer commits on tap; Today's Deal from the path; Speed Round shows 13 tiles.
 
 #### Phase 30: Bug squash (19.4)
-- [ ] All seven steps of §19.4 done; the 1.3 bug log filled in `docs/PROGRESS.md`; a test for every fix; zero runtime warnings in the UI suite's console.
-- [ ] Known issues listed.
+- [x] All seven steps of §19.4 done; the 1.3 bug log filled in `docs/PROGRESS.md`; a test for every fix; zero runtime warnings in the UI suite's console.
+- [x] Known issues listed.
 
 #### Phase 31: Compliance in the app and the website (19.5, 19.6)
 - [ ] Money wording, Privacy Policy and Support links in About, privacy manifest re-audited, placeholder search clean.
