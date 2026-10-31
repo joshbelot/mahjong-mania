@@ -27,7 +27,7 @@ Plan: `docs/SPEC.md` §19 (first App Store release). v1.2 build 4 is on TestFlig
 | 28 Harder, fairer questions | merged | [#44](https://github.com/joshbelot/mahjong-mania/pull/44) |
 | 29 Cheat sheet and practice polish | merged | [#45](https://github.com/joshbelot/mahjong-mania/pull/45) |
 | 30 Bug squash | merged | [#46](https://github.com/joshbelot/mahjong-mania/pull/46) |
-| 31 Compliance in the app and the website | not started | |
+| 31 Compliance in the app and the website | in PR | claude/app-store-compliance |
 | 32 App Store listing package | not started | |
 | 33 1.3 QA and TestFlight upload | not started | |
 
