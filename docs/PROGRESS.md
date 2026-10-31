@@ -26,7 +26,7 @@ Plan: `docs/SPEC.md` §19 (first App Store release). v1.2 build 4 is on TestFlig
 |---|---|---|
 | 28 Harder, fairer questions | merged | [#44](https://github.com/joshbelot/mahjong-mania/pull/44) |
 | 29 Cheat sheet and practice polish | merged | [#45](https://github.com/joshbelot/mahjong-mania/pull/45) |
-| 30 Bug squash | in PR | claude/bug-squash |
+| 30 Bug squash | merged | [#46](https://github.com/joshbelot/mahjong-mania/pull/46) |
 | 31 Compliance in the app and the website | not started | |
 | 32 App Store listing package | not started | |
 | 33 1.3 QA and TestFlight upload | not started | |
@@ -37,12 +37,12 @@ Plan: `docs/SPEC.md` §19 (first App Store release). v1.2 build 4 is on TestFlig
 |---|---|---|---|---|
 | Practice, Speed Round | A bonus question with number or Yes/No choices showed no buttons | the bonus view drew only text choices | draws every choice type (`testSpeedRoundWithoutTheTimer`) | [#44](https://github.com/joshbelot/mahjong-mania/pull/44) |
 | Practice, free play | Pick-a-Hand free play still waited for Check after commit-on-tap landed | the result was recorded inside the Check handler | recorded when the session reaches feedback (`PracticePolishTests`, `PracticeDealTests`) | [#45](https://github.com/joshbelot/mahjong-mania/pull/45) |
-| Data | A corrupt store file was set aside and the app reset that data without telling the user | the quarantine only logged | an alert names the data that was reset (`CorruptStoreTests`) | PR_PLACEHOLDER |
-| Game, scoreboard | The number of hand 100 and up wrapped ("#20" over "0") | fixed 30 pt width | `fixedSize` with a minimum width (`EdgeCaseSweepTests` checks hand 200) | PR_PLACEHOLDER |
-| Game, scoreboard | A 60-character name at the largest text size filled the whole screen | no line limit at accessibility sizes | at most 4 lines (`EdgeCaseSweepTests`, AX5) | PR_PLACEHOLDER |
-| Practice, path | Locked node titles failed the contrast audit (about 2.5:1) | `textFaint` used for text | `textMuted` (`ContrastTests`) | PR_PLACEHOLDER |
-| Settings | Section headers and footers were grey on cream and failed the contrast audit | system default colours on a custom background | `textMuted` | PR_PLACEHOLDER |
-| Cards, QR | A pasted link could carry a zlib bomb (80 MB from a few KB) | no size limit on incoming links | links over 20,000 characters and cards over 500,000 bytes are refused (`CardQRFuzzTests`); found by reading, hardening | PR_PLACEHOLDER |
+| Data | A corrupt store file was set aside and the app reset that data without telling the user | the quarantine only logged | an alert names the data that was reset (`CorruptStoreTests`) | [#46](https://github.com/joshbelot/mahjong-mania/pull/46) |
+| Game, scoreboard | The number of hand 100 and up wrapped ("#20" over "0") | fixed 30 pt width | `fixedSize` with a minimum width (`EdgeCaseSweepTests` checks hand 200) | [#46](https://github.com/joshbelot/mahjong-mania/pull/46) |
+| Game, scoreboard | A 60-character name at the largest text size filled the whole screen | no line limit at accessibility sizes | at most 4 lines (`EdgeCaseSweepTests`, AX5) | [#46](https://github.com/joshbelot/mahjong-mania/pull/46) |
+| Practice, path | Locked node titles failed the contrast audit (about 2.5:1) | `textFaint` used for text | `textMuted` (`ContrastTests`) | [#46](https://github.com/joshbelot/mahjong-mania/pull/46) |
+| Settings | Section headers and footers were grey on cream and failed the contrast audit | system default colours on a custom background | `textMuted` | [#46](https://github.com/joshbelot/mahjong-mania/pull/46) |
+| Cards, QR | A pasted link could carry a zlib bomb (80 MB from a few KB) | no size limit on incoming links | links over 20,000 characters and cards over 500,000 bytes are refused (`CardQRFuzzTests`); found by reading, hardening | [#46](https://github.com/joshbelot/mahjong-mania/pull/46) |
 
 Checked and found no bug (each has a test that stays): parser and card import fuzz (10,000 random lines, 10,000 random files, hostile long input); the QR decoder fuzz (10,000 random strings, 10,000 random payloads); every store file corrupt (alone and all six together); a 1.1 settings file and a 1.2 `practice.json` load with the same totals; Reset all data; atomic saves leave no temporary file; 3- and 4-player sessions of 40 random hands stay balanced to zero and settle up clears everyone; a 200-hand session totals twenty times in well under a second; blanks switched on mid-session change nothing; an empty card, and a rack of blanks and jokers, never crash the engine or Practice; changing the daily goal on a day already met; a time-zone change between two lessons; a Daily Deal that finishes after midnight. No `try!`, `as!`, `fatalError`, `precondition` or `print` in app or core; the few `[0]` are previews and the Debug gallery.
 
