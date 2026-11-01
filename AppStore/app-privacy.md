@@ -3,7 +3,7 @@
 App Store Connect, App Privacy.
 
 1. "Do you or your third-party partners collect data from this app?" **No**.
-2. That is the only question. The label then reads **Data Not Collected**.
+2. For the current questionnaire, Apple says no further collection questions are needed; confirm the resulting **Data Not Collected** label and assess any new questions honestly.
 3. Privacy Policy URL: `https://joshbelot.github.io/mahjong-mania/privacy.html`
 
 Why this is true (for your own check):

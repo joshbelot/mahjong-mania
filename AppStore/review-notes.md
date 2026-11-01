@@ -23,5 +23,5 @@ Privacy: no data is collected. There are no accounts, analytics, ads or third-pa
 
 Content: the built-in Practice Card contains original hands. The app does not include any other card. The About screen says the app is independent and not affiliated with the National Mah Jongg League.
 
-Age rating: 4+. There is no user-generated content shared with others, no chat, no web access and no social features.
+Age rating: 4+ is expected, subject to Apple’s assessment. Players can share their own card text or QR code with another person; there is no broad distribution feature, chat, in-app web browsing or social feed.
 ```

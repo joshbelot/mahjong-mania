@@ -1,7 +1,7 @@
 #!/bin/zsh
 # Makes the App Store screenshots (SPEC §19.7): AppStore/screenshots/6.9/*.png at 1320 x 2868 on the
-# iPhone 17 Pro Max simulator, light mode, 9:41, full battery. Also writes a 1284 x 2778 set (6.5 inch)
-# by scaling. Run from the repository root. Needs Xcode, XcodeGen and `sips`.
+# iPhone 17 Pro Max simulator, light mode, 9:41, full battery.
+# Run from the repository root. Needs Xcode and XcodeGen.
 set -euo pipefail
 cd "${0:A:h}/.."
 UDID=$(xcrun simctl list devices available | grep "iPhone 17 Pro Max" | head -1 | sed -E 's/.*\(([0-9A-F-]{36})\).*/\1/')
@@ -16,9 +16,17 @@ xcrun simctl status_bar "$UDID" override --time 9:41 --batteryState discharging 
 trap 'xcrun simctl status_bar "$UDID" clear' EXIT
 TEST_RUNNER_SCREENSHOT_DIR="$OUT" xcodebuild test -project MahjongMania.xcodeproj -scheme MahjongMania \
   -destination "id=$UDID" -only-testing:MahjongManiaUITests/AppStoreScreenshotTests CODE_SIGNING_ALLOWED=NO
-OUT65="$PWD/AppStore/screenshots/6.5"
-rm -rf "$OUT65"; mkdir -p "$OUT65"
-for f in "$OUT"/*.png; do
-  sips -z 2778 1284 "$f" --out "$OUT65/$(basename "$f")" >/dev/null
-done
-sips -g pixelWidth -g pixelHeight "$OUT"/*.png "$OUT65"/*.png | grep -E "png|pixel"
+python3 - "$OUT" <<'PYCODE'
+import pathlib, struct, sys
+root = pathlib.Path(sys.argv[1])
+expected = {f"{i:02d}-{name}.png" for i, name in enumerate(
+    ["practice-path", "lesson-feedback", "three-stars", "helper", "scoreboard", "settle-up", "cards", "house-rules"], 1)}
+actual = {p.name for p in root.glob("*.png")}
+if actual != expected:
+    sys.exit(f"Screenshot set mismatch: missing {sorted(expected - actual)}, unexpected {sorted(actual - expected)}")
+for path in sorted(root.glob("*.png")):
+    data = path.read_bytes()[:24]
+    if data[:8] != b"\x89PNG\r\n\x1a\n" or len(data) < 24 or struct.unpack(">II", data[16:24]) != (1320, 2868):
+        sys.exit(f"Invalid screenshot dimensions or PNG: {path.name}")
+    print(f"{path.name}: 1320 x 2868")
+PYCODE

@@ -1,8 +1,6 @@
 # Age rating questionnaire (App Store Connect)
 
-App Information, Age Rating, Edit. Answer exactly as below. The expected result is **4+**.
-
-If a question below is not listed, the answer is **None** or **No**.
+App Information, Age Rating, Edit. The answers below reflect the current app and are expected to yield **4+**; Apple determines the actual rating. Assess any new or unfamiliar question honestly against the current app and Apple’s definitions. See [Apple’s age-rating categories](https://developer.apple.com/help/app-store-connect/reference/app-information/age-ratings-values-and-definitions/) and [questionnaire instructions](https://developer.apple.com/help/app-store-connect/manage-app-information/set-an-app-age-rating/).
 
 | Question | Answer |
 |---|---|
@@ -20,7 +18,7 @@ If a question below is not listed, the answer is **None** or **No**.
 | Contests | None |
 | Gambling (real money) | No |
 | Unrestricted web access | No |
-| User-generated content | No |
+| User-generated content | No broad distribution in the app. Users can share their own card text or QR code with another person; review Apple’s definition when answering. |
 | Messaging or chat | No |
 | Advertising | No |
 | Parental controls | No |

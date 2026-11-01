@@ -108,7 +108,9 @@ struct HouseRulesView: View {
   private var moneyCard: some View {
     SectionCard("Money") {
       VStack(spacing: 0) {
-        GameToggleRow(title: "Play for money", isOn: $rules.money.enabled, identifier: "rules.money")
+        GameToggleRow(
+          title: "Show amounts in money", subtitle: "The app only does the maths. No money is handled here.",
+          isOn: $rules.money.enabled, identifier: "rules.money")
         if rules.money.enabled {
           Divider().overlay(theme.border)
           StepperField("Cents per point", value: $rules.money.centsPerPoint, range: 1...100, unit: "\u{00A2}")

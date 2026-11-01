@@ -156,6 +156,11 @@ final class CardsTests: XCTestCase {
 
     element(app, "cards.import").tap()
     fillImportText(app)
+    waitFor(app, "import.text").tap()
+    let importDone = waitFor(app, "import.keyboardDone")
+    XCTAssertTrue(importDone.isHittable, "The import keyboard must have a usable Done button")
+    attach("cards-import-keyboard-\(scheme)")
+    importDone.tap()
 
     let name = waitFor(app, "import.name")
     name.tap()
@@ -189,7 +194,12 @@ final class CardsTests: XCTestCase {
     attach("cards-editor-valid-\(scheme)")
 
     notation.tap()
-    appendToNotation(app, notation, keys: ["9", "9"])
+    let quickKey = waitFor(app, "key.F")
+    XCTAssertTrue(quickKey.isHittable, "Notation keys must be usable above the keyboard")
+    XCTAssertTrue(waitFor(app, "editor.keyboardDone").isHittable)
+    attach("cards-editor-keyboard-\(scheme)")
+    quickKey.tap()
+    quickKey.tap()
     waitFor(app, "editor.error")
     XCTAssertFalse(button(app, "editor.save").isEnabled, "Save must be disabled while there are errors")
     attach("cards-editor-error-\(scheme)")

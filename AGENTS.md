@@ -9,6 +9,10 @@ This is a **native iOS app** (Swift 6 + SwiftUI, iOS 17+). There is no Expo, Rea
 - v1.0–v1.2 are done and on TestFlight. The current work is **version 1.3: `docs/SPEC.md` §19** (harder practice questions, a tile cheat sheet, practice polish, a bug squash, App Store compliance and the listing package), phases 28–33 in order, one PR per phase, ticking the §19.9 boxes and the table in `docs/PROGRESS.md` in the same PR. When all are merged, ship 1.3 to TestFlight as §19.9 Phase 33 says. Never press Submit for Review; that is the owner's step.
 - Releases go to TestFlight via `tools/upload_testflight.sh` (see `RELEASING.md`). Never print, log or commit signing credentials (`ASC_*`, `DEVELOPMENT_TEAM`, `.p8` files).
 
+## Approved waves
+
+Approved waves are planned and specified first, then executed one phase per PR in order. The owner authorizes commits, pushes, PRs, merges, and an automatic TestFlight release after all phases and gates pass. Physical-device checks and Submit for Review remain the owner’s steps.
+
 ## Working on the owner's Mac (stabilisation)
 
 The app was written entirely in a Linux sandbox with no Swift toolchain; until 2026-10-13 it had only ever been compiled and run by CI, and nobody had looked at it running. This Mac has Xcode 27, Swift 6.4, XcodeGen and iPhone 17-family simulators, so verify locally instead of waiting for CI.

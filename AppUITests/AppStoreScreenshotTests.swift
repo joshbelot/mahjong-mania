@@ -20,7 +20,7 @@ final class AppStoreScreenshotTests: XCTestCase {
 
   private func element(_ app: XCUIApplication, _ id: String) -> XCUIElement { app.descendants(matching: .any)[id].firstMatch }
 
-  private func shot(_ name: String) {
+  private func shot(_ name: String) throws {
     Thread.sleep(forTimeInterval: 0.8)
     let screenshot = XCUIScreen.main.screenshot()
     let attachment = XCTAttachment(screenshot: screenshot)
@@ -28,19 +28,19 @@ final class AppStoreScreenshotTests: XCTestCase {
     attachment.lifetime = .keepAlways
     add(attachment)
     if let outputDirectory {
-      try? FileManager.default.createDirectory(atPath: outputDirectory, withIntermediateDirectories: true)
-      try? screenshot.pngRepresentation.write(to: URL(fileURLWithPath: outputDirectory).appendingPathComponent("\(name).png"))
+      try FileManager.default.createDirectory(atPath: outputDirectory, withIntermediateDirectories: true)
+      try screenshot.pngRepresentation.write(to: URL(fileURLWithPath: outputDirectory).appendingPathComponent("\(name).png"))
     }
   }
 
-  func testPracticePathLessonAndPerfectFinish() {
+  func testPracticePathLessonAndPerfectFinish() throws {
     let app = launch("practice")
     XCTAssertTrue(element(app, "path.node.u2l2").waitForExistence(timeout: 20))
     Thread.sleep(forTimeInterval: 1)
     app.swipeDown()
     app.swipeDown()
     Thread.sleep(forTimeInterval: 0.6)
-    shot("01-practice-path")
+    try shot("01-practice-path")
     while !element(app, "path.node.u2l2").isHittable { app.swipeUp() }
     element(app, "path.node.u2l2").tap()
     XCTAssertTrue(element(app, "lesson.start").waitForExistence(timeout: 5))
@@ -54,35 +54,40 @@ final class AppStoreScreenshotTests: XCTestCase {
       XCTAssertTrue(correct.waitForExistence(timeout: 10), "a right choice for question \(question)")
       correct.tap()
       XCTAssertTrue(element(app, "lesson.feedback").waitForExistence(timeout: 10))
-      if question == 0 { shot("02-lesson-feedback") }
+      if question == 0 { try shot("02-lesson-feedback") }
       element(app, "lesson.continue").tap()
     }
     XCTAssertTrue(element(app, "complete.title").waitForExistence(timeout: 10))
     Thread.sleep(forTimeInterval: 1.2)
-    shot("03-three-stars")
+    try shot("03-three-stars")
   }
 
-  func testHelperWithSuggestions() {
+  func testHelperWithSuggestions() throws {
     let app = launch(
       "helper",
-      ["-UITestHelperRack", "1C,3C,6C,2B,5B,5B,8B,3D,5D,9D,N,E,J", "-UITestHelperMode", "playing", "-UITestAssist", "peek"])
+      ["-UITestHelperRack", "1C,3C,6C,2B,5B,5B,8B,3D,4D,5D,9D,N,E,J", "-UITestHelperMode", "playing", "-UITestAssist", "coach"])
     XCTAssertTrue(app.navigationBars.firstMatch.waitForExistence(timeout: 20))
-    let reveal = element(app, "helper.results.reveal")
-    XCTAssertTrue(reveal.waitForExistence(timeout: 10))
-    reveal.tap()
-    Thread.sleep(forTimeInterval: 1.0)
-    // Fold the tile picker away so the closest hands have the screen.
-    app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.64)).tap()
-    Thread.sleep(forTimeInterval: 1.0)
-    shot("04-helper")
+    let toggle = element(app, "helper.keyboard.toggle")
+    XCTAssertTrue(toggle.waitForExistence(timeout: 10))
+    toggle.tap()
+    XCTAssertTrue(element(app, "discard.row.0").waitForExistence(timeout: 10), "Expected discard advice for a full rack")
+    let result = element(app, "result.0")
+    var swipes = 0
+    while !result.isHittable && swipes < 8 {
+      app.swipeUp()
+      swipes += 1
+    }
+    XCTAssertTrue(result.exists && result.isHittable, "Expected a closest-hand result in view")
+    XCTAssertFalse(app.staticTexts["Discard suggestions need your full 14 tiles: 13 plus the one you just drew."].exists)
+    try shot("04-helper")
   }
 
-  func testGameNightScoreboardAndSettleUp() {
+  func testGameNightScoreboardAndSettleUp() throws {
     let app = launch("game")
     XCTAssertTrue(element(app, "game.resume").waitForExistence(timeout: 20))
     element(app, "game.resume").tap()
     XCTAssertTrue(element(app, "score.Alex").waitForExistence(timeout: 10))
-    shot("05-scoreboard")
+    try shot("05-scoreboard")
     app.navigationBars.buttons.firstMatch.tap()
     XCTAssertTrue(element(app, "game.history").waitForExistence(timeout: 10))
     element(app, "game.history").tap()
@@ -94,15 +99,17 @@ final class AppStoreScreenshotTests: XCTestCase {
     element(app, "menu.summary").tap()
     XCTAssertTrue(element(app, "settle.line.0").waitForExistence(timeout: 10) || element(app, "settle.none").exists)
     app.swipeUp()
-    shot("06-settle-up")
+    try shot("06-settle-up")
   }
 
-  func testCardsWithPatternAndHouseRules() {
+  func testCardsWithPatternAndHouseRules() throws {
     let app = launch("cards")
     XCTAssertTrue(element(app, "cards.row.practice-v1").waitForExistence(timeout: 20))
+    let cardRows = app.descendants(matching: .any).matching(NSPredicate(format: "identifier BEGINSWITH 'cards.row.'"))
+    XCTAssertEqual(cardRows.count, 1, "The screenshot demo must contain only the original Practice Card")
     element(app, "cards.row.practice-v1").tap()
     XCTAssertTrue(element(app, "line.row.0").waitForExistence(timeout: 10))
-    shot("07-cards")
+    try shot("07-cards")
     app.terminate()
 
     let rules = launch("game")
@@ -111,6 +118,6 @@ final class AppStoreScreenshotTests: XCTestCase {
     XCTAssertTrue(element(rules, "settings.houseRules").waitForExistence(timeout: 10))
     element(rules, "settings.houseRules").tap()
     Thread.sleep(forTimeInterval: 1)
-    shot("08-house-rules")
+    try shot("08-house-rules")
   }
 }
