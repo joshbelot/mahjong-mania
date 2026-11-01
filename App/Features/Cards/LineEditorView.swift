@@ -56,12 +56,18 @@ struct LineEditorView: View {
           .disabled(!model.canSave)
           .accessibilityIdentifier("editor.save")
       }
-      ToolbarItemGroup(placement: .keyboard) {
-        if focus == .notation {
-          keyRow
+    }
+    .safeAreaInset(edge: .bottom, spacing: 0) {
+      if focus != nil {
+        HStack(spacing: Spacing.sm) {
+          if focus == .notation { keyRow }
+          Spacer(minLength: 0)
+          Button("Done") { focus = nil }
+            .accessibilityIdentifier("editor.keyboardDone")
         }
-        Button("Done") { focus = nil }
-          .accessibilityIdentifier("editor.keyboardDone")
+        .padding(.horizontal, Spacing.md)
+        .frame(minHeight: 44)
+        .background(theme.surface)
       }
     }
     .interactiveDismissDisabled(model != original)

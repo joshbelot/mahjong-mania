@@ -27,7 +27,7 @@ Plan: `docs/SPEC.md` §19 (first App Store release). v1.2 build 4 is on TestFlig
 | 28 Harder, fairer questions | merged | [#44](https://github.com/joshbelot/mahjong-mania/pull/44) |
 | 29 Cheat sheet and practice polish | merged | [#45](https://github.com/joshbelot/mahjong-mania/pull/45) |
 | 30 Bug squash | merged | [#46](https://github.com/joshbelot/mahjong-mania/pull/46) |
-| 31 Compliance in the app and the website | not started | |
+| 31 Compliance in the app and the website | in PR | claude/app-store-compliance |
 | 32 App Store listing package | not started | |
 | 33 1.3 QA and TestFlight upload | not started | |
 
@@ -183,3 +183,8 @@ Answered by the owner ("choose by best practice and consistency") and done in th
 Line identity across card edits was fixed too (line IDs are `L_<hash>`, see DECISIONS). Remaining limitation: editing a hand's own text gives it a new ID, so its win count starts again.
 
 **Environment notes:** phases 0–12 were written in a sandbox with no Swift toolchain and verified only by CI (see DECISIONS.md). CI has been disabled by the owner since 2026-10-13; everything is now verified locally on the owner's Mac, see `AGENTS.md`. The last green CI run on `main` was on `57d6397` (2026-10-09); screenshots from that period are on the `ci-screenshots` branch.
+
+
+### Phase 31 local gate (2026-10-31)
+
+`RESULT_BUNDLE=/private/tmp/terra-p31-final.xcresult tools/test.sh` passed: 333 core tests, 299 app unit tests and 121 UI tests on iPhone Air (iOS 26.5); 420 Xcode test runs, no retries, failures, skipped tests, compiler warnings or runtime warnings. Xcode emitted one App Intents metadata-extraction notice. The log and result bundle are in `/private/tmp/terra-p31-final.log` and `/private/tmp/terra-p31-final.xcresult`. Focused iPhone 17 Pro Max tests and screenshots checked the money wording and About links in light, dark and AX5, both live links in Safari, and the card keyboard controls. The AX5 game screens require scrolling to read the complete text.

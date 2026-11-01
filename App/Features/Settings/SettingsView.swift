@@ -146,7 +146,7 @@ struct SettingsView: View {
 
   private var moneySection: some View {
     Section {
-      Toggle("Track money", isOn: store.binding(\.defaultRules.money.enabled))
+      Toggle("Show amounts in money", isOn: store.binding(\.defaultRules.money.enabled))
         .accessibilityIdentifier("settings.money")
       Stepper(
         "\(store.settings.defaultRules.money.centsPerPoint)¢ per point",
@@ -162,6 +162,8 @@ struct SettingsView: View {
       }
     } header: {
       Text("Money").foregroundStyle(theme.textMuted)
+    } footer: {
+      Text("The app only does the maths. No money is handled here.").foregroundStyle(theme.textMuted)
     }
     .listRowBackground(theme.surface)
   }
@@ -213,6 +215,14 @@ struct SettingsView: View {
       Text("Everything stays on your phone: no accounts, no tracking, no network.")
         .font(Typography.small)
         .foregroundStyle(theme.textMuted)
+      Link(destination: AppLinks.privacy) {
+        Label("Privacy Policy", systemImage: "hand.raised")
+      }
+      .accessibilityIdentifier("settings.privacy")
+      Link(destination: AppLinks.support) {
+        Label("Support", systemImage: "questionmark.circle")
+      }
+      .accessibilityIdentifier("settings.support")
     } header: {
       Text("About").foregroundStyle(theme.textMuted)
     }

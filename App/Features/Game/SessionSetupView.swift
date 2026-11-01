@@ -257,7 +257,7 @@ struct SessionSetupView: View {
     SectionCard("Money") {
       VStack(spacing: 0) {
         GameToggleRow(
-          title: "Play for money", subtitle: "Settle up at the end of the night.",
+          title: "Show amounts in money", subtitle: "The app only does the maths. No money is handled here.",
           isOn: $rules.money.enabled, identifier: "setup.money")
         if rules.money.enabled {
           Divider().overlay(theme.border)

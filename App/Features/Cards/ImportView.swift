@@ -54,9 +54,17 @@ struct ImportView: View {
           Button("Cancel") { dismiss() }
             .accessibilityIdentifier("import.cancel")
         }
-        ToolbarItem(placement: .keyboard) {
-          Button("Done") { textFocused = false }
-            .accessibilityIdentifier("import.keyboardDone")
+      }
+      .safeAreaInset(edge: .bottom, spacing: 0) {
+        if textFocused {
+          HStack {
+            Spacer()
+            Button("Done") { textFocused = false }
+              .accessibilityIdentifier("import.keyboardDone")
+          }
+          .padding(.horizontal, Spacing.lg)
+          .frame(minHeight: 44)
+          .background(theme.surface)
         }
       }
       .onChange(of: text) { _, _ in

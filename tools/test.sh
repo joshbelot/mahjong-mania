@@ -21,3 +21,5 @@ xcodebuild test \
   -resultBundlePath "$RESULT_BUNDLE" \
   -retry-tests-on-failure \
   CODE_SIGNING_ALLOWED=NO
+
+python3 tools/check_runtime_warnings.py "$RESULT_BUNDLE"
