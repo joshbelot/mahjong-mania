@@ -28,7 +28,7 @@ Plan: `docs/SPEC.md` §19 (first App Store release). v1.2 build 4 is on TestFlig
 | 29 Cheat sheet and practice polish | merged | [#45](https://github.com/joshbelot/mahjong-mania/pull/45) |
 | 30 Bug squash | merged | [#46](https://github.com/joshbelot/mahjong-mania/pull/46) |
 | 31 Compliance in the app and the website | merged | [#47](https://github.com/joshbelot/mahjong-mania/pull/47) |
-| 32 App Store listing package | in progress | claude/app-store-listing |
+| 32 App Store listing package | in PR | claude/app-store-listing |
 | 33 1.3 QA and TestFlight upload | not started | |
 
 ### 1.3 bug log
@@ -193,3 +193,5 @@ Line identity across card edits was fixed too (line IDs are `L_<hash>`, see DECI
 ### Phase 32 listing verification (2026-10-31)
 
 `python3 tools/check_listing.py`: name 24/30, subtitle 27/30, promotional text 161/170, description 2126/4000, keywords 94/100, What's New 284/4000; all limits OK. `tools/app_store_screenshots.sh` passed on iPhone 17 Pro Max (iOS 26.5): eight 1320 × 2868 PNGs, inspected individually. The app's full-screen completion view hides the status bar; the other seven show the 9:41 and full-battery override. The optional scaled 6.5-inch set was omitted. Listing answers refer to Apple's current definitions and the owner must assess any new questions.
+
+`RESULT_BUNDLE=/private/tmp/terra-p32-final.xcresult tools/test.sh` passed on iPhone Air / iOS 26.5: 333 core tests, 299 app unit tests and 125 UI tests; 424 Xcode test runs, no retries, failures, skipped tests, compiler warnings or runtime warnings. Log: `/private/tmp/terra-p32-final.log`; result bundle: `/private/tmp/terra-p32-final.xcresult`.
