@@ -361,6 +361,10 @@ final class HelperTests: XCTestCase {
     XCTAssertTrue(seenLabel.contains("2 seen"), "Got '\(seenLabel)'")
     attach("helper-playing-\(scheme(dark))")
 
+    // The exposure can be reported hittable while behind the navigation bar after scrolling
+    // through the seen-tile picker. Fold the picker and bring the exposed-set row into view.
+    tap(app, "seen.toggle")
+    app.swipeDown()
     tap(app, "helper.exposures.exposure.0")
     XCTAssertTrue(waitForGone(element(app, "helper.exposures.exposure.0")), "Tapping an exposure removes it")
   }
