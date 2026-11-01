@@ -29,7 +29,9 @@ Plan: `docs/SPEC.md` §19 (first App Store release). v1.2 build 4 is on TestFlig
 | 30 Bug squash | merged | [#46](https://github.com/joshbelot/mahjong-mania/pull/46) |
 | 31 Compliance in the app and the website | merged | [#47](https://github.com/joshbelot/mahjong-mania/pull/47) |
 | 32 App Store listing package | merged | [#48](https://github.com/joshbelot/mahjong-mania/pull/48) |
-| 33 1.3 QA and TestFlight upload | in progress | claude/release-1-3 |
+| 33 1.3 QA and TestFlight upload | merged; 1.3 (5) VALID in App Store Connect | [#49](https://github.com/joshbelot/mahjong-mania/pull/49) |
+
+On 2026-11-01, the clean-main dry run exported 1.3 (4), `altool --validate-app` succeeded, and the real release uploaded 1.3 (5). App Store Connect reports build 5 VALID. The build bump is commit `0be416c`. The owner still needs to install and test on a physical iPhone and complete the App Store checklist and submission.
 
 ### 1.3 bug log
 
