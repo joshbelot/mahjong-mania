@@ -1,3 +1,15 @@
+# Release handoff — Mahjong Mania v1.3
+
+_Status: release preparation is in progress; the version and build are not shipped until App Store Connect reports the uploaded build VALID. See `docs/PROGRESS.md` for the verified outcome._
+
+1.3 adds harder tile-fact practice, the Tiles cheat sheet, commit-on-tap choices, Today's Deal on the path, the Speed Round rack, Sunny and celebrations, a bug squash, and App Store compliance links. The complete listing package and owner submission steps are in [`AppStore/checklist.md`](../AppStore/checklist.md).
+
+The owner still needs to install the processed TestFlight build on a physical iPhone and check haptics, sound, real-device speed, manual VoiceOver and QR scanning. The owner chooses availability, trader status, private App Review contact details and submission timing, and alone submits the app for review. Do not submit automatically.
+
+The sections below are historical release records. Their CI and one-time setup claims describe their original dates; CI is now disabled and local `tools/test.sh` is the gate. Current release instructions are in `RELEASING.md`.
+
+---
+
 # Release handoff — Mahjong Mania v1.2
 
 _Status: all 1.2 phases (21–27) are merged and the 1.2 upload was made by the agent from a clean `main` with the owner's authorisation (SPEC §18.11). The build number and processing state are in `docs/PROGRESS.md`._

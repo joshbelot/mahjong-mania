@@ -27,7 +27,8 @@ One command ships a build, with no Xcode signing UI. You do the one-time setup b
 From a clean, up-to-date `main` checkout, in a terminal:
 
 ```sh
-zsh -ic 'tools/upload_testflight.sh --dry-run'   # first time: archives and exports, uploads nothing
+zsh -ic 'tools/upload_testflight.sh --dry-run --ipa-output /private/tmp/mahjong-validation.ipa'
+zsh -ic 'xcrun altool --validate-app -f /private/tmp/mahjong-validation.ipa -t ios --apiKey "$ASC_KEY_ID" --apiIssuer "$ASC_ISSUER_ID"'
 zsh -ic 'tools/upload_testflight.sh'             # the real upload
 ```
 
@@ -39,7 +40,7 @@ zsh -ic 'tools/upload_testflight.sh'             # the real upload
 4. increases the build number (`tools/bump_build.sh`), archives, exports and uploads;
 5. commits the bump to `main` (`Bump build to N [skip ci]`). If `main` is protected it pushes `release/build-N` instead; open and merge a PR from it before the next release.
 
-A dry run does steps 1–3 and the archive/export, leaves the build number unchanged and pushes nothing. Never run the script with `set -x`, `env` or `printenv` around it: those would print your credentials.
+A dry run does steps 1–3 and the archive/export, leaves the build number unchanged and pushes nothing. `--ipa-output` is optional, only valid with `--dry-run`, and copies the single exported IPA to a new absolute path outside the checkout before cleanup. Its parent must already exist and the destination must not exist. Use a fresh path in a private temporary directory and validate that IPA before the real upload; delete the signed artifact when it is no longer needed. Without the option, the temporary export is removed as before. Never run the script with `set -x`, `env` or `printenv` around it: those would print your credentials.
 
 ## A new version (not just a new build)
 

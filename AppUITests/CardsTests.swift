@@ -121,7 +121,8 @@ final class CardsTests: XCTestCase {
   }
 
   private func openCards(_ app: XCUIApplication) {
-    let tab = app.tabBars.buttons["Cards"]
+    let phoneTab = app.tabBars.buttons["Cards"]
+    let tab = phoneTab.exists ? phoneTab : app.buttons.matching(NSPredicate(format: "label == %@", "Cards")).firstMatch
     XCTAssertTrue(tab.waitForExistence(timeout: 10), "Missing Cards tab")
     tab.tap()
     waitFor(app, "cards.import")
