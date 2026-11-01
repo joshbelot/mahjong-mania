@@ -4,6 +4,7 @@
 set -euo pipefail
 cd "${0:A:h}/.."
 
+python3 tools/test_upload_arguments.py
 swift test --package-path Packages/MahjongCore
 
 command -v xcodegen >/dev/null 2>&1 || { echo "xcodegen not found (brew install xcodegen)" >&2; exit 1; }

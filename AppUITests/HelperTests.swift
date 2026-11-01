@@ -39,7 +39,8 @@ final class HelperTests: XCTestCase {
     if let blanks { app.launchArguments += ["-UITestBlanks", "\(blanks)"] }
     app.launch()
     if openHelper {
-      let tab = app.tabBars.buttons["Helper"]
+      let phoneTab = app.tabBars.buttons["Helper"]
+      let tab = phoneTab.exists ? phoneTab : app.buttons.matching(NSPredicate(format: "label == %@", "Helper")).firstMatch
       XCTAssertTrue(tab.waitForExistence(timeout: 10), "Missing Helper tab")
       tab.tap()
       XCTAssertTrue(app.navigationBars["Helper"].waitForExistence(timeout: 5))

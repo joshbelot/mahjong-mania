@@ -1,20 +1,16 @@
-Thanks for testing Mahjong Mania 1.2! This round turns practice into a game. Please tell me whether it's fun, and where anything felt confusing, too easy or too hard.
+Thanks for testing Mahjong Mania 1.3! Please tell me where Practice, the Helper, or Game Night feels unclear, and whether anything looks wrong at your preferred text size.
 
 What's new
-- A new Practice tab. A path of short lessons (2 to 3 minutes each) takes you from "what is a Bam?" through reading the card, jokers, choosing a hand and the Charleston. Earn stars, XP and levels. Mistakes never stop you: they come back at the end of the lesson and again on later days.
-- "I'm new", "I know the basics" or "I play regularly" at setup sets where your path starts. You can test out of any unit at any time.
-- Daily goal and streak. Pick a goal (1, 2 or 4 lessons a day). Your streak counts your own calendar days, a streak freeze covers a day you miss, and there's no nagging: no notifications at all.
-- The Daily Deal: one hand to choose and three tiles to pass, the same for everyone each day, harder as the week goes on. Share your result as text.
-- Speed Round (after Unit 6): 60 seconds of keep or pass. Prefer no clock? Settings → Practice → "No timer in Speed Round".
-- Free play: the Pick-a-Hand and Charleston drills moved here, with Easy, Normal and Hard, your own card if you like, and "Review mistakes".
-- Badges, a profile with a 12-week calendar and accuracy by skill, and a little celebration when you level up. Sounds can be turned off in Settings.
+- Practice asks harder tile-fact questions, with a Tiles cheat sheet available from Practice, lessons, Helper and Learn.
+- Single-choice answers check on tap. Today's Deal is on the path, and Speed Round shows the rack. Sunny and the unit illustrations bring new celebrations.
+- A bug-squash pass improves data recovery, accessibility and reliability. Settings has Privacy Policy and Support links, and money settings explain that the app only does the maths.
 
 What to try
-1. Start with Practice → Lesson 1. Is the next step always obvious? Did anything take longer than 3 minutes?
-2. Get a question wrong on purpose. Is the explanation clear? Does it come back at the end?
-3. If you already play: test out of a unit from its header and see whether the questions feel fair.
-4. Play the Daily Deal and tap Share.
-5. Turn on a bigger text size, dark mode, or Reduce Motion and look around Practice.
-6. After Unit 6 (or by testing out of it), try the Speed Round.
+1. Start a new Practice lesson, open Tiles, answer a question and continue. Are the questions fair and explanations clear?
+2. Play Today's Deal and try Speed Round after Unit 6. Does the rack make Keep or Pass easier to judge?
+3. Enter a full rack in Helper and inspect the closest hands and discard suggestions. Try Charleston passes too.
+4. Run a game night with four players, record hands, change a house rule and check the settle-up summary.
+5. Duplicate the Practice Card, edit a hand and share or scan its QR code. Open Privacy Policy and Support from Settings.
+6. Try large text, dark mode, Reduce Motion and VoiceOver. Please report haptics, sound and speed on your iPhone.
 
-Known limits: iPhone only, portrait only, no leagues or online play, no reminders. Everything stays on your phone.
+Everything stays on your phone. The app does not take, hold or move money.

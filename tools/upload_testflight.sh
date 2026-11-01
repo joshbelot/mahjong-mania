@@ -10,24 +10,43 @@ set -euo pipefail
 
 usage() {
   cat <<'USAGE'
-Usage: tools/upload_testflight.sh [--dry-run]
+Usage: tools/upload_testflight.sh [--dry-run] [--ipa-output <absolute-path>]
 
   --dry-run   Run tests, archive and export (no upload), leave the build number unchanged,
               commit and push nothing.
+  --ipa-output <absolute-path>
+              With --dry-run, preserve the exported IPA at a new path outside the checkout.
 USAGE
 }
 
 DRY_RUN=0
-for arg in "$@"; do
-  case "$arg" in
-    --dry-run) DRY_RUN=1 ;;
+IPA_OUTPUT=""
+while (( $# )); do
+  case "$1" in
+    --dry-run) DRY_RUN=1; shift ;;
+    --ipa-output)
+      (( $# >= 2 )) || { print -u2 'error: --ipa-output requires a path'; exit 2; }
+      [[ -z "$IPA_OUTPUT" && -n "$2" ]] || { print -u2 'error: --ipa-output requires one non-empty path'; exit 2; }
+      IPA_OUTPUT=$2; shift 2 ;;
     -h|--help) usage; exit 0 ;;
-    *) echo "Unknown argument: $arg" >&2; usage >&2; exit 2 ;;
+    *) echo "Unknown argument: $1" >&2; usage >&2; exit 2 ;;
   esac
 done
 
 REPO_ROOT=${0:A:h:h}
 cd "$REPO_ROOT"
+
+if [[ -n "$IPA_OUTPUT" ]]; then
+  (( DRY_RUN )) || { print -u2 'error: --ipa-output requires --dry-run'; exit 2; }
+  [[ "$IPA_OUTPUT" == /* ]] || { print -u2 'error: --ipa-output must be an absolute path'; exit 2; }
+  [[ ! -e "$IPA_OUTPUT" && ! -L "$IPA_OUTPUT" ]] || { print -u2 'error: --ipa-output destination already exists'; exit 2; }
+  [[ -d "${IPA_OUTPUT:h}" ]] || { print -u2 'error: --ipa-output parent directory does not exist'; exit 2; }
+  command -v python3 >/dev/null 2>&1 || { print -u2 'error: python3 is required for --ipa-output'; exit 2; }
+  output_parent=${IPA_OUTPUT:h:A}
+  [[ "$output_parent" != "$REPO_ROOT" && "$output_parent" != "$REPO_ROOT/"* ]] || {
+    print -u2 'error: --ipa-output must be outside the checkout'; exit 2
+  }
+fi
 
 step() { print -P "%F{green}==>%f $*" }
 fail() { print -P "%F{red}error:%f $*" >&2; exit 1 }
@@ -147,6 +166,26 @@ run_logged build/export.log xcodebuild -exportArchive \
 
 # 8. Record the bump ----------------------------------------------------------------------------------------
 if (( DRY_RUN )); then
+  if [[ -n "$IPA_OUTPUT" ]]; then
+    ipa_files=(build/export/*.ipa(N.))
+    (( ${#ipa_files} == 1 )) || fail "Expected exactly one exported IPA; found ${#ipa_files}."
+    # O_EXCL prevents overwriting a destination created after preflight. Keep signed data private.
+    python3 - "${ipa_files[1]}" "$IPA_OUTPUT" <<'PY'
+import os
+import shutil
+import sys
+
+source, destination = sys.argv[1:]
+fd = os.open(destination, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+try:
+    with os.fdopen(fd, "wb") as output, open(source, "rb") as input_file:
+        shutil.copyfileobj(input_file, output)
+except BaseException:
+    os.unlink(destination)
+    raise
+PY
+    print "Exported IPA preserved at $IPA_OUTPUT"
+  fi
   print "Dry run complete: archive and export succeeded. Nothing was uploaded and the build number is unchanged ($BUILD)."
   exit 0
 fi
