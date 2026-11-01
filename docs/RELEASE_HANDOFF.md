@@ -1,6 +1,6 @@
 # Release handoff — Mahjong Mania v1.3
 
-_Status: release preparation is in progress; the version and build are not shipped until App Store Connect reports the uploaded build VALID. See `docs/PROGRESS.md` for the verified outcome._
+_Status: 1.3 build 5 was uploaded on 2026-11-01 and App Store Connect reports it VALID. App Store review submission is the owner's step._
 
 1.3 adds harder tile-fact practice, the Tiles cheat sheet, commit-on-tap choices, Today's Deal on the path, the Speed Round rack, Sunny and celebrations, a bug squash, and App Store compliance links. The complete listing package and owner submission steps are in [`AppStore/checklist.md`](../AppStore/checklist.md).
 

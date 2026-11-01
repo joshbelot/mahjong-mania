@@ -1863,4 +1863,4 @@ Same rules as §18.12. Each UI phase: look at the changed screens in the simulat
 #### Phase 33: 1.3 QA and release
 - [x] Simulator QA: fresh-install beginner run through Unit 2, experienced test-out, a full game night, Helper, Cards incl. QR, on iPhone and iPad simulators; §13/§17/§18 checks still pass.
 - [x] `MARKETING_VERSION` → "1.3", `TestFlight/WhatToTest.txt`, handoff notes with the owner's App Store steps.
-- [ ] When every 1.3 phase is committed and merged: from a clean, up-to-date `main`, `--dry-run`, `altool --validate-app`, the real upload, and the build processed (VALID) in App Store Connect. The owner has authorised this upload. **Do not submit for review**; that is the owner's step (§19.7).
+- [x] When every 1.3 phase is committed and merged: from a clean, up-to-date `main`, `--dry-run`, `altool --validate-app`, the real upload, and the build processed (VALID) in App Store Connect. The owner has authorised this upload. **Do not submit for review**; that is the owner's step (§19.7).
