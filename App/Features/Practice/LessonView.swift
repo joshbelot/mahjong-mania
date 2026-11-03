@@ -10,6 +10,7 @@ struct LessonView: View {
   @State private var outcome: PlayOutcome?
   @State private var applied = false
   @State private var confirmQuit = false
+  @State private var showNotes = false
   @State private var celebrations: [CelebrationItem] = []
   @State private var celebrationIndex = 0
   @State private var afterCelebrations: (() -> Void)?
@@ -47,6 +48,26 @@ struct LessonView: View {
       Button("Keep going", role: .cancel) {}
     } message: {
       Text("Your progress in it will be lost.")
+    }
+    .sheet(isPresented: $showNotes, onDismiss: { session.closeNotes() }) {
+      NavigationStack {
+        ScrollView {
+          Text(session.teachingText)
+            .font(Typography.body)
+            .foregroundStyle(theme.text)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(Spacing.lg)
+        }
+        .background(theme.bg)
+        .navigationTitle("Lesson notes")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+          ToolbarItem(placement: .confirmationAction) {
+            Button("Done") { showNotes = false }
+              .accessibilityIdentifier("lesson.notes.done")
+          }
+        }
+      }
     }
     .overlay {
       if celebrations.indices.contains(celebrationIndex) {
@@ -129,6 +150,19 @@ struct LessonView: View {
           .accessibilityLabel("\(session.combo) in a row")
           .accessibilityIdentifier("lesson.combo")
       }
+      if session.notesAllowed {
+        Button {
+          session.openNotes()
+          showNotes = true
+        } label: {
+          Image(systemName: "book")
+            .font(.headline)
+            .foregroundStyle(theme.primary)
+            .frame(width: 44, height: 44)
+        }
+        .accessibilityLabel("Lesson notes")
+        .accessibilityIdentifier("lesson.notes")
+      }
       if session.cheatSheetAllowed && session.phase != .intro && session.phase != .finished {
         TilesButton()
       }
@@ -148,6 +182,8 @@ struct LessonView: View {
       }
     }
     .padding(.horizontal, Spacing.sm)
+    // The controls retain accessible labels and 44-point targets; cap symbol scaling so they do not overlap at AX sizes.
+    .dynamicTypeSize(...DynamicTypeSize.large)
   }
 
   // MARK: Content
@@ -215,7 +251,7 @@ struct LessonView: View {
           .titleStyle()
           .foregroundStyle(theme.text)
           .accessibilityAddTraits(.isHeader)
-        Text(session.node.intro)
+        Text(session.teachingText)
           .font(Typography.body)
           .foregroundStyle(theme.text)
           .fixedSize(horizontal: false, vertical: true)
@@ -230,12 +266,17 @@ struct LessonView: View {
         Text("\(session.node.count) quick questions. Mistakes are fine; they come back at the end.")
           .font(Typography.small)
           .foregroundStyle(theme.textMuted)
-        Button("Let's go") { withAnimation(.snappy(duration: 0.2)) { session.begin() } }
-          .buttonStyle(PrimaryButton(.primary, size: .large))
-          .accessibilityIdentifier("lesson.start")
       }
       .padding(Spacing.lg)
       .frame(maxWidth: .infinity, alignment: .leading)
+    }
+    .safeAreaInset(edge: .bottom) {
+      Button("Let's go") { withAnimation(.snappy(duration: 0.2)) { session.begin() } }
+        .buttonStyle(PrimaryButton(.primary, size: .large))
+        .accessibilityIdentifier("lesson.start")
+        .padding(.horizontal, Spacing.lg)
+        .padding(.vertical, Spacing.md)
+        .background(theme.bg)
     }
   }
 }

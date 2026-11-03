@@ -91,6 +91,38 @@ final class PracticeTests: PracticeUITestCase {
     attach("lesson1-\(tag)-7-path-after")
   }
 
+  func testLessonNotesReturnToSameQuestion() {
+    let app = launch(practiceFlags)
+    tap(app, "path.node.u1l1")
+    attach("notes-intro")
+    tap(app, "lesson.start")
+    let prompt = element(app, "lesson.prompt")
+    XCTAssertTrue(prompt.waitForExistence(timeout: 10))
+    let original = prompt.label
+    attach("notes-question")
+    tap(app, "lesson.notes")
+    XCTAssertTrue(app.navigationBars["Lesson notes"].waitForExistence(timeout: 5))
+    attach("notes-open")
+    tap(app, "lesson.notes.done")
+    XCTAssertEqual(prompt.label, original)
+    XCTAssertTrue(element(app, "lesson.hint.button").isEnabled)
+    attach("notes-return")
+  }
+
+  func testNotesDarkAndAccessibilityLayouts() {
+    for (dark, size, tag) in [(true, nil as String?, "dark"), (false, "UICTContentSizeCategoryAccessibilityXXXL" as String?, "ax5")] {
+      let app = launch(practiceFlags, dark: dark, textSize: size)
+      tap(app, "path.node.u1l1")
+      attach("notes-\(tag)-intro")
+      tap(app, "lesson.start")
+      tap(app, "lesson.notes")
+      attach("notes-\(tag)-open")
+      tap(app, "lesson.notes.done")
+      attach("notes-\(tag)-return")
+      app.terminate()
+    }
+  }
+
   func testPlayLessonOneLight() { lessonOne(tag: "light") }
   func testPlayLessonOneDark() { lessonOne(dark: true, tag: "dark") }
   func testPlayLessonOneAccessibilitySize() { lessonOne(textSize: Self.accessibilityM, tag: "ax") }

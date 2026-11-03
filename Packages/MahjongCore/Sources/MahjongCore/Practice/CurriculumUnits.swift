@@ -29,15 +29,15 @@ extension Curriculum {
       lessons: [
         lesson(
           1, 1, "Suits and dragons", count: 8,
-          intro: "Three suits have the numbers 1 to 9: Cracks (characters, in red), Bams (bamboo, in green) and Dots (circles, in blue). Each suit has a matching dragon: Red goes with Cracks, Green with Bams and Soap, the White Dragon, with Dots.",
+          intro: "Your goal is to make a hand of 14 tiles that matches one line on a card. A line is a recipe for the tiles you need. Start by learning the tiles; then practise reading those recipes.\n\nYour rack holds your tiles. In a real game, you play with tiles at the table; these lessons give you short puzzles to practise.\n\nThere are three numbered suits: Cracks (Characters), Bams (Bamboo), and Dots (Circles). Each suit has tiles numbered 1 to 9.\n\nThe full tile set has four copies of each numbered tile, four of each Wind, and four of each Dragon.\n\nSome card patterns ask for a suit’s matching Dragon: Red with Cracks, Green with Bams, and White — also called Soap — with Dots.",
           [LessonPart([.tileFact], 1, focus: ExerciseFocus.suitsAndDragons)]),
         lesson(
           1, 2, "Flowers, jokers and Soap", count: 8,
-          intro: "A set has 152 tiles. Eight Flowers all count as one tile, and eight Jokers stand in for other tiles, but only in sets of three or more. Soap is the White Dragon, and it is also the zero in year hands.",
+          intro: "A standard American mahjong set has 152 tiles, including eight Flowers and eight Jokers.\n\nAll Flowers are interchangeable. Each Flower is still one tile: a pair of Flowers needs two Flower tiles.\n\nA Joker can replace a tile in a group of three or more matching tiles. It cannot replace a tile in a single or pair. A group of three matching tiles is called a Pung, so a Pung is the smallest group that may contain a Joker. You cannot pass a Joker during the Charleston.\n\nSoap is the White Dragon. In year patterns, it also represents the digit 0.",
           [LessonPart([.tileFact], 1, focus: ExerciseFocus.flowersJokersSoap)]),
         lesson(
           1, 3, "Mixed", count: 8,
-          intro: "Everything about the tiles together, plus a few more facts: nicknames for the suits and how the deal starts. Take your time; speed doesn't matter.",
+          intro: "Everything about the tiles together, plus a few more facts.\n\nEast is the dealer. East starts with 14 tiles; everyone else starts with 13. The Charleston is a round of tile swapping before play: first right, then across, then left. The full procedure is in Learn.\n\nTake your time; speed doesn't matter.",
           [LessonPart([.tileFact], 2)]),
       ]),
     unit(
@@ -49,7 +49,7 @@ extension Curriculum {
           [LessonPart([.groupName], 2)]),
         lesson(
           2, 2, "Colours mean suits", count: 8,
-          intro: "On the card, each colour is a suit. Different colours must be different suits, but which suit is up to you.",
+          intro: "A card line is a recipe: match every group and its number of tiles. F means Flower; D means Dragon. X means exposed and C means concealed.\n\nPrinted colours show suit relationships, not the colours painted on the tiles. Groups printed in the same colour use the same suit; different colours use different suits. You choose which physical suit each colour represents.\n\nSome lines allow the numbers to change together. For example, a like-number line printed with 1s may use 7s instead when every numbered group uses 7 and the suit relationships still match.",
           [
             LessonPart([.matchesLine], 1, focus: ExerciseFocus.colours),
             LessonPart([.matchesLine], 2, focus: ExerciseFocus.colours),

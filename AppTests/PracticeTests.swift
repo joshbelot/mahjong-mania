@@ -59,6 +59,49 @@ struct LessonSessionTests {
     LessonSession(node: Curriculum.node(id: id)!, gold: gold, seed: seed, showIntro: intro)
   }
 
+  @Test func notesPreserveTheCurrentAttemptAndAreRestricted() {
+    var time = Date(timeIntervalSince1970: 1000)
+    let s = LessonSession(node: Curriculum.node(id: "u8l1")!, seed: 5, showIntro: false, now: { time })
+    let selectable = s.exercise!.tiles.firstIndex(where: { $0 != .joker })!
+    s.toggleTile(selectable)
+    let id = s.exercise?.id
+    let selection = s.selectedTiles
+    #expect(selection == [selectable])
+    let progress = s.progress
+    let xp = s.xpEarned
+    let elapsed = s.elapsedSeconds
+    #expect(s.notesAllowed)
+    s.openNotes()
+    time.addTimeInterval(30)
+    #expect(s.elapsedSeconds == elapsed)
+    s.closeNotes()
+    time.addTimeInterval(2)
+    #expect(s.elapsedSeconds == elapsed + 2)
+    #expect(s.exercise?.id == id && s.selectedTiles == selection)
+    #expect(s.records.isEmpty && s.hint == nil && s.hintAvailable)
+    #expect(s.progress == progress && s.xpEarned == xp)
+    #expect(!session("u1c").notesAllowed)
+    #expect(!session("u1l1", gold: true).notesAllowed)
+    #expect(!LessonSession(node: Curriculum.node(id: "u1l1")!, testOut: true, seed: 1, showIntro: false).notesAllowed)
+    #expect(!LessonSession(title: "Custom", ids: [], seed: 1).notesAllowed)
+  }
+
+  @Test func hardTileFactsTeachTheSelectedHouseRules() {
+    let rules = RuleSet(id: "test", name: "Test", rules: [
+      HouseRule(id: RuleID.blanks, isEnabled: true, blanks: BlankOptions(count: 4)),
+      HouseRule(id: RuleID.charlestonSecond, isEnabled: false),
+      HouseRule(id: RuleID.courtesy, isEnabled: true),
+      HouseRule(id: RuleID.jokerExchange, isEnabled: false),
+    ])
+    let s = LessonSession(node: Curriculum.node(id: "u10l1")!, seed: 1, rules: rules, showIntro: true)
+    #expect(s.teachingText.contains("156 tiles"))
+    #expect(s.teachingText.contains("second Charleston switched off"))
+    #expect(s.teachingText.contains("allows a courtesy pass"))
+    #expect(s.teachingText.contains("does not allow exchanging"))
+    let beginner = LessonSession(node: Curriculum.node(id: "u1l1")!, seed: 1, rules: rules, showIntro: true)
+    #expect(!beginner.teachingText.contains("156 tiles"))
+  }
+
   @Test func aPerfectLessonFinishesWithThreeStars() {
     let s = session("u1l1")
     #expect(s.phase == .answering && s.total == 8 && s.progress == 0)

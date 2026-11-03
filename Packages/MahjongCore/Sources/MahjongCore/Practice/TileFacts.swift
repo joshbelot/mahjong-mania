@@ -26,6 +26,45 @@ enum TileFacts {
     case secondCharleston
     case courtesy
     case jokerExchange
+
+    /// Stable identifiers are independent of pool order and question seed.
+    var conceptID: String {
+      switch self {
+      case .dragonForSuit(let suit): return "dragonForSuit.\(suit.rawValue)"
+      case .suitForDragon(let dragon): return "suitForDragon.\(dragon.rawValue)"
+      case .countSuited(let suit): return "countSuited.\(suit.rawValue)"
+      case .countWind: return "countWind"
+      case .countDragon: return "countDragon"
+      case .zeroTile: return "zeroTile"
+      case .countFlowers: return "countFlowers"
+      case .countJokers: return "countJokers"
+      case .countWhole: return "countWhole"
+      case .jokerPair: return "jokerPair"
+      case .jokerCharleston: return "jokerCharleston"
+      case .jokerSmallest: return "jokerSmallest"
+      case .flowersSame: return "flowersSame"
+      case .nickname(let suit): return "nickname.\(suit.rawValue)"
+      case .dealer: return "dealer"
+      case .firstPass: return "firstPass"
+      case .blankSet: return "house.blankSet"
+      case .blankSwap: return "house.blankSwap"
+      case .secondCharleston: return "house.secondCharleston"
+      case .courtesy: return "house.courtesy"
+      case .jokerExchange: return "house.jokerExchange"
+      }
+    }
+
+    var taughtIn: String {
+      switch self {
+      case .dragonForSuit, .suitForDragon, .countSuited, .countWind, .countDragon, .nickname:
+        return "u1l1"
+      case .zeroTile, .countFlowers, .countJokers, .countWhole, .jokerPair, .jokerCharleston,
+        .jokerSmallest, .flowersSame:
+        return "u1l2"
+      case .dealer, .firstPass: return "u1l3"
+      case .blankSet, .blankSwap, .secondCharleston, .courtesy, .jokerExchange: return "houseRules"
+      }
+    }
   }
 
   // MARK: Pools
