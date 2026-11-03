@@ -18,7 +18,19 @@ Source of truth for where the build is. Updated by the lead on `main`.
 | 11 Learn | merged (11a content PR 10, 11b screens PR 13) | |
 | 12 Settings, polish, release | merged (12a PR 12, 12b PR 15, 12c PR 17); owner steps and QA remain, see backlog below | |
 
-## Version 1.3 (current work)
+## Version 1.4 (current work)
+
+Plan: [NEXT_WAVES_SPEC.md](NEXT_WAVES_SPEC.md), phases 34–38 in order. The 1.5 scanning wave is separate and has not begun.
+
+| Phase | Status | PR |
+|---|---|---|
+| 34 Beginner audit and teaching | complete; local gate passed | [#51](https://github.com/joshbelot/mahjong-mania/pull/51) |
+| 35 Concrete feedback | pending | |
+| 36 Beginner flow | pending | |
+| 37 Guided card entry | pending | |
+| 38 QA and TestFlight release | pending | |
+
+## Version 1.3 (done)
 
 Plan: `docs/SPEC.md` §19 (first App Store release). v1.2 build 4 is on TestFlight (2026-10-18). One PR per phase, in order; ship to TestFlight when all are merged; the owner submits for review.
 
@@ -197,3 +209,8 @@ Line identity across card edits was fixed too (line IDs are `L_<hash>`, see DECI
 `python3 tools/check_listing.py`: name 24/30, subtitle 27/30, promotional text 161/170, description 2126/4000, keywords 94/100, What's New 284/4000; all limits OK. `tools/app_store_screenshots.sh` passed on iPhone 17 Pro Max (iOS 26.5): eight 1320 × 2868 PNGs, inspected individually. The app's full-screen completion view hides the status bar; the other seven show the 9:41 and full-battery override. The optional scaled 6.5-inch set was omitted. Listing answers refer to Apple's current definitions and the owner must assess any new questions.
 
 `RESULT_BUNDLE=/private/tmp/terra-p32-final.xcresult tools/test.sh` passed on iPhone Air / iOS 26.5: 333 core tests, 299 app unit tests and 125 UI tests; 424 Xcode test runs, no retries, failures, skipped tests, compiler warnings or runtime warnings. Log: `/private/tmp/terra-p32-final.log`; result bundle: `/private/tmp/terra-p32-final.xcresult`.
+
+
+### Phase 34 local gate (2026-11-02)
+
+`RESULT_BUNDLE=/private/tmp/terra14-phase34-full.xcresult tools/test.sh` passed on a dedicated iPhone Air simulator, iOS 26.5: 335 core tests, 301 app unit tests and 127 UI tests; no failures, retries, compiler warnings or runtime warnings. Log: `/private/tmp/terra14-phase34-full.log`. Focused lesson notes and session tests also passed. Screenshot-reviewed notes and intro evidence is in `/private/tmp/terra14-notes-shots/`, `/private/tmp/terra14-notes-small2-shots/` (dark and AX5 on iPhone 17e), and `/private/tmp/terra14-notes-ipad-shots/`. The iPad test emitted Xcode's existing `UIRequiresFullScreen` future-orientation notice. Physical-device checks and actual-user comprehension remain owner follow-ups.

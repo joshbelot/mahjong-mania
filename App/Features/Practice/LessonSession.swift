@@ -33,7 +33,10 @@ final class LessonSession {
   /// The player's rule book, for hard tile facts about their own table.
   @ObservationIgnored private let rules: RuleSet?
   @ObservationIgnored private var rng: SeededRandom
-  @ObservationIgnored private let startedAt = Date()
+  @ObservationIgnored private let startedAt: Date
+  @ObservationIgnored private let now: () -> Date
+  @ObservationIgnored private var notesOpenedAt: Date?
+  @ObservationIgnored private var notesDuration: TimeInterval = 0
 
   private(set) var items: [Item]
   private(set) var index = 0
@@ -67,8 +70,10 @@ final class LessonSession {
   /// - Parameter review: due review exercises (review nodes only).
   init(
     node: LessonSpec, gold: Bool = false, testOut: Bool = false, seed: UInt64, review: [ExerciseID] = [],
-    rules: RuleSet? = nil, showIntro: Bool
+    rules: RuleSet? = nil, showIntro: Bool, now: @escaping () -> Date = Date.init
   ) {
+    self.now = now
+    startedAt = now()
     self.rules = rules
     self.node = node
     self.gold = gold
@@ -85,6 +90,8 @@ final class LessonSession {
   /// A play outside the path: the given questions, no hints, no re-asks. `exercises` are used as they are
   /// (a Daily Deal); otherwise each of `ids` is made on `card`.
   init(title: String, ids: [ExerciseID] = [], exercises: [Exercise]? = nil, card: Card = PracticeCard.card, seed: UInt64 = 1) {
+    now = Date.init
+    startedAt = now()
     let count = exercises?.count ?? ids.count
     node = LessonSpec.custom(id: "custom", title: title, count: count)
     gold = false
@@ -102,8 +109,46 @@ final class LessonSession {
 
   // MARK: Derived state
 
+  /// The hard tile-fact pool can ask about this table's selected house rules.
+  var teachingText: String {
+    guard node.parts.contains(where: { $0.difficulty >= 3 && $0.types.contains(.tileFact) }),
+      let rules else { return node.intro }
+    func rule(_ id: String) -> HouseRule? { rules.rules.first { $0.id == id } }
+    var lines: [String] = []
+    if let blanks = rule(RuleID.blanks), blanks.isEnabled {
+      let count = blanks.blanks?.count ?? 6
+      lines.append("Your table adds \(count) blanks to the standard 152 tiles, for \(152 + count) tiles. A blank can be swapped for a discarded tile.")
+    }
+    if let second = rule(RuleID.charlestonSecond) {
+      lines.append(second.isEnabled ? "Your table has a second Charleston: left, across, then right." : "Your table has the second Charleston switched off.")
+    }
+    if let courtesy = rule(RuleID.courtesy) {
+      lines.append(courtesy.isEnabled ? "Your table allows a courtesy pass: you and the player across may swap up to three tiles." : "Your table has the courtesy pass switched off.")
+    }
+    if let exchange = rule(RuleID.jokerExchange) {
+      lines.append(exchange.isEnabled ? "Your table allows exchanging a real tile for a Joker in an exposed set." : "Your table does not allow exchanging a real tile for a Joker in an exposed set.")
+    }
+    return ([node.intro] + lines).joined(separator: "\n\n")
+  }
+
   var isCheckpoint: Bool { node.kind == .checkpoint }
   var hintsAllowed: Bool { node.kind != .checkpoint && !gold }
+  /// Notes are available only for ordinary, scored path lessons.
+  var notesAllowed: Bool {
+    node.kind == .lesson && !gold && !testOut && Curriculum.node(id: node.id) != nil
+      && phase != .intro && phase != .finished
+  }
+
+  func openNotes() {
+    guard notesAllowed, notesOpenedAt == nil else { return }
+    notesOpenedAt = now()
+  }
+
+  func closeNotes() {
+    guard let opened = notesOpenedAt else { return }
+    notesDuration += now().timeIntervalSince(opened)
+    notesOpenedAt = nil
+  }
   var total: Int { items.count }
   var answered: Int { records.count }
   var progress: Double { total == 0 ? 0 : Double(answered) / Double(total) }
@@ -276,7 +321,11 @@ final class LessonSession {
 
   // MARK: Result
 
-  var elapsedSeconds: Int { Int(Date().timeIntervalSince(startedAt)) }
+  var elapsedSeconds: Int {
+    let now = now()
+    let openDuration = notesOpenedAt.map { now.timeIntervalSince($0) } ?? 0
+    return max(0, Int(now.timeIntervalSince(startedAt) - notesDuration - openDuration))
+  }
 
   func playResult(day: LocalDay, hour: Int) -> PlayResult {
     PlayResult(
