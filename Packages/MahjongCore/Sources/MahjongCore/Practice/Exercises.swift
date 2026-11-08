@@ -161,7 +161,7 @@ public enum Exercises {
       case .matchesLine:
         hint.text =
           exercise.id.focus == ExerciseFocus.colours
-          ? "Tiles in the same colour on the pattern must be the same suit; different colours, different suits."
+          ? "Groups printed in the same colour use the same suit; different printed colours use different suits."
           : "Go group by group and compare each with the pattern."
       case .whichHand:
         hint.text = "Look for the hand whose pattern has the same groups as these tiles."

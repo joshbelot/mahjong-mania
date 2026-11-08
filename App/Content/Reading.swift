@@ -29,6 +29,12 @@ enum LearnReading {
             "Different colours: different suits.",
             "Which actual suit gets which colour is up to you.",
           ]),
+          .paragraph(
+            "A, B and C can label the suit relationships without relying on colour. For one original like-number line, A = Bams, B = Dots and C = Cracks is as valid as A = Dots, B = Bams and C = Cracks. A matching Dragon follows its assigned suit; Red and Green name the actual Dragon tiles."
+          ),
+          .example(
+            notation: "FF 1111/x 11/y 1111/z DD/x ; 25 ; X ; Like Sandwich ; shift",
+            caption: "At 7s, use 2 Flowers, four 7s in A, two 7s in B, four 7s in C and two Dragons matching A."),
           .example(
             notation: "FF 2026/x 2222/y 6666/y ; 25 ; X ; Year Kongs",
             caption:

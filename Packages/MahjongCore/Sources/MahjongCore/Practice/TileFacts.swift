@@ -176,13 +176,13 @@ enum TileFacts {
         hint: "Think of the dragon's colour: red for Cracks, green for Bams, white (Soap) for Dots.")
     case .countSuited(let suit):
       let value = rng.element(of: [1, 2, 3, 5, 6, 7, 8, 9]) ?? 5
-      return count(of: "\(value) \(suit.plainName.dropLast())s", copies: 4)
+      return count(of: "\(value) \(suit.plainName.dropLast())", copies: 4)
     case .countWind:
       let wind = rng.element(of: [Wind.north, .east, .west, .south]) ?? .east
-      return count(of: "\(Tile.wind(wind).name) Winds", copies: 4)
+      return count(of: "\(Tile.wind(wind).name) Wind", copies: 4)
     case .countDragon:
       let dragon = rng.element(of: [Dragon.red, .green]) ?? .red
-      return count(of: "\(Tile.dragon(dragon).name)s", copies: 4)
+      return count(of: Tile.dragon(dragon).name, copies: 4)
     case .countFlowers:
       return count(of: "Flowers", copies: 8, subject: "Flowers")
     case .countJokers:
@@ -202,8 +202,8 @@ enum TileFacts {
         hint: "It's a dragon, and the blank-looking one.")
     case .jokerPair:
       return Pick(
-        prompt: "Can a joker be part of a pair?", correct: .yesNo(false), wrong: [.yesNo(true)], answer: "No",
-        explanation: "Jokers only join sets of three or more tiles. They can never be in a pair or a single.",
+        prompt: "Can a Joker replace a tile in a pair?", correct: .yesNo(false), wrong: [.yesNo(true)], answer: "No",
+        explanation: "No. A pair needs two matching tiles without a Joker. Jokers can replace tiles only in groups of three or more.",
         hint: "Jokers need at least three tiles in the set.")
     case .jokerCharleston:
       return Pick(
@@ -292,11 +292,11 @@ enum TileFacts {
     let wrong = [2, 3, 4, 6, 8, 9, 12].filter { $0 != copies }
     let near = wrong.sorted { abs($0 - copies) < abs($1 - copies) }.prefix(3)
     return Pick(
-      prompt: "How many \(name) are in a set?", correct: .number(copies), wrong: near.map { .number($0) },
+      prompt: copies == 4 ? "How many copies of the \(name) are in a full tile set?" : "How many \(name) are in a full tile set?", correct: .number(copies), wrong: near.map { .number($0) },
       answer: "\(copies)",
       explanation: copies == 8
         ? "A set has 8 \(subject ?? name)."
-        : "A set has 4 of every suit, wind and dragon tile.",
+        : "Four. Each numbered tile, Wind, and Dragon has four copies in a standard full tile set.",
       hint: copies == 8 ? "Flowers and Jokers come in eights." : "Every suit, wind and dragon tile comes in fours.")
   }
 }

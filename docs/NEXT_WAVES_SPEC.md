@@ -268,11 +268,11 @@ Starting points: `Practice/Curriculum.swift`, `CurriculumUnits.swift`, `TileFact
 
 Starting points: MahjongCore `Practice/CardReadingExercises.swift`, `ExerciseTypes.swift`, `Exercises.swift`, `Engine/EngineTypes.swift`, notation descriptions; pattern/feedback views and Learn card-reading content.
 
-- [ ] Implement §3.2 using the actual generated/evaluated `Target` and concrete `binding`, group counts and Joker substitutions. Retain context in the exercise's deterministic data where necessary; do not re-roll a different target to make explanatory copy.
-- [ ] Both `matchesLine` and `whichHand` explanations are covered. Wrong answers identify a true mismatch; multiple legal interpretations choose one evaluated interpretation consistently. No rule verdict comes from presentation colors or generated prose.
-- [ ] Add original worked color examples and a visible/non-color suit relationship legend. Label actual suits in ordinary concrete feedback; explain A/B/C only where abstract relationships are being taught/edited. F/D/X/C/0 and shift rules precede their scored use.
-- [ ] Regression fixtures cover the 7s example; swapped suit assignments; fixed suits and matching Dragons; literal year Soap/zero; legal and illegal Joker replacement; shifted consecutive/parity bounds; alternatives and concealed/exposure eligibility where exercised. Assert semantic correctness and absence of misleading printed-number descriptions, not just one exact sentence. Existing answer keys and seeds stay unchanged.
-- [ ] Visually inspect the worked examples, correct/wrong feedback and hints in both exercise families. Complete the common gate.
+- [x] Implement §3.2 using the actual generated/evaluated `Target` and concrete `binding`, group counts and Joker substitutions. Retain context in the exercise's deterministic data where necessary; do not re-roll a different target to make explanatory copy.
+- [x] Both `matchesLine` and `whichHand` explanations are covered. Wrong answers identify a true mismatch; multiple legal interpretations choose one evaluated interpretation consistently. No rule verdict comes from presentation colors or generated prose.
+- [x] Add original worked color examples and a visible/non-color suit relationship legend. Label actual suits in ordinary concrete feedback; explain A/B/C only where abstract relationships are being taught/edited. F/D/X/C/0 and shift rules precede their scored use.
+- [x] Regression fixtures cover the 7s example; swapped suit assignments; fixed suits and matching Dragons; literal year Soap/zero; legal and illegal Joker replacement; shifted consecutive/parity bounds; alternatives and concealed/exposure eligibility where exercised. Assert semantic correctness and absence of misleading printed-number descriptions, not just one exact sentence. Existing answer keys and seeds stay unchanged.
+- [x] Visually inspect the worked examples, correct/wrong feedback and hints in both exercise families. Complete the common gate.
 
 ### Phase 36 — First actions, Helper context and scorekeeping clarity
 

@@ -50,6 +50,27 @@ struct LessonIllustration: View {
 
   var body: some View {
     let examples = Self.examples(for: nodeID)
+    if nodeID == "u2l2" {
+      VStack(alignment: .leading, spacing: Spacing.md) {
+        Text("One line, two ways")
+          .font(Typography.body.weight(.bold))
+        Text("Original practice pattern: FF 1111/A 11/B 1111/C DD/A")
+          .font(Typography.small.weight(.semibold))
+        Text("A, B and C are three different suits. The repeated A means the Dragon matches suit A. Each F is one Flower.")
+        Text("Example 1: A = Bams, B = Dots, C = Cracks")
+          .fontWeight(.semibold)
+        Text("2 Flowers · 4 seven Bams · 2 seven Dots · 4 seven Cracks · 2 Green Dragons")
+        Text("Example 2: A = Dots, B = Bams, C = Cracks")
+          .fontWeight(.semibold)
+        Text("2 Flowers · 4 seven Dots · 2 seven Bams · 4 seven Cracks · 2 Soap (White Dragons)")
+        Text("Both use 7 throughout. The pattern's colour does not choose the physical suit; a Dragon's name is its actual tile.")
+      }
+      .font(Typography.small)
+      .foregroundStyle(theme.text)
+      .frame(maxWidth: .infinity, alignment: .leading)
+      .padding(Spacing.lg)
+      .background(theme.surfaceAlt, in: RoundedRectangle(cornerRadius: Radius.lg))
+    }
     if !examples.isEmpty {
       FlowLayout(spacing: Spacing.lg, lineSpacing: Spacing.lg) {
         ForEach(examples) { example in

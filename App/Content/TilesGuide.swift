@@ -34,7 +34,7 @@ enum LearnTiles {
             header: ["Dragon", "Nickname", "Goes with"],
             rows: TileCheatSheet.dragons.map { [$0.tile == .dragon(.white) ? "White Dragon" : $0.tile.name, $0.nickname, $0.goesWith] }),
           .paragraph(
-            "A dragon shown in a suit's colour on the card means the dragon that goes with that suit. That is called the matching dragon."
+            "A Dragon symbol in the same printed colour as a numbered group means the Dragon that matches whichever suit you choose for that group."
           ),
           .paragraph(
             "Soap does double duty. In year hands it is the zero (so a 2026 hand uses one Soap), and it also serves as the ordinary White Dragon."

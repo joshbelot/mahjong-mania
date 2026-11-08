@@ -119,7 +119,6 @@ enum CardReadingExercises {
     }
 
     var shownGroups = groups
-    var why = ""
     var ok = true
     if !wantYes {
       var broken = false
@@ -128,7 +127,6 @@ enum CardReadingExercises {
           guard let result = mutate(groups, kind, rng: &rng) else { continue }
           if !analyzer.matches(at: lineIndex, tiles: result.groups.flatMap { $0 }) {
             shownGroups = result.groups
-            why = result.why
             broken = true
           }
         }
@@ -141,11 +139,9 @@ enum CardReadingExercises {
     let grouped = id.difficulty == 1
     let display = grouped ? shownGroups : []
     let shownTiles = grouped ? flat : flat.sortedForDisplay()
-    let explanation =
-      matches
-      ? "Yes, these tiles make \(line.displayName): "
-        + Notation.describe(line.variants[target.variantIndex], shift: line.shift, concealed: line.concealed)
-      : "No. " + why
+    let explanation = matches
+      ? "Yes. " + ConcretePracticeFeedback.target(target, line: line, groups: groups)
+      : ConcretePracticeFeedback.mismatch(shown: shownGroups, valid: groups, target: target, line: line)
     let exercise = Exercise(
       id: id, prompt: "Does this hand match the line?", tiles: shownTiles, groups: display, lines: [line],
       choices: yesNo(), key: .choices(correct: [matches ? 0 : 1], answer: matches ? "Yes" : "No", explanation: explanation))
@@ -190,9 +186,7 @@ enum CardReadingExercises {
     let options = rng.shuffled([lineIndex] + picks.prefix(wanted - 1))
     let correct = options.firstIndex(of: lineIndex) ?? 0
     let grouped = id.difficulty == 1
-    let explanation =
-      "These tiles make \(line.displayName): "
-      + Notation.describe(line.variants[target.variantIndex], shift: line.shift, concealed: line.concealed)
+    let explanation = ConcretePracticeFeedback.target(target, line: line, groups: groups)
     let exercise = Exercise(
       id: id, prompt: "Which hand is this?", tiles: grouped ? flat : flat.sortedForDisplay(),
       groups: grouped ? groups : [], choices: options.map { .line(analyzer.card.lines[$0]) },
