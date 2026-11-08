@@ -1870,7 +1870,7 @@ Same rules as §18.12. Each UI phase: look at the changed screens in the simulat
 The authoritative requirements, acceptance criteria, and release gates for phases 34–38 are in [NEXT_WAVES_SPEC.md](NEXT_WAVES_SPEC.md). The separately gated 1.5 scanning wave is out of scope.
 
 - [x] Phase 34 — beginner audit, prerequisite coverage and teaching.
-- [ ] Phase 35 — explanations that match the shown hand.
+- [x] Phase 35 — explanations that match the shown hand.
 - [ ] Phase 36 — first actions, Helper context and scorekeeping clarity.
 - [ ] Phase 37 — own-card setup and guided hand entry.
 - [ ] Phase 38 — integrated QA and automatic TestFlight release.

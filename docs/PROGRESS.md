@@ -25,7 +25,7 @@ Plan: [NEXT_WAVES_SPEC.md](NEXT_WAVES_SPEC.md), phases 34–38 in order. The 1.5
 | Phase | Status | PR |
 |---|---|---|
 | 34 Beginner audit and teaching | complete; local gate passed | [#51](https://github.com/joshbelot/mahjong-mania/pull/51) |
-| 35 Concrete feedback | pending | |
+| 35 Concrete feedback | local gate passed; PR pending | |
 | 36 Beginner flow | pending | |
 | 37 Guided card entry | pending | |
 | 38 QA and TestFlight release | pending | |
@@ -214,3 +214,10 @@ Line identity across card edits was fixed too (line IDs are `L_<hash>`, see DECI
 ### Phase 34 local gate (2026-11-02)
 
 `RESULT_BUNDLE=/private/tmp/terra14-phase34-full.xcresult tools/test.sh` passed on a dedicated iPhone Air simulator, iOS 26.5: 335 core tests, 301 app unit tests and 127 UI tests; no failures, retries, compiler warnings or runtime warnings. Log: `/private/tmp/terra14-phase34-full.log`. Focused lesson notes and session tests also passed. Screenshot-reviewed notes and intro evidence is in `/private/tmp/terra14-notes-shots/`, `/private/tmp/terra14-notes-small2-shots/` (dark and AX5 on iPhone 17e), and `/private/tmp/terra14-notes-ipad-shots/`. The iPad test emitted Xcode's existing `UIRequiresFullScreen` future-orientation notice. Physical-device checks and actual-user comprehension remain owner follow-ups.
+
+
+### Phase 35 local gate (2026-11-02; visual recheck 2026-11-07)
+
+`RESULT_BUNDLE=/private/tmp/terra14-phase35-full.xcresult tools/test.sh` passed on the phase 35 branch on iOS 26.5: 340 core tests, 301 app unit tests and 127 UI tests, with no failures, compiler/analyzer warnings or runtime layout warnings. Xcode emitted three App Intents metadata-extraction warnings. The preserved log is in `terra14-recovery-backup/terra14-phase35-full.log` in the primary checkout; the temporary result bundle was partially removed by macOS cleanup. The source was recovered and committed as `78a7ab0` before the screenshot recheck.
+
+Using ordinary app navigation, visually inspected correct and incorrect card-reading feedback, hints and worked examples on iPhone 17 Pro and iPhone 17e, including dark and AX5; screenshots are in `terra14-recovery-backup/phase35-pro-live/`, `phase35-small-live/` and `phase35-small/` in the primary checkout. On a fresh iPad (A16), iOS 26.5, navigated through the unit test-out and Sets lesson to the colour lesson, and inspected its worked examples and actual feedback (`terra14-recovery-backup/phase35-ipad-live/i056.png` and `i058.png`). Physical-device checks remain owner follow-ups.
