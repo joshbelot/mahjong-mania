@@ -25,7 +25,7 @@ Plan: [NEXT_WAVES_SPEC.md](NEXT_WAVES_SPEC.md), phases 34–38 in order. The 1.5
 | Phase | Status | PR |
 |---|---|---|
 | 34 Beginner audit and teaching | complete; local gate passed | [#51](https://github.com/joshbelot/mahjong-mania/pull/51) |
-| 35 Concrete feedback | local gate passed; PR pending | |
+| 35 Concrete feedback | complete; local gate passed | [#52](https://github.com/joshbelot/mahjong-mania/pull/52) |
 | 36 Beginner flow | pending | |
 | 37 Guided card entry | pending | |
 | 38 QA and TestFlight release | pending | |
