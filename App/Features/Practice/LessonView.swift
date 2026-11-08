@@ -52,11 +52,14 @@ struct LessonView: View {
     .sheet(isPresented: $showNotes, onDismiss: { session.closeNotes() }) {
       NavigationStack {
         ScrollView {
-          Text(session.teachingText)
-            .font(Typography.body)
-            .foregroundStyle(theme.text)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(Spacing.lg)
+          VStack(alignment: .leading, spacing: Spacing.lg) {
+            Text(session.teachingText)
+              .font(Typography.body)
+              .foregroundStyle(theme.text)
+            LessonIllustration(nodeID: session.node.id)
+          }
+          .frame(maxWidth: .infinity, alignment: .leading)
+          .padding(Spacing.lg)
         }
         .background(theme.bg)
         .navigationTitle("Lesson notes")

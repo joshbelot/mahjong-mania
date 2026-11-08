@@ -49,7 +49,7 @@ extension Curriculum {
           [LessonPart([.groupName], 2)]),
         lesson(
           2, 2, "Colours mean suits", count: 8,
-          intro: "A card line is a recipe: match every group and its number of tiles. F means Flower; D means Dragon. X means exposed and C means concealed.\n\nPrinted colours show suit relationships, not the colours painted on the tiles. Groups printed in the same colour use the same suit; different colours use different suits. You choose which physical suit each colour represents.\n\nSome lines allow the numbers to change together. For example, a like-number line printed with 1s may use 7s instead when every numbered group uses 7 and the suit relationships still match.",
+          intro: "A card line is a recipe: match every group and its number of tiles. F means Flower; D means a matching Dragon. X means exposed and C means concealed. In a year, 0 is Soap (the White Dragon).\n\nPrinted colours show suit relationships, not the colours painted on the tiles. Groups printed in the same colour use the same suit; different colours use different suits. You choose which physical suit each colour represents.\n\nSome lines allow the numbers to change together. For example, a like-number line printed with 1s may use 7s instead when every numbered group uses 7 and the suit relationships still match. In a consecutive line, the numbers shift together while keeping the same gaps; a printed 1, 2, 3 can become 4, 5, 6.",
           [
             LessonPart([.matchesLine], 1, focus: ExerciseFocus.colours),
             LessonPart([.matchesLine], 2, focus: ExerciseFocus.colours),
