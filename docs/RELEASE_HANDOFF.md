@@ -1,3 +1,11 @@
+# Release handoff — Mahjong Mania v1.4
+
+_Status: 1.4 is being released from main after phases 34–38 (PRs #51–#54 and the release PR). The processed build and its App Store Connect status are recorded in `docs/PROGRESS.md` once confirmed. App Store review submission is the owner's step._
+
+1.4 adds beginner clarity: teaching before scored questions, explanations that match the shown hand, hint-cost disclosure, plainer Helper and Game wording, a compact Charleston tracker, and a guided own-card editor. Owner checks on a physical iPhone (haptics, real-device speed, VoiceOver by hand, installing the TestFlight build) remain open. Do not submit automatically.
+
+---
+
 # Release handoff — Mahjong Mania v1.3
 
 _Status: 1.3 build 5 was uploaded on 2026-11-01 and App Store Connect reports it VALID. App Store review submission is the owner's step._

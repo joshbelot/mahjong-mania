@@ -36,7 +36,7 @@ GAME NIGHT: SCORING FOR YOUR TABLE
 Add your players, record each hand (who won, from whom, jokerless, self-pick, wall game) and watch the scoreboard update. Set your own house rules, from what the discarder pays to a second Charleston or playing with blanks. A settle-up summary shows who owes whom. The app only does the maths: no money is ever handled.
 
 CARDS: YOUR HAND LIST
-Use the built-in Practice Card, or type in your own card's hands with a simple notation. Share a card with a friend by showing a QR code. Your cards are yours to keep.
+Use the built-in Practice Card, or build your own card's hands step by step with a guided editor (or type them with a simple notation). Share a card with a friend by showing a QR code. Your cards are yours to keep.
 
 LEARN: PLAIN-ENGLISH EXPLANATIONS
 The tiles, the sets, the Charleston, calling, jokers and the words you hear at the table, explained simply, with a searchable glossary. House rules are explained in plain words too.
@@ -68,10 +68,10 @@ scorekeeper,scoreboard,charleston,jokers,tiles,hands,lessons,game night,helper,r
 - Privacy Policy URL: `https://joshbelot.github.io/mahjong-mania/privacy.html`
 - Marketing URL: leave empty
 - Price: Free (no in-app purchases)
-- What's New (version 1.3): see below
+- What's New (version 1.4): see below
 
-## What's New in 1.3 (max 4000)
+## What's New in 1.4 (max 4000)
 
 ```
-The first App Store release. Practice now asks real questions instead of ones the screen answers for you, adds a Tiles cheat sheet, Today's Deal on the path, a Speed Round that shows your rack, and Sunny the tile mascot. Plus a round of bug fixes, a privacy policy and a support page.
+Clearer for new players. Practice now teaches the goal and tile facts before scored questions, explains each hand using the actual tiles shown, and tells you what hints cost before you use one. Hand Helper and Game explain what each mode, distance and result means. Build your own card hand by hand with a guided editor, with no special notation needed.
 ```

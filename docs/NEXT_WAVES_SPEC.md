@@ -296,9 +296,9 @@ Starting points: `OnboardingView.swift`, `SettingsStore.swift`, app tab/navigati
 
 ### Phase 38 — Integrated 1.4 QA and automatic TestFlight release
 
-- [ ] Create `claude/release-1-4` after phases 34–37 merge. Complete §7 end to end; update `docs/BEGINNER_AUDIT.md` with before/after evidence and unresolved owner items. Fix reproduced release blockers with regression coverage; defer unapproved redesigns.
-- [ ] Set `MARKETING_VERSION` to `"1.4"` in `project.yml`, regenerate, and keep build numbering under the uploader. Update TestFlight/WhatToTest, release handoff/history, AppStore What's New, review notes and any screenshots/listing claims affected by changed UI. Run the existing listing checker and regenerate/inspect any affected screenshot set. No scanning claims, camera permission or pricing changes.
-- [ ] Verify all old saved fixtures, progress, cards, sessions, settings, rule presets, shared QR/text imports and active-card selection survive. Existing iOS 17 availability and Foundation-only core remain intact; use actual available destinations and check introduced API availability.
+- [x] Create `claude/release-1-4` after phases 34–37 merge. Complete §7 end to end; update `docs/BEGINNER_AUDIT.md` with before/after evidence and unresolved owner items. Fix reproduced release blockers with regression coverage; defer unapproved redesigns.
+- [x] Set `MARKETING_VERSION` to `"1.4"` in `project.yml`, regenerate, and keep build numbering under the uploader. Update TestFlight/WhatToTest, release handoff/history, AppStore What's New, review notes and any screenshots/listing claims affected by changed UI. Run the existing listing checker and regenerate/inspect any affected screenshot set. No scanning claims, camera permission or pricing changes.
+- [x] Verify all old saved fixtures, progress, cards, sessions, settings, rule presets, shared QR/text imports and active-card selection survive. Existing iOS 17 availability and Foundation-only core remain intact; use actual available destinations and check introduced API availability.
 - [ ] Finish the common full local/visual gate on the final phase branch, record evidence and merge the phase PR. Check all five PRs are on main. Leave actual upload/processing boxes open until confirmed.
 - [ ] Perform §6.2 from clean, up-to-date main. Confirm exact version/build processing `VALID`, then record the result/PRs/test evidence in PROGRESS/DECISIONS. Never press Submit for Review. Leave physical-device/VoiceOver/haptics/TestFlight-install boxes for the owner.
 

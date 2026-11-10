@@ -56,3 +56,18 @@ An isolated fresh iPhone 17 Pro simulator (`F091FA60-D99C-4AA3-9972-8EBF5B73E34D
 - On a separate iPad mini (A17 Pro), iOS 26.5, default text size, a setup-assisted pass skipped onboarding and used the visible random-deal control. The full rack and pass controls fit in the compatibility layout (`/private/tmp/terra14-ipad/01-welcome.png`, `04-rack.png`). For QR-picture import, the existing test-generated QR screenshot was added to this simulator's Photos library; Cards → Import → picture opened the picker and displayed the QR image (`08-picker.png`). The first accessibility selector could not tap the system picker item; a subsequent screenshot-guided coordinate tap selected it. The app decoded and checked two hands and saved the test card (`14-picker.png`–`17-import.png`). This is the existing QR-picture import, not the scanning wave.
 
 Unexercised cases: the natural Unit 2 sequence did not present the specific shifted-number mismatch or a wrong Dragon/Joker-in-pair example; no answer-key or pre-unlock shortcut was used to force one. The selected-mode contextual tip was not observed. Lesson notes, own-card deferral, and notation-free guided entry do not exist in this 1.3 baseline and are recorded as absent capabilities, not passes. Physical-device VoiceOver and haptics and actual beginner/experienced-player comprehension remain owner follow-ups. Existing scripted flows and earlier screenshots are supplemental evidence only; they do not establish a fresh-user journey.
+
+## 1.4 integrated recheck — 2026-11-10 (Phase 38)
+
+Build: `claude/release-1-4` from main at the merge of PR #54 (marketing version 1.4). Method: the phase-by-phase screenshot reviews recorded in `docs/PROGRESS.md` (iPhone Air, iPhone 17e, iPhone 17 Pro, an iPad; light, dark, AX5) plus the full local gate on the release branch. This is **not** a repeat of the complete §7 stepwise walkthrough by hand, and it is not a study of an actual novice.
+
+| §7 task | 1.4 evidence |
+|---|---|
+| 1–3 Understand, first and later lessons | Phase 34: goal/tile-fact/prerequisite teaching and lesson notes reopen the same question; Phase 36: Start here, daily/XP context, hint-cost confirmation. Screenshots in the Phase 34/36 gate records. |
+| 4 Read a card | Phase 35: concrete-target feedback and original colour-relationship examples (iPhone 17 Pro/17e, iPad). |
+| 5 Helper | Phase 36: mode/distance/dead-reason copy, labelled example racks with safeguards, compact Charleston tracker (iPhone 17e light/dark, AX5). |
+| 6 Game | Phase 36: wall-game and settings wording; recording taps unchanged (existing GameNight UI tests pass). |
+| 7 Cards | Phase 37: onboarding own-card → banner → Add a card chooser → guided build without notation → preview → save → explicit "Use this card" (iPhone Air light, dark, AX5; `OwnCardSetupTests`). Helper using the activated card is covered by existing card/Helper tests, not re-walked by hand. |
+| 8 Learn/recovery | Fixtures, saved progress, cards and settings decode in the unit suite (`V1FixtureTests`, `DataIntegrityTests`, `PendingCardSetupTests`). |
+
+Open owner items: physical-device haptics, VoiceOver by hand, real-device speed, installing the TestFlight build, and observing one real beginner and one experienced player.
