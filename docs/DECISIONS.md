@@ -325,3 +325,8 @@ The 1.3 beginner walkthrough showed a quint with five natural copies of one numb
 - Cards' "New" button is now "Add a card" (same identifier) and opens a chooser: Build hands, Import card text, Read a shared QR code. No printed-card scanning is offered.
 - `MahjongCore.GuidedLine` is a second view over `GroupSpec`/`TileSpec`/`SuitRef`/`Shift`. It writes groups as ordinary notation and validates through the existing parser and `Engine.expand` (14 tiles per way, at least one real hand), so there is no second rule engine. Lines with decorative operators (`+ = - x`) or no groups are not representable: they open in the notation editor labelled "Advanced pattern" with their source unchanged.
 - New hands, and existing hands the form can represent exactly, open in the guided editor; the notation editor stays reachable ("Advanced notation" / "Guided editor"), with Apply/Discard/Keep-editing when switching with unsaved edits. Two existing UI tests now tap "Advanced notation" before using the notation field. Saving still goes through `CardEditing`.
+
+## 2026-11-10, Phase 38: 1.4 integration
+
+- Version 1.4 is set through `project.yml`; build numbers stay under the uploader. Listing copy (`AppStore/metadata.md`), WhatToTest, the checklist and the release handoff were updated for the beginner-clarity changes; no scanning, camera or pricing claims. `tools/check_listing.py` now validates "What's New in 1.4".
+- The §7 recheck is recorded honestly in `docs/BEGINNER_AUDIT.md`: phase-level screenshot reviews plus the full gate, not a fresh by-hand walkthrough of every task.

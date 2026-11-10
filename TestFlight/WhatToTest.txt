@@ -1,16 +1,16 @@
-Thanks for testing Mahjong Mania 1.3! Please tell me where Practice, the Helper, or Game Night feels unclear, and whether anything looks wrong at your preferred text size.
+Thanks for testing Mahjong Mania 1.4! Please tell me where Practice, the Helper, card setup or Game Night feels unclear, and whether anything looks wrong at your preferred text size.
 
 What's new
-- Practice asks harder tile-fact questions, with a Tiles cheat sheet available from Practice, lessons, Helper and Learn.
-- Single-choice answers check on tap. Today's Deal is on the path, and Speed Round shows the rack. Sunny and the unit illustrations bring new celebrations.
-- A bug-squash pass improves data recovery, accessibility and reliability. Settings has Privacy Policy and Support links, and money settings explain that the app only does the maths.
+- Practice teaches the goal, tile facts and card colours before scored questions, and lesson notes can be reopened. Explanations use the actual tiles shown, and hints tell you their cost first.
+- Helper and Game explain modes, distance, dead hands and wall games in plain words. The Charleston tracker is compact, and tips match the screen you're on.
+- Choosing "I'll enter my own card" now leads to a guided editor that builds hands without notation. Notation is still there as Advanced.
 
 What to try
 1. Start a new Practice lesson, open Tiles, answer a question and continue. Are the questions fair and explanations clear?
 2. Play Today's Deal and try Speed Round after Unit 6. Does the rack make Keep or Pass easier to judge?
 3. Enter a full rack in Helper and inspect the closest hands and discard suggestions. Try Charleston passes too.
 4. Run a game night with four players, record hands, change a house rule and check the settle-up summary.
-5. Duplicate the Practice Card, edit a hand and share or scan its QR code. Open Privacy Policy and Support from Settings.
+5. Add a card with Build hands, save it and choose Use this card. Then duplicate the Practice Card, edit a hand and share its QR code. Open Privacy Policy and Support from Settings.
 6. Try large text, dark mode, Reduce Motion and VoiceOver. Please report haptics, sound and speed on your iPhone.
 
 Everything stays on your phone. The app does not take, hold or move money.

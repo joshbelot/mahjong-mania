@@ -20,7 +20,7 @@ def block(heading):
     return match.group(1).strip()
 
 
-limits = [("Name", 30), ("Subtitle", 30), ("Promotional text", 170), ("Description", 4000), ("Keywords", 100), ("What's New in 1.3", 4000)]
+limits = [("Name", 30), ("Subtitle", 30), ("Promotional text", 170), ("Description", 4000), ("Keywords", 100), ("What's New in 1.4", 4000)]
 ok = True
 values = {}
 for name, limit in limits:
@@ -44,7 +44,7 @@ for k in keywords:
         print(f"keyword repeats a word of the name or subtitle: {k}")
 
 banned = ["nmjl", "national mah jongg league", "official card", "mah jongg", "mahjongg", "rummikub", "mahjong legends"]
-for name in ["Name", "Subtitle", "Promotional text", "Keywords", "What's New in 1.3"]:
+for name in ["Name", "Subtitle", "Promotional text", "Keywords", "What's New in 1.4"]:
     low = values[name].lower()
     for b in banned:
         if b in low:
