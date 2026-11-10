@@ -28,7 +28,7 @@ Plan: [NEXT_WAVES_SPEC.md](NEXT_WAVES_SPEC.md), phases 34–38 in order. The 1.5
 | 35 Concrete feedback | complete; local gate passed | [#52](https://github.com/joshbelot/mahjong-mania/pull/52) |
 | 36 Beginner flow | complete; local gate passed | [#53](https://github.com/joshbelot/mahjong-mania/pull/53) |
 | 37 Guided card entry | complete; local gate passed | [#54](https://github.com/joshbelot/mahjong-mania/pull/54) |
-| 38 QA and TestFlight release | gate passed; upload pending | PR pending |
+| 38 QA and TestFlight release | merged; **1.4 (6) uploaded and processed VALID** | [#55](https://github.com/joshbelot/mahjong-mania/pull/55) |
 
 ## Version 1.3 (done)
 
@@ -214,7 +214,8 @@ Line identity across card edits was fixed too (line IDs are `L_<hash>`, see DECI
 
 ### Phase 38 local gate (2026-11-10)
 
-`RESULT_BUNDLE=build/p38-gate.xcresult tools/test.sh` on `claude/release-1-4` passed on iPhone Air, iOS 26.5: 132 UI tests (plus core and app unit suites), 0 failures, no retries, no compiler or runtime warnings. `python3 tools/check_listing.py`: all limits OK (What's New 353/4000). Log: `terra14-recovery-backup/phase38-gate.log`. Upload and processing status are recorded below only when confirmed.
+`RESULT_BUNDLE=build/p38-gate.xcresult tools/test.sh` on `claude/release-1-4` passed on iPhone Air, iOS 26.5: 132 UI tests (plus core and app unit suites), 0 failures, no retries, no compiler or runtime warnings. `python3 tools/check_listing.py`: all limits OK (What's New 353/4000). Log: `terra14-recovery-backup/phase38-gate.log`. 
+**Release (2026-11-10):** from clean `main` (`01d27c2`, all of PRs #51–#55): dry run exported the IPA (`--dry-run --ipa-output`); `xcrun altool --validate-app` reported "VERIFY SUCCEEDED with no errors"; the real `tools/upload_testflight.sh` re-ran the full tests, bumped to build 6 (`30fbff5`, pushed to main by the script), archived and uploaded **Mahjong Mania 1.4 (6)**. A read-only App Store Connect query at 09:04 PT showed 1.4 build 6 `processingState` **VALID** (uploaded 07:57 PT). Logs: `terra14-recovery-backup/release-dryrun.log`, `release-upload.log`. Not submitted for review. Owner steps open: physical-device haptics/VoiceOver/speed, installing the TestFlight build, and observing a real beginner.
 
 ### Phase 32 listing verification (2026-10-31)
 
