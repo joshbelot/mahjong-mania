@@ -14,6 +14,8 @@ struct CardsListView: View {
   @Environment(SettingsStore.self) private var settings
   @Environment(\.cardsNavigator) private var navigator
 
+  @Binding var openChooser: Bool
+  @State private var showChooser = false
   @State private var showImport = false
   @State private var showNew = false
   @State private var newName = ""
@@ -23,6 +25,10 @@ struct CardsListView: View {
   @State private var deleteTarget: Card?
   /// Set by the import sheet; opened once the sheet has gone.
   @State private var pendingOpenID: String?
+
+  init(openChooser: Binding<Bool> = .constant(false)) {
+    _openChooser = openChooser
+  }
 
   var body: some View {
     List {
@@ -59,13 +65,35 @@ struct CardsListView: View {
     } content: {
       ImportView { pendingOpenID = $0 }
     }
+    .onChange(of: openChooser, initial: true) {
+      if openChooser {
+        openChooser = false
+        showChooser = true
+      }
+    }
+    .sheet(isPresented: $showChooser) {
+      CardMethodChooser(
+        build: {
+          showChooser = false
+          newName = ""
+          showNew = true
+        },
+        importText: {
+          showChooser = false
+          showImport = true
+        },
+        scanQR: {
+          showChooser = false
+          showImport = true
+        })
+    }
     .sheet(item: $qrCard) { CardQRSheet(card: $0) }
     .alert("New card", isPresented: $showNew) {
       TextField("Card name", text: $newName)
       Button("Create") { createCard() }
       Button("Cancel", role: .cancel) {}
     } message: {
-      Text("Give your card a name. You can add hands one by one or import them.")
+      Text("Give your card a name. Next you can build its hands one at a time, no special notation needed.")
     }
     .alert("Rename card", isPresented: renameBinding) {
       TextField("Card name", text: $renameText)
@@ -90,10 +118,9 @@ struct CardsListView: View {
   private var actionBar: some View {
     AdaptiveStack(spacing: Spacing.md) {
       Button {
-        newName = ""
-        showNew = true
+        showChooser = true
       } label: {
-        Label("New", systemImage: "plus")
+        Label("Add a card", systemImage: "plus")
       }
       .buttonStyle(PrimaryButton(.secondary, fullWidth: true))
       .accessibilityIdentifier("cards.new")
@@ -190,6 +217,85 @@ struct CardsListView: View {
       settings.update { $0.activeCardID = AppSettings.practiceCardID }
     }
     cards.delete(id: card.id)
+  }
+}
+
+/// "Add a card": how do you want to get the hands in? Printed-card scanning is not offered (NEXT_WAVES §3.5).
+private struct CardMethodChooser: View {
+  @Environment(SettingsStore.self) private var settings
+  @Environment(\.theme) private var theme
+  @Environment(\.dismiss) private var dismiss
+  let build: () -> Void
+  let importText: () -> Void
+  let scanQR: () -> Void
+
+  var body: some View {
+    NavigationStack {
+      ScreenContainer {
+        VStack(alignment: .leading, spacing: Spacing.md) {
+          Text("How do you want to add your card?")
+            .font(Typography.body)
+            .foregroundStyle(theme.textMuted)
+          method(
+            "Build hands", "Choose the tiles for each hand from your own card, step by step.", "square.grid.2x2",
+            "method.build", build)
+          method(
+            "Import card text", "Paste or open a card file in Mahjong Mania's text format.",
+            "square.and.arrow.down", "method.import", importText)
+          method(
+            "Read a shared QR code", "Use a QR code made by Mahjong Mania on another device. It does not read printed cards.",
+            "qrcode.viewfinder", "method.qr", scanQR)
+          if settings.settings.pendingCardSetup {
+            Button("Use the Practice Card for now") {
+              settings.update {
+                $0.pendingCardSetup = false
+                $0.activeCardID = AppSettings.practiceCardID
+              }
+              dismiss()
+            }
+            .frame(minHeight: 44)
+            .accessibilityIdentifier("method.practice")
+          }
+        }
+      }
+      .navigationTitle("Add a card")
+      .navigationBarTitleDisplayMode(.inline)
+      .toolbar {
+        ToolbarItem(placement: .cancellationAction) {
+          Button("Cancel") { dismiss() }.accessibilityIdentifier("method.cancel")
+        }
+      }
+    }
+    .presentationDetents([.large])
+  }
+
+  private func method(
+    _ title: String, _ detail: String, _ symbol: String, _ id: String, _ action: @escaping () -> Void
+  ) -> some View {
+    Button(action: action) {
+      HStack(alignment: .top, spacing: Spacing.md) {
+        Image(systemName: symbol)
+          .font(.title3)
+          .foregroundStyle(theme.primary)
+          .frame(width: 32)
+          .accessibilityHidden(true)
+        VStack(alignment: .leading, spacing: Spacing.xs) {
+          Text(title).font(Typography.h2).foregroundStyle(theme.text)
+          Text(detail)
+            .font(Typography.small)
+            .foregroundStyle(theme.textMuted)
+            .multilineTextAlignment(.leading)
+            .fixedSize(horizontal: false, vertical: true)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+      }
+      .padding(Spacing.lg)
+      .background(theme.surface, in: RoundedRectangle(cornerRadius: Radius.lg))
+      .overlay(RoundedRectangle(cornerRadius: Radius.lg).strokeBorder(theme.border))
+      .contentShape(RoundedRectangle(cornerRadius: Radius.lg))
+    }
+    .buttonStyle(.plain)
+    .accessibilityIdentifier(id)
   }
 }
 

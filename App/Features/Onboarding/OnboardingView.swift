@@ -208,8 +208,8 @@ struct OnboardingView: View {
       ) { choose(.practice) }
       choiceCard(
         title: "I'll enter my own card",
-        detail: "Type in the hands from your own copy of the card.",
-        example: "After setup, open the Cards tab and tap New.",
+        detail: "Build the hands from your own copy of the card, one at a time. No special notation needed.",
+        example: "After setup, tap \"Set up your card\" to start.",
         selected: cardChoice == .own, id: "card.own"
       ) { choose(.own) }
       choiceCard(
@@ -221,8 +221,12 @@ struct OnboardingView: View {
 
   private func choose(_ choice: CardChoice) {
     cardChoice = choice
-    // Every option starts on the Practice Card; an entered card is picked in the Cards tab.
-    settings.update { $0.activeCardID = AppSettings.practiceCardID }
+    // Every option starts on the Practice Card. Choosing "own card" is remembered so the app can offer card
+    // setup after onboarding; the other choices clear it.
+    settings.update {
+      $0.activeCardID = AppSettings.practiceCardID
+      $0.pendingCardSetup = (choice == .own)
+    }
   }
 
   private func choiceCard(

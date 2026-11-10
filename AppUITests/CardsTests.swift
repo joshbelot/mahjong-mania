@@ -190,6 +190,7 @@ final class CardsTests: XCTestCase {
     attach("cards-line-detail-bottom-\(scheme)")
 
     waitFor(app, "line.edit").tap()
+    waitFor(app, "guided.advanced").tap()
     let notation = waitFor(app, "editor.notation")
     waitFor(app, "editor.valid")
     attach("cards-editor-valid-\(scheme)")
@@ -247,6 +248,7 @@ final class CardsTests: XCTestCase {
     waitFor(app, "line.row.0").tap()
     waitFor(app, "line.pattern")
     waitFor(app, "line.edit").tap()
+    waitFor(app, "guided.advanced").tap()
 
     let notation = waitFor(app, "editor.notation")
     notation.tap()

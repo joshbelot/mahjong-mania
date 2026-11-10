@@ -88,6 +88,9 @@ struct AppSettings: VersionedDocument, Equatable {
   var soundEffects = true
   /// Speed Round without the clock: 30 untimed questions (SPEC §18.8).
   var speedRoundNoTimer = false
+  /// The player chose "I'll enter my own card" in onboarding and has not yet activated a card or chosen the
+  /// Practice Card (NEXT_WAVES §3.5). Old settings files decode as false.
+  var pendingCardSetup = false
 
   init() {}
 
@@ -109,6 +112,7 @@ struct AppSettings: VersionedDocument, Equatable {
     bestStreaks = try c.decodeIfPresent(BestStreaks.self, forKey: .bestStreaks) ?? BestStreaks()
     soundEffects = try c.decodeIfPresent(Bool.self, forKey: .soundEffects) ?? true
     speedRoundNoTimer = try c.decodeIfPresent(Bool.self, forKey: .speedRoundNoTimer) ?? false
+    pendingCardSetup = try c.decodeIfPresent(Bool.self, forKey: .pendingCardSetup) ?? false
   }
 }
 

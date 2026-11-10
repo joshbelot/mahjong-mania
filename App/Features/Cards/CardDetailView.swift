@@ -19,18 +19,40 @@ enum LineEditorRequest: Identifiable, Hashable {
   }
 }
 
-/// Presents `LineEditorView` in its own navigation stack for `request` on card `cardID`.
+/// Presents the guided editor (the default for new hands and for hands it can represent exactly) or the
+/// notation editor, in its own navigation stack, for `request` on card `cardID`. Hands the guided form cannot
+/// represent open in the notation editor untouched and are labelled "Advanced pattern".
 struct LineEditorSheet: View {
   let cardID: String
   let request: LineEditorRequest
   var onSaved: () -> Void = {}
 
   @Environment(CardsStore.self) private var cards
+  /// Set when the user switches editors; replaces the default for this card and request.
+  @State private var override: EditorContent?
+
+  enum EditorContent: Equatable {
+    case guided(GuidedEditorModel)
+    case advanced(LineEditorModel, isAdvancedPattern: Bool)
+  }
 
   var body: some View {
     NavigationStack {
       if let card = cards.card(id: cardID) {
-        LineEditorView(cardID: cardID, lineID: request.lineID, model: model(for: card), onSaved: onSaved)
+        switch override ?? initialContent(for: card) {
+        case .guided(let model):
+          GuidedHandEditorView(
+            cardID: cardID, lineID: request.lineID, model: model, onSaved: onSaved,
+            onAdvanced: { override = .advanced($0, isAdvancedPattern: false) }
+          )
+          .id("guided")
+        case .advanced(let model, let advancedPattern):
+          LineEditorView(
+            cardID: cardID, lineID: request.lineID, model: model, advancedPattern: advancedPattern,
+            onSaved: onSaved, onGuided: { override = .guided($0) }
+          )
+          .id("advanced")
+        }
       } else {
         EmptyStateView("Card not found", systemImage: "rectangle.stack.badge.minus")
       }
@@ -39,11 +61,12 @@ struct LineEditorSheet: View {
     .presentationDragIndicator(.visible)
   }
 
-  private func model(for card: Card) -> LineEditorModel {
+  private func initialContent(for card: Card) -> EditorContent {
     if let lineID = request.lineID, let line = card.lines.first(where: { $0.id == lineID }) {
-      return LineEditorModel(card: card, editing: line)
+      if let guided = GuidedEditorModel(card: card, editing: line) { return .guided(guided) }
+      return .advanced(LineEditorModel(card: card, editing: line), isAdvancedPattern: true)
     }
-    return LineEditorModel(availableSections: card.sections)
+    return .guided(GuidedEditorModel(availableSections: card.sections))
   }
 }
 
@@ -128,7 +151,11 @@ struct CardDetailView: View {
       }
     }
     .safeAreaInset(edge: .top, spacing: 0) {
-      if card.builtIn { builtInBanner(card) }
+      if card.builtIn {
+        builtInBanner(card)
+      } else if settings.settings.pendingCardSetup && !card.lines.isEmpty && !isActive(card) {
+        activateBanner(card)
+      }
     }
     .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search hands")
     .navigationTitle(card.name)
@@ -197,6 +224,32 @@ struct CardDetailView: View {
     .background(theme.primarySoft)
     .accessibilityElement(children: .contain)
     .accessibilityIdentifier("card.builtInBanner")
+  }
+
+  /// Explicit activation after building a card from onboarding's "own card" choice.
+  private func activateBanner(_ card: Card) -> some View {
+    VStack(alignment: .leading, spacing: Spacing.sm) {
+      Text("Use this card for Helper and Game?")
+        .font(Typography.body.weight(.semibold))
+        .foregroundStyle(theme.text)
+      Text("Practice lessons keep using the Practice Card.")
+        .font(Typography.small)
+        .foregroundStyle(theme.textMuted)
+      Button("Use this card") {
+        settings.update {
+          $0.activeCardID = card.id
+          $0.pendingCardSetup = false
+        }
+      }
+      .buttonStyle(PrimaryButton(.primary, fullWidth: true))
+      .accessibilityIdentifier("card.activate")
+    }
+    .padding(Spacing.md)
+    .frame(maxWidth: .infinity, alignment: .leading)
+    .background(theme.primarySoft)
+    .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+    .accessibilityElement(children: .contain)
+    .accessibilityIdentifier("card.activateBanner")
   }
 
   private func optionsMenu(_ card: Card) -> some View {

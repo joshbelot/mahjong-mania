@@ -11,7 +11,11 @@ struct LineEditorView: View {
   /// The line being edited, or nil for a new hand.
   let lineID: String?
   let original: LineEditorModel
+  /// True when this hand's notation cannot be shown in the guided editor (it is kept exactly as written).
+  var advancedPattern = false
   var onSaved: () -> Void = {}
+  /// Asks the host to open the guided editor with this content.
+  var onGuided: (GuidedEditorModel) -> Void = { _ in }
 
   @Environment(\.dismiss) private var dismiss
   @Environment(\.theme) private var theme
@@ -20,13 +24,20 @@ struct LineEditorView: View {
 
   @State private var model: LineEditorModel
   @State private var keyTick = 0
+  @State private var showSwitchChoice = false
+  @State private var showNotGuided = false
   @FocusState private var focus: Field?
 
-  init(cardID: String, lineID: String?, model: LineEditorModel, onSaved: @escaping () -> Void = {}) {
+  init(
+    cardID: String, lineID: String?, model: LineEditorModel, advancedPattern: Bool = false,
+    onSaved: @escaping () -> Void = {}, onGuided: @escaping (GuidedEditorModel) -> Void = { _ in }
+  ) {
     self.cardID = cardID
     self.lineID = lineID
     self.original = model
+    self.advancedPattern = advancedPattern
     self.onSaved = onSaved
+    self.onGuided = onGuided
     _model = State(initialValue: model)
   }
 
@@ -35,6 +46,7 @@ struct LineEditorView: View {
     ScreenContainer {
       VStack(alignment: .leading, spacing: Spacing.lg) {
         if !settings.settings.cardNoticeSeen { noticeBanner }
+        if advancedPattern { advancedBanner }
         SectionCard("Hand") {
           notationField
           liveArea(status)
@@ -42,6 +54,13 @@ struct LineEditorView: View {
         SectionCard("Details") {
           detailFields
         }
+        Button {
+          if model != original { showSwitchChoice = true } else { switchToGuided(model) }
+        } label: {
+          Label("Guided editor", systemImage: "square.grid.2x2").frame(minHeight: 44)
+        }
+        .buttonStyle(PrimaryButton(.secondary, fullWidth: true))
+        .accessibilityIdentifier("editor.guided")
       }
     }
     .navigationTitle(lineID == nil ? "New hand" : "Edit hand")
@@ -70,6 +89,18 @@ struct LineEditorView: View {
         .background(theme.surface)
       }
     }
+    .confirmationDialog("Switch to the guided editor?", isPresented: $showSwitchChoice, titleVisibility: .visible) {
+      Button("Apply my changes") { switchToGuided(model) }
+      Button("Discard my changes", role: .destructive) { switchToGuided(original) }
+      Button("Keep editing", role: .cancel) {}
+    } message: {
+      Text("You have changes that are not saved.")
+    }
+    .alert("This hand stays in notation", isPresented: $showNotGuided) {
+      Button("OK", role: .cancel) {}
+    } message: {
+      Text("The guided editor can't show this hand exactly yet, or it has a problem to fix first. Nothing was changed.")
+    }
     .interactiveDismissDisabled(model != original)
     .haptic(.selection, trigger: keyTick)
     .onChange(of: model.notation) { _, newValue in
@@ -78,6 +109,30 @@ struct LineEditorView: View {
         focus = nil
       }
     }
+  }
+
+  // MARK: Switching
+
+  private func switchToGuided(_ source: LineEditorModel) {
+    if let guided = GuidedEditorModel(advanced: source) {
+      onGuided(guided)
+    } else {
+      showNotGuided = true
+    }
+  }
+
+  private var advancedBanner: some View {
+    HStack(alignment: .top, spacing: Spacing.md) {
+      Image(systemName: "wrench.and.screwdriver.fill").foregroundStyle(theme.gold).accessibilityHidden(true)
+      Text("Advanced pattern. This hand uses notation the guided editor can't show, so it is kept exactly as written.")
+        .font(Typography.small)
+        .foregroundStyle(theme.text)
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+    .padding(Spacing.md)
+    .background(theme.surfaceAlt, in: RoundedRectangle(cornerRadius: Radius.lg))
+    .accessibilityElement(children: .combine)
+    .accessibilityIdentifier("editor.advancedPattern")
   }
 
   // MARK: Copyright notice
