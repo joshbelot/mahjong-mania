@@ -4,6 +4,14 @@
 
 **1.5, phases 39–42, is a separately gated scanning wave.** Its local-only experiment is specified here so it does not need redesigning after 1.4. Production scanning requires the Phase 39 accuracy gate; it is not part of the 1.4 execution prompt. Owner-supplied card pictures are pending and do not block 1.4. No API spending, backend, advertising, subscription or scan-credit work is authorized by this document.
 
+**Owner revision, 2026-11-10 (1.4 shipped as build 6):** scanning ships as a **Beta** feature. The revision lowers the exact-draft gate, keeps the zero-wrong-but-ready rule strict, and adds:
+- a beta disclaimer
+- a whole-photo quality check with "take a better photo" guidance
+- one-tap confirmation of ready rows
+- first-class support for every common source format (§4.4)
+
+The app does not restrict or judge where a user's image or PDF came from. Changes are in §4.1, §4.2, §4.4, §5.1, §5.3 and Phases 39–42.
+
 This is the authoritative supplement for these waves. Existing `docs/SPEC.md` still owns the app's engine, scoring, persistence and prior releases. In Phase 34, add a concise §20 pointer and phase checklist to SPEC, plus a 1.4 progress table in PROGRESS, referencing this document rather than duplicating requirements. Preserve 1.3 history and its real completion evidence. If another completed wave has already consumed these version/phase identifiers, reconcile and document the mapping before implementation; never overwrite another wave. AGENTS governs local gates and overrides obsolete CI references in the older SPEC. No CI is available or to be enabled.
 
 ## 0. Evidence and limits of this evaluation
@@ -144,7 +152,7 @@ Cards → “Add a card” opens a method chooser:
 2. “Import card text” — the existing notation file flow.
 3. “Read a shared QR code” — the existing image/link flow, clearly labelled as a Mahjong Mania QR code.
 
-Do not advertise Scan a printed card until the scanning wave is implemented and passes its gate. The existing photo picker recognizes a QR code in a picture; it does not read the photographed printed hands.
+Do not advertise “Scan a card” until the scanning wave is implemented and passes its gate. The existing photo picker recognizes a QR code in a picture; it does not read the photographed printed hands.
 
 Guided hand entry is a second UI over the existing notation/domain model:
 
@@ -178,44 +186,82 @@ Before implementing the production scanner, create a small local development har
 - Vision OCR + layout/color analysis + deterministic parsing.
 - Optionally the same inputs plus an available on-device model for draft proposals. Report separately; no silent fallback to a server.
 
-Use **30 original test pages** with at least **120 annotated rows**, including at least 20 deliberately unreadable/ambiguous rows. Split 20 development pages / 10 held-out pages before tuning; held-out pages must include at least 30 readable rows and eight deliberately ambiguous/unreadable rows. Include clean image and PDF sources, multi-column layouts, red/green/blue and black ink, different font sizes, grayscale, rotated/skewed photos, shadows/glare, blur, `0/O`, `1/I`, F/D/NEWS, counts and points, X/C, any/consecutive/like rules, matching Dragons, alternatives, and a footnote affecting several rows. Repetition/augmentations of the same card layout must stay in one split. These are targets for the experiment, not measured results.
+Use **30 original test pages** with at least **120 annotated rows**, including at least 20 deliberately unreadable/ambiguous rows. Split 20 development pages / 10 held-out pages before tuning; held-out pages must include at least 30 readable rows and eight deliberately ambiguous/unreadable rows. Cover every source format in §4.4 (at least two pages each, in both splits where possible). Include clean image and PDF sources, multi-column layouts, red/green/blue and black ink, different font sizes, grayscale, rotated/skewed photos, shadows/glare, blur, `0/O`, `1/I`, F/D/NEWS, counts and points, X/C, any/consecutive/like rules, matching Dragons, alternatives, and a footnote affecting several rows. Repetition/augmentations of the same card layout must stay in one split. These are targets for the experiment, not measured results.
 
 Define ground truth as canonical line semantics: all variants, numbers, group sizes, suit equality/inequality/fixed-suit constraints, dragon constraints, shift range, points, and concealed flag. Text-string similarity or “14 tiles” alone is insufficient.
 
-Report exact rows correct, rows needing correction, rows omitted, rows correctly flagged, confidently wrong rows, runtime, peak memory, and OS/device/model used. Preserve all source spans and uncertainties. Freeze the supported classes before running held-out evaluation; omitted readable rows in those classes count as failures, and do not move hard rows out of the denominator after seeing results. Required advance gate:
+Report exact rows correct, rows needing correction, rows omitted, rows correctly flagged, confidently wrong rows, runtime, peak memory, and OS/device/model used. Report each metric separately for each §4.4 source format as well as in total. Preserve all source spans and uncertainties. Freeze the supported classes before running held-out evaluation; omitted readable rows in those classes count as failures, and do not move hard rows out of the denominator after seeing results.
 
-- At least 90% of supported, readable held-out rows produce a semantically exact draft without manual repair; list excluded/unsupported layouts explicitly.
+Required advance gate (beta). The user reviews every row before saving, so draft accuracy can be lower than for an unreviewed feature. Being quietly wrong is never acceptable:
+
+- At least **60%** of supported, readable held-out rows produce a semantically exact draft without manual repair. Report the figure honestly, even when it is far above 60%. List excluded and unsupported layouts explicitly. Any one §4.4 format below 60% may still ship only if the app labels that format as limited (for example "Grayscale: you'll pick the suits") and the result is recorded in DECISIONS.
 - Every intentionally ambiguous/unreadable held-out row is flagged or rejected, never presented as ready.
-- Zero semantically wrong rows labelled ready in the held-out set. This finite result is a release gate, not a guarantee about arbitrary cards.
+- **Zero** semantically wrong rows labelled ready in the held-out set. This rule is not relaxed for the beta. This finite result is a release gate, not a guarantee about arbitrary cards.
+- The whole-photo quality check (§5.1 step 3a) rejects with a retake message at least 90% of the deliberately poor held-out sources (heavy blur, very dark, large glare, card mostly cut off, not a card) and accepts every clean source.
 - No card is saved or activated without review, even when every row is ready.
 - Main-thread responsiveness remains good, cancel works, and memory stays bounded. Measure baseline performance on the available simulator and freeze numeric time/memory budgets from the development set before the held-out run. Record physical-device performance separately on the oldest supported test device available; if none is available, leave that owner check open and label simulator measurements honestly. No physical-device speed claim without evidence.
 
-If the gate fails, ship the clarity wave independently. Improve the experiment or restrict scanning to a narrower, clearly labelled assisted workflow (for example one cropped line at a time). Do not ship “scan any card” marketing or silently increase cost/device requirements to meet the gate.
+If the gate fails, improve the experiment or restrict scanning to a narrower, clearly labelled assisted workflow (for example one cropped line at a time). Do not ship “scan any card” marketing or silently increase cost/device requirements to meet the gate.
 
 ### 4.2 Owner-supplied evaluation samples
 
-Useful first samples: one sharp color photo of a full card, one close-up of a section with footnotes/alternatives, one ordinary imperfect phone photo, and a source PDF if available. The same card at different resolutions is useful for robustness but is not independent layout evidence. Keep a held-out set after initial exploration.
+The owner places samples in `private/card-scans/`, which is git-ignored. They may be photos of a physical card, PDFs, screenshots or any other format in §4.4, from any source the owner chooses. Agents use whatever is there and do not search for or download card files themselves. Expected samples:
+- clean, flat photos of each side
+- close-ups of each panel, especially footnotes and alternatives
+- ordinary imperfect phone photos (tilted, hand-held, warm light, shadow, glare, slight blur)
+- the card on different backgrounds
+- optionally a grayscale printout, a photo of the card on a screen, PDFs, and older-year cards
 
-Inspect supplied images in the current conversation first and produce a draft transcription plus an uncertainty list for the owner to check. This is a reference for testing local recognition, not an API benchmark. Do not forward samples to another provider or run paid calls for this wave. Do not put real proprietary card images or their full reconstructed contents into the public repository; commit only original fixtures and aggregate results.
+The same layout at different resolutions or in different formats is useful for robustness but is not independent layout evidence. Older-year cards are different layouts and are the most valuable additions. Keep a held-out set after initial exploration.
+
+**Ground truth comes from the owner's own transcriptions** in card-file format (§9 of SPEC), stored beside the samples, for example `private/card-scans/2026/answer-key.txt`. The 2026 key already exists. Agents do not transcribe a real card from the images, and do not reconstruct its contents beyond what the harness needs to compare results. A sample without an answer key is used only for the quality check and for "does not crash / flags honestly" checks.
+
+Do not forward samples to another provider or run paid calls for this wave. Never commit real card images, their contents or per-row results that reveal them. Commit only original fixtures and aggregate results (counts and rates per format).
 
 ### 4.3 Cost boundary
 
 No provider account, API key, cloud endpoint, attestation/quota server, paid request, or monetization system is to be created. Local failures go to correction/manual entry or an honest unsupported-input message. Any future cloud proposal requires a separate product decision and budget; a cap or hoped-for donations does not make it self-funding. Earlier API price estimates are intentionally excluded from the execution scope.
 
+### 4.4 Supported source formats and robustness
+
+The scanner must read every common way a card reaches a phone. **The app does not check, restrict or comment on where a user's file came from.** Every source goes through the same flow and the same review. Supported formats, each one a reported test class in §4.1:
+
+| Format | How it is read |
+|---|---|
+| Phone photo of a printed card (flat or hand-held, any light) | Vision OCR plus colour and layout analysis on the cropped, perspective-corrected image |
+| PDF with a text layer (selectable text) | Read the text and its positions **directly from the PDF** with PDFKit. This is the primary text source and needs no OCR. Render the page only for ink colours and layout. Where the text layer and OCR disagree, the text layer wins for characters, and the row is flagged if the layout is inconsistent. |
+| Image-only or scanned PDF | Render each selected page within the §5.3 caps, then take the photo path |
+| Screenshot (PNG/JPEG of a PDF, web page or app) | Photo path, skipping perspective correction when the image is already straight |
+| Grayscale printout or photocopy | Photo path; suit relationships cannot be read from colour, so the user assigns them (§5.3); label the format "you'll pick the suits" |
+| Photo of a laptop or phone screen | Photo path, with moiré and screen-glare handling in the quality check |
+| Retyped or reformatted table (plain text, spreadsheet export, different fonts, colour words instead of colour ink) | Photo path or text-layer path; layout analysis must not assume the printed card's exact geometry |
+
+Layout analysis must not hard-code one publisher's page geometry; build it from row and column detection so that older-year and reformatted layouts work. Original test pages for each format are created by the agent (§4.1); owner samples measure real-world quality.
+
 ## 5. Scanning wave: product flow and data contracts
 
 ### 5.1 Acquisition and review flow
 
-Cards → Add a card adds “Scan a printed card” with “Take photo,” “Choose photos,” and “Choose image or PDF.” The term “upload” is avoided because the selected files remain on the device.
+Cards → Add a card adds “Scan a card” with a **Beta** tag, offering “Take photo,” “Choose photos,” and “Choose image or PDF.” The term “upload” is avoided because the selected files remain on the device. The Beta tag stays on the menu item, the scan screens and the scanner's Learn/Help entry until a later release removes it on measured evidence.
 
-1. Explain the baseline: “Scan a card you own. We'll make a draft for you to check. Photos and files stay on your device.” Preserve the existing personal-use content policy.
+1. Explain the baseline: “Scan your card. We'll make a draft for you to check. Photos and files stay on your device.” Then the beta disclaimer, shown on this screen and again on the save step: **“Scanning is in beta. Check every hand against your card before you play. The scanner can make mistakes, and you can fix any hand before or after saving.”** Preserve the existing personal-use content policy. Do not add copy that questions or restricts where the user's file came from.
 2. Capture/select. Request camera access only on Take photo, with `NSCameraUsageDescription` in project.yml. Use PhotosPicker and the document picker rather than blanket photo-library access. Check scanner/camera support and give Photos/Files alternatives when unavailable or denied. Handle iCloud-only file downloads with a clear offline error; do not claim the app fetched no data if the system is downloading a user-selected source.
-3. Preview, rotate, crop, and retain color. Suggest a close, glare-free capture, one panel at a time for a folded card. Do not force black-and-white filters. Select PDF pages before rendering. A text PDF may supply text layout hints, but colored page rendering is still needed; image-only PDFs take the same OCR path. Reject encrypted PDFs with a clear message and offer an unlocked image/PDF, without attempting to bypass protection.
+3. Preview, rotate, crop, and retain color. Suggest a close, glare-free capture, one panel at a time for a folded card. Do not force black-and-white filters. Select PDF pages before rendering. A PDF with a text layer is read from that layer first (§4.4); colored page rendering is still needed for suit colours. Image-only PDFs take the OCR path. Reject encrypted PDFs with a clear message and offer an unlocked image/PDF, without attempting to bypass protection.
+3a. **Photo quality check, before reading.** Run a fast on-device check of each page and give one specific, plain fix for each problem found:
+   - “Too blurry. Hold the phone steady, or tap to focus.”
+   - “Too dark. Move to better light.”
+   - “Glare on the card. Tilt it away from the light.”
+   - “Part of the card is cut off. Fit the whole panel in the frame.”
+   - “Too far away. Move closer, or scan one panel at a time.”
+   - “Screen lines in the photo. Take a screenshot instead, or move back a little.”
+   - “This doesn't look like a card.”
+   
+   Offer **Retake** (or **Choose another**) and **Try anyway**. After reading, if fewer than half of the page's detected rows are readable, show “We couldn't read most of this photo” with the same specific tips and Retake, instead of a page of unreadable rows. The user can still continue to fix rows by hand. Thresholds are tuned on the development set and frozen before the held-out run.
 4. Read in a cancellable background task with progress per page/row. OCR/table text is data, never instructions to the app or a model. A malformed file cannot cause network/tool actions, unbounded work, or executable behavior.
 5. Review each detected row beside its source crop and page/row number. Show the colored pattern, one example hand, points, X/C meaning, notes/constraints, and any unresolved fields. No model-generated “confidence percentage” UI. Use “Ready to review,” “Needs a check,” and “Can't read this line.”
 6. Tap a group to correct text, count, suit relationship, number range, or dragon mapping in the guided editor; compare with the source. Footnotes have explicit scope: line, section, or whole page. Unresolved footnotes/alternatives block the affected row. Never discard a troublesome variant to make a row validate.
-7. Every row starts unconfirmed. The user confirms reviewed rows. A summary lists confirmed, unresolved, and excluded counts. Saving only the confirmed rows requires explicit acknowledgement of omitted rows: “Save N hands; leave M out.” There is no silently skipped content.
-8. Ask for the card's name/year; never assert issuer identity from a logo. Create one card atomically using existing CardFile/parser validation, then offer “Use this card in Helper and Game Night.” Do not overwrite/merge an existing card in the first scanner release.
+7. Every row starts unconfirmed. Ready rows are shown together in a scrollable list, each with its source crop beside it, and **“Confirm all ready hands”** confirms every visible ready row in one tap. Rows that need a check, or can't be read, are confirmed one at a time after they are fixed. A summary lists confirmed, unresolved, and excluded counts. Saving only the confirmed rows requires explicit acknowledgement of omitted rows: “Save N hands; leave M out.” There is no silently skipped content.
+8. Ask for the card's name/year; never assert issuer identity from a logo. Create one card atomically using existing CardFile/parser validation, then offer “Use this card in Helper and Game Night.” Do not overwrite/merge an existing card in the first scanner release. A saved scanned card is an ordinary user card: every hand can be edited later in the existing card editor (guided or advanced), and the card's detail screen offers “Fix a hand” with a reminder that it came from a beta scan.
 9. Cancel leaves existing cards/settings untouched and clears temporary media. Keep the source/draft during the current import session only; closing with edits asks whether to discard the draft. A cold launch does not pretend a half-written card exists. A future resumable draft is separate scope.
 
 ### 5.2 Architecture
@@ -231,11 +277,11 @@ Cards → Add a card adds “Scan a printed card” with “Take photo,” “Ch
 
 ### 5.3 Resource limits, privacy and content
 
-Supported initial sources are JPEG, PNG, HEIC and PDF; validate actual decodability, not the filename alone. Initial input caps: 30 MB per import, at most 4 selected pages/photos, decoded sources no larger than 50 megapixels, and at most 120 candidate rows. Reject limits with a useful crop/select-fewer-pages action before allocating full decoded buffers. Downsample/process one page at a time to at most 12 megapixels; do not render a huge PDF page at its unconstrained native dimensions. Release file-provider/security-scoped access and temporary buffers on every success/error/cancel path. These are maximum caps, adjustable downward with measured memory evidence recorded in DECISIONS. Raising them requires a separate resource review.
+Supported initial sources are JPEG, PNG, HEIC and PDF, covering every §4.4 format; validate actual decodability, not the filename alone. Initial input caps: 30 MB per import, at most 4 selected pages/photos, decoded sources no larger than 50 megapixels, and at most 120 candidate rows. Reject limits with a useful crop/select-fewer-pages action before allocating full decoded buffers. Downsample/process one page at a time to at most 12 megapixels; do not render a huge PDF page at its unconstrained native dimensions. Release file-provider/security-scoped access and temporary buffers on every success/error/cancel path. These are maximum caps, adjustable downward with measured memory evidence recorded in DECISIONS. Raising them requires a separate resource review.
 
 Color-dependent patterns from grayscale or near-monochrome sources require user-assigned suit relationships. Glare, clipping, missing points/flags, inconsistent constraints, or uncertain footnotes must never be auto-filled from guesses. Explain what to recapture or correct.
 
-The baseline adds no account, per-scan charge, API key, external inference, analytics, remote image retention, or public distribution. No cloud fallback is available. Do not log extracted card contents. Imported images/PDFs and their metadata are temporary local inputs; share/export actions must never attach original source media accidentally. The app continues to ship only its original Practice Card; fixtures and marketing use original content. Scanning a user-supplied card does not give the app rights to publish that card. Retain the existing personal-use notice; do not present this feature as legal permission to redistribute copyrighted cards.
+The baseline adds no account, per-scan charge, API key, external inference, analytics, remote image retention, or public distribution. No cloud fallback is available. Do not log extracted card contents. Imported images/PDFs and their metadata are temporary local inputs; share/export actions must never attach original source media accidentally. The app continues to ship only its original Practice Card; fixtures and marketing use original content. Scanning a user-supplied card does not give the app rights to publish that card. Retain the existing personal-use notice; do not present this feature as legal permission to redistribute copyrighted cards. The app reads whatever the user chooses and does not check or comment on where it came from. App Store and website copy describe the feature as scanning **your** card (“Scan your card: photo, PDF or screenshot”) and never advertise reading downloaded copies of a published card or name an issuer.
 
 Re-audit camera/photo/file handling, privacy manifest and App Store copy. Offline processing can remain accurately described as local; remove the old “no permissions” claim once camera capture exists. Account for system file-provider downloads in support copy. Reset all data also removes any app-owned temporary draft media. Optional on-device model use must not invoke cloud services. Update privacy text for camera permission without weakening the local-processing guarantee.
 
@@ -317,6 +363,7 @@ The owner's standing instructions explicitly authorize commit/push/PR/merge and 
 - [ ] Separate `claude/card-scan-feasibility` PR. Produce `docs/CARD_SCAN_EVALUATION.md`, an original annotated corpus/manifest and a local reproducible harness. No production entry point, paid request or network fallback. Platform recognition stays in an Apple-target harness/app adapter; semantic comparison stays Foundation-only.
 - [ ] Freeze the layout-disjoint dev/held-out split, ground truth, supported input classes, gate denominator and numeric resource budgets before the final held-out run (§4.1). Report every row, omissions and ready-but-wrong errors, plus runtime/memory/OS/device. Do not remove hard examples after seeing results.
 - [ ] Owner samples stay private and are never required to manufacture synthetic passing evidence. Original fixtures can establish correctness/reproducibility; results from synthetic files alone do not establish camera-photo quality. Report missing real-device/sample evidence honestly.
+- [ ] Original fixtures cover every §4.4 format. Run owner samples from `private/card-scans/` against their answer keys (§4.2) and report aggregate per-format results only. Prototype and tune the §5.1 step 3a quality check and report its accept/reject rates.
 - [ ] Production phases 40–42 may proceed only when the fixed semantic/ambiguity gates pass for a documented useful supported class. If they fail, stop production implementation and record the actual failed metrics; a narrowed flow needs an amended explicit scope/benchmark before continuing. Do not add a server or spend money. Notify the owner of this concrete decision.
 - [ ] Common gate applies to executable additions. Add 1.5/39–42 linked checklists to SPEC/PROGRESS when this separate wave begins. A passing experiment is not a public scanner release.
 
@@ -328,7 +375,7 @@ The owner's standing instructions explicitly authorize commit/push/PR/merge and 
 
 ### Phase 41 — Source comparison, corrections and atomic card creation
 
-- [ ] Implement §5 candidate states and review UI, every field/footnote/alternative, guided correction, invalidated confirmation after semantic edits, explicit omissions and atomic create-new-card. At least one confirmed usable row required; zero-row save is disabled. Existing card/history/settings remain unchanged on failure/cancel.
+- [ ] Implement §5 candidate states and review UI, every field/footnote/alternative, guided correction, invalidated confirmation after semantic edits, explicit omissions and atomic create-new-card. Also implement the Beta tag and disclaimer, the photo quality check with Retake/Try anyway (§5.1 step 3a), “Confirm all ready hands”, the text-layer PDF path, and “Fix a hand” on a saved scanned card. At least one confirmed usable row required; zero-row save is disabled. Existing card/history/settings remain unchanged on failure/cancel.
 - [ ] Require every row's confirmation even if recognition is exact. “Ready to review” is not “correct.” Edited/corrected rows pass existing semantic validation; unresolved fields block confirmation. No auto-activation or silent merging.
 - [ ] Exercise original images/PDFs end to end plus injected acquisition errors, share/export content isolation and temp cleanup on cancel, successful save, reset and abandoned sessions. Stale app-owned media from a killed import is removed at next launch without touching system originals. Complete the common gate.
 
@@ -372,6 +419,11 @@ For the screenshot-reviewed method:
 - Grayscale, glare over a group, ambiguous `0/O`, missing X/C/points, and a footnote spanning rows: user sees exactly what must be resolved; no invented values.
 - File too large, excessive page count, corrupt/locked PDF, source deleted by provider, camera denial/unsupported simulator, missing Apple Intelligence, cancelled selection/recognition/review, and interrupted save: readable error/recovery, no existing-data loss.
 - A source containing instructions such as “ignore previous rules” remains inert text, never a model/tool instruction or imported action.
+- Beta tag and disclaimer appear on the menu item, the first scan screen and the save step, in light/dark and AX5.
+- A blurry, dark, glary, cut-off or non-card photo gets the specific retake message from §5.1 step 3a; Retake reopens capture; Try anyway continues; a mostly unreadable page shows “We couldn't read most of this photo”.
+- “Confirm all ready hands” confirms only the visible ready rows; rows that need a check stay unconfirmed; editing a confirmed row unconfirms it.
+- A PDF with a text layer reads its text without OCR and matches the same page as an image; an image-only PDF, a screenshot, a grayscale page (user assigns suits), a photo of a screen and a retyped table each complete review and save.
+- A saved scanned card opens in the card editor and “Fix a hand” edits one hand without changing the others.
 - Repeated scan of the same source creates no duplicate unless the user explicitly saves another card; no silent merge into existing data.
 - Source colors preserve equality/inequality independently of physical suit artwork; matching Dragons and literal year zeros are validated. Alternative patterns are all preserved or explicitly unresolved.
 - Core import logic runs under `swift test` on Linux. UI uses injected original local fixtures; physical camera quality and speed require real-device evidence before advertising them as verified.
