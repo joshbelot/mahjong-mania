@@ -26,8 +26,8 @@ Plan: [NEXT_WAVES_SPEC.md](NEXT_WAVES_SPEC.md), phases 34–38 in order. The 1.5
 |---|---|---|
 | 34 Beginner audit and teaching | complete; local gate passed | [#51](https://github.com/joshbelot/mahjong-mania/pull/51) |
 | 35 Concrete feedback | complete; local gate passed | [#52](https://github.com/joshbelot/mahjong-mania/pull/52) |
-| 36 Beginner flow | complete; local gate passed | PR pending |
-| 37 Guided card entry | pending | |
+| 36 Beginner flow | complete; local gate passed | [#53](https://github.com/joshbelot/mahjong-mania/pull/53) |
+| 37 Guided card entry | complete; local gate passed | PR pending |
 | 38 QA and TestFlight release | pending | |
 
 ## Version 1.3 (done)
@@ -207,6 +207,10 @@ Line identity across card edits was fixed too (line IDs are `L_<hash>`, see DECI
 ### Phase 36 local gate (2026-11-09)
 
 `RESULT_BUNDLE=build/p36-gate3.xcresult tools/test.sh` passed on iPhone Air, iOS 26.5: core and app unit tests passed and 129 UI tests ran in the last UI target with 0 failures; no compiler warnings (only Xcode's AppIntents metadata notices) and "No Xcode runtime warnings". An earlier gate failed on one stale assertion (`testTodaysDealIsOnThePathAndStartsWithOneTap` omitted the new Today's Deal caption); the test now expects the spec §3.3 caption. Log: `terra14-recovery-backup/phase36-gate3.log`. Visual QA (phone, dark, AX5, iPad, example rack; screenshots in `terra14-recovery-backup/phase36-*`) plus a 2026-11-09 recheck of the Charleston tracker on iPhone 17e in light and dark: the recommendation shows above the tracker controls with the tile keyboard collapsed. The Charleston UI test helper now collapses the tile keyboard on that phone so rack taps are reachable. Physical-device checks remain owner steps.
+
+### Phase 37 local gate (2026-11-10)
+
+`RESULT_BUNDLE=build/p37-gate2.xcresult tools/test.sh` passed on iPhone Air, iOS 26.5, with core (incl. 8 new `GuidedHandTests`), app unit (incl. new guided editor and pending-setup tests) and 132 UI tests, 0 failures, no retries, no compiler warnings and no runtime warnings. An earlier gate needed one retry of the new own-card UI test (menu timing); the test was hardened and the final gate ran clean. Log: `terra14-recovery-backup/phase37-gate2.log`. Visual QA of onboarding, banner, method chooser, guided editor and activation in light, dark and AX5 (screenshots in the xcresult / `terra14-recovery-backup`); the pinned banners are capped at XXXL text so they cannot fill the screen at AX5. Physical-device checks remain owner steps.
 
 ### Phase 32 listing verification (2026-10-31)
 

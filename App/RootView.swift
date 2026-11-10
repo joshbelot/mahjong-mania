@@ -11,6 +11,8 @@ struct RootView: View {
   @State fileprivate var importRequest: LinkImport?
   @State fileprivate var linkError: CardQRCode.DecodeError?
   @State fileprivate var openedCardID: String?
+  @Environment(CardsStore.self) private var cards
+  @State fileprivate var chooserRequest = false
 
   init(startTab: AppTab? = nil) {
     _selectedTab = State(initialValue: LaunchOptions.initialTab() ?? startTab ?? .game)
@@ -38,7 +40,7 @@ struct RootView: View {
         .tabItem { Label("Practice", systemImage: "flame.fill") }
         .accessibilityIdentifier("tab.practice")
         .tag(AppTab.practice)
-      NavigationStack(path: $cardsPath) { CardsListView() }
+      NavigationStack(path: $cardsPath) { CardsListView(openChooser: $chooserRequest) }
         .tabItem { Label("Cards", systemImage: "rectangle.stack") }
         .accessibilityIdentifier("tab.cards")
         .tag(AppTab.cards)
@@ -48,6 +50,10 @@ struct RootView: View {
         .tag(AppTab.learn)
     }
     .tint(theme.primary)
+    .safeAreaInset(edge: .top, spacing: 0) {
+      if settings.settings.pendingCardSetup && selectedTab != .cards { cardSetupBanner }
+    }
+    .onChange(of: settings.settings.activeCardID) { clearSetupIfCardActivated() }
     .environment(\.tabSwitcher, TabSwitcher { selectedTab = $0 })
     .environment(\.cardsNavigator, CardsNavigator { cardsPath.append($0) })
     .onChange(of: links.pending, initial: true) { handlePendingLink() }
@@ -71,6 +77,52 @@ struct RootView: View {
 }
 
 extension RootView {
+  /// Nonblocking reminder after onboarding's "I'll enter my own card" (NEXT_WAVES §3.5).
+  fileprivate var cardSetupBanner: some View {
+    VStack(alignment: .leading, spacing: Spacing.sm) {
+      Text("Set up your card")
+        .font(Typography.body.weight(.semibold))
+        .foregroundStyle(theme.text)
+      Text("Build the hands from your own card to use them in Helper and Game.")
+        .font(Typography.small)
+        .foregroundStyle(theme.textMuted)
+        .fixedSize(horizontal: false, vertical: true)
+      AdaptiveStack(spacing: Spacing.sm) {
+        Button("Set up your card") {
+          selectedTab = .cards
+          cardsPath = []
+          chooserRequest = true
+        }
+        .buttonStyle(PrimaryButton(.primary, fullWidth: true))
+        .accessibilityIdentifier("cardsetup.start")
+        Button("Use the Practice Card for now") {
+          settings.update {
+            $0.pendingCardSetup = false
+            $0.activeCardID = AppSettings.practiceCardID
+          }
+        }
+        .buttonStyle(PrimaryButton(.secondary, fullWidth: true))
+        .accessibilityIdentifier("cardsetup.practice")
+      }
+    }
+    .padding(Spacing.md)
+    .frame(maxWidth: .infinity, alignment: .leading)
+    .background(theme.primarySoft)
+    // A pinned banner must not take over the screen at accessibility text sizes; the full setup lives in Cards.
+    .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+    .accessibilityElement(children: .contain)
+    .accessibilityIdentifier("cardsetup.banner")
+  }
+
+  /// Activating a card with at least one hand completes setup. An empty card never does.
+  fileprivate func clearSetupIfCardActivated() {
+    let id = settings.settings.activeCardID
+    guard settings.settings.pendingCardSetup, id != AppSettings.practiceCardID,
+      let card = cards.card(id: id), !card.lines.isEmpty
+    else { return }
+    settings.update { $0.pendingCardSetup = false }
+  }
+
   /// Opens the Import screen, pre-filled, for a card link; says so if the link is not a card.
   fileprivate func handlePendingLink() {
     guard let url = links.pending else { return }
@@ -97,6 +149,7 @@ extension RootView {
   let stores = AppStores.inMemory()
   return RootView()
     .environment(stores.settings)
+    .environment(stores.cards)
     .environment(stores.practice)
     .preferredColorScheme(.light)
 }
@@ -105,6 +158,7 @@ extension RootView {
   let stores = AppStores.inMemory()
   return RootView()
     .environment(stores.settings)
+    .environment(stores.cards)
     .environment(stores.practice)
     .preferredColorScheme(.dark)
 }
