@@ -9,9 +9,10 @@ struct CoachTipBanner: View {
   @State private var hidden = false
 
   let screen: String
+  var eligible: Set<String>? = nil
 
   var body: some View {
-    if settings.settings.assistLevel == .coach, !hidden, let tip = tips.tip(for: screen) {
+    if settings.settings.assistLevel == .coach, !hidden, let tip = tips.tip(for: screen, eligible: eligible) {
       HStack(alignment: .top, spacing: Spacing.md) {
         Image(systemName: "lightbulb.fill")
           .foregroundStyle(theme.gold)

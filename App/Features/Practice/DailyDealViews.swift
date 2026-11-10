@@ -215,6 +215,10 @@ struct TodaysDealNode: View {
         Text("Today's Deal")
           .font(Typography.body.weight(.semibold))
           .foregroundStyle(theme.text)
+        Text("One daily puzzle. Try the lessons first if you're new.")
+          .font(Typography.small)
+          .foregroundStyle(theme.textMuted)
+          .multilineTextAlignment(.center)
         if played != nil {
           Text(results)
             .font(.title3)
@@ -239,7 +243,7 @@ struct TodaysDealNode: View {
     .accessibilityLabel("Today's Deal, number \(DailyDeal.number(for: day))")
     .accessibilityValue(
       played == nil
-        ? "Not played yet. Difficulty \(level) of 3." : "Played today. Tap to play again for practice.")
+        ? "One daily puzzle. Try the lessons first if you're new. Not played yet. Difficulty \(level) of 3." : "Played today. Tap to play again for practice.")
     .accessibilityAddTraits(.isButton)
     .accessibilityIdentifier("daily.card")
     .overlay(alignment: .topTrailing) {

@@ -54,6 +54,10 @@ struct ProfileView: View {
         }
       }
       .accessibilityElement(children: .combine)
+      Text("XP are learning points. A streak counts days you meet your daily lesson goal.")
+        .font(Typography.small)
+        .foregroundStyle(theme.textMuted)
+        .fixedSize(horizontal: false, vertical: true)
     }
   }
 

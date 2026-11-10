@@ -147,6 +147,41 @@ final class LargeTextTests: XCTestCase {
     }
   }
 
+  func testPracticePathTitleHasRoomAtLargestTextSize() {
+    let app = launch(dark: false)
+    app.tabBars.buttons["Practice"].tap()
+    let lesson = el(app, "path.node.u1l1")
+    XCTAssertTrue(lesson.waitForExistence(timeout: 10))
+    XCTAssertGreaterThan(lesson.frame.width, 200, "The lesson title needs the available width at accessibility sizes")
+    XCTAssertTrue(lesson.label.contains("Suits and dragons"))
+  }
+
+  func testCardSummaryStacksAtLargestTextSize() {
+    let app = XCUIApplication()
+    app.launchArguments += [
+      "-UITestResetData", "-UITestTab", "practice", "-UITestPlacement", "basics",
+      "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL",
+    ]
+    app.launch()
+    let lesson = el(app, "path.node.u2l2")
+    for _ in 0..<15 where !lesson.isHittable { app.swipeDown() }
+    XCTAssertTrue(lesson.isHittable)
+    lesson.tap()
+    tapID(app, "node.play")
+    if el(app, "lesson.start").waitForExistence(timeout: 4) { tapID(app, "lesson.start") }
+    let name = el(app, "drill.line.name")
+    let points = el(app, "drill.line.points")
+    XCTAssertTrue(name.waitForExistence(timeout: 10))
+    XCTAssertTrue(points.waitForExistence(timeout: 10))
+    XCTAssertGreaterThanOrEqual(points.frame.minY, name.frame.maxY, "The name and points must stack at accessibility sizes")
+    app.swipeUp()
+    app.swipeUp()
+    tapID(app, "lesson.hint.button")
+    let explanation = el(app, "lesson.hint.explanation")
+    XCTAssertTrue(explanation.waitForExistence(timeout: 5))
+    XCTAssertTrue(explanation.isHittable, "The first-hint explanation should scroll into view")
+  }
+
   func testLargeTextLight() { check(dark: false) }
   func testLargeTextDark() { check(dark: true) }
 }

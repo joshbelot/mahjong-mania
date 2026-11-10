@@ -26,7 +26,7 @@ Plan: [NEXT_WAVES_SPEC.md](NEXT_WAVES_SPEC.md), phases 34–38 in order. The 1.5
 |---|---|---|
 | 34 Beginner audit and teaching | complete; local gate passed | [#51](https://github.com/joshbelot/mahjong-mania/pull/51) |
 | 35 Concrete feedback | complete; local gate passed | [#52](https://github.com/joshbelot/mahjong-mania/pull/52) |
-| 36 Beginner flow | pending | |
+| 36 Beginner flow | complete; local gate passed | PR pending |
 | 37 Guided card entry | pending | |
 | 38 QA and TestFlight release | pending | |
 
@@ -203,6 +203,10 @@ Line identity across card edits was fixed too (line IDs are `L_<hash>`, see DECI
 
 `RESULT_BUNDLE=/private/tmp/terra-p31-final.xcresult tools/test.sh` passed: 333 core tests, 299 app unit tests and 121 UI tests on iPhone Air (iOS 26.5); 420 Xcode test runs, no retries, failures, skipped tests, compiler warnings or runtime warnings. Xcode emitted one App Intents metadata-extraction notice. The log and result bundle are in `/private/tmp/terra-p31-final.log` and `/private/tmp/terra-p31-final.xcresult`. Focused iPhone 17 Pro Max tests and screenshots checked the money wording and About links in light, dark and AX5, both live links in Safari, and the card keyboard controls. The AX5 game screens require scrolling to read the complete text.
 
+
+### Phase 36 local gate (2026-11-09)
+
+`RESULT_BUNDLE=build/p36-gate3.xcresult tools/test.sh` passed on iPhone Air, iOS 26.5: core and app unit tests passed and 129 UI tests ran in the last UI target with 0 failures; no compiler warnings (only Xcode's AppIntents metadata notices) and "No Xcode runtime warnings". An earlier gate failed on one stale assertion (`testTodaysDealIsOnThePathAndStartsWithOneTap` omitted the new Today's Deal caption); the test now expects the spec §3.3 caption. Log: `terra14-recovery-backup/phase36-gate3.log`. Visual QA (phone, dark, AX5, iPad, example rack; screenshots in `terra14-recovery-backup/phase36-*`) plus a 2026-11-09 recheck of the Charleston tracker on iPhone 17e in light and dark: the recommendation shows above the tracker controls with the tile keyboard collapsed. The Charleston UI test helper now collapses the tile keyboard on that phone so rack taps are reachable. Physical-device checks remain owner steps.
 
 ### Phase 32 listing verification (2026-10-31)
 

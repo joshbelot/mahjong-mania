@@ -74,6 +74,11 @@ final class HelperTests: XCTestCase {
   ) {
     let target = element(app, id)
     XCTAssertTrue(target.waitForExistence(timeout: 10), "Missing \(id)", file: file, line: line)
+    // On the smallest phones the tile keyboard covers the rack; collapse it as a person would.
+    if id.hasPrefix("rack.tile."), !target.isHittable {
+      let toggle = element(app, "helper.keyboard.toggle")
+      if toggle.exists, toggle.label.contains("Hide") { toggle.tap() }
+    }
     var swipes = 0
     while !target.isHittable && swipes < 4 {
       app.swipeUp()
@@ -278,6 +283,7 @@ final class HelperTests: XCTestCase {
     let app = launch(assist: "coach", rack: Self.sampleRack)
     XCTAssertTrue(element(app, "pass.row.0").waitForExistence(timeout: 10))
     collapseKeyboard(app)
+    tap(app, "charleston.details")
     tap(app, "charleston.east")
     XCTAssertEqual(element(app, "rack.count").label, "13 of 14 tiles")
     attach("helper-charleston-east-light")

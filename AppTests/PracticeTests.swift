@@ -159,6 +159,32 @@ struct LessonSessionTests {
     #expect(LessonScoring.stars([s.records[0]]) == 2)
   }
 
+  @Test func firstHintConfirmationIsOncePerAttemptAndDismissalIsFree() {
+    let s = session("u1l1")
+    let original = s.exercise?.id
+    s.requestHint()
+    #expect(s.hintConfirmationPresented && s.hint == nil && s.hintAvailable)
+    s.dismissHintConfirmation()
+    #expect(!s.hintConfirmationPresented && s.hint == nil && s.records.isEmpty)
+    #expect(s.exercise?.id == original && s.xpEarned == 0)
+    s.requestHint()
+    s.confirmHint()
+    s.confirmHint()
+    #expect(s.hasConfirmedHint && s.hint != nil && !s.hintAvailable)
+    answerRight(s)
+    #expect(s.records.count == 1 && s.records[0].usedHint && s.feedback?.xp == 5)
+    s.next()
+    s.requestHint()
+    #expect(!s.hintConfirmationPresented && s.hint != nil)
+    let fresh = session("u1l1")
+    fresh.requestHint()
+    #expect(fresh.hintConfirmationPresented)
+    let assessment = session("u1c")
+    assessment.requestHint()
+    assessment.confirmHint()
+    #expect(!assessment.hintConfirmationPresented && assessment.hint == nil)
+  }
+
   @Test func aRemovedChoiceCannotBePicked() {
     let s = session("u1l1")
     s.useHint()

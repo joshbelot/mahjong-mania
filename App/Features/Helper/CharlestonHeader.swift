@@ -5,6 +5,7 @@ import SwiftUI
 struct CharlestonHeader: View {
   @Environment(\.theme) private var theme
   @Environment(HelperStore.self) private var helper
+  @State private var detailsExpanded = false
 
   let onSwitchToPlaying: () -> Void
 
@@ -17,21 +18,6 @@ struct CharlestonHeader: View {
 
   var body: some View {
     SectionCard {
-      Toggle(isOn: eastBinding) {
-        Text("I'm East (dealer) \u{00B7} 14 tiles")
-          .font(Typography.body)
-          .foregroundStyle(theme.text)
-      }
-      .tint(theme.primary)
-      .accessibilityHint("The dealer starts with 14 tiles, everyone else with 13")
-      .accessibilityIdentifier("charleston.east")
-
-      Text(helper.trackerText)
-        .font(Typography.h2)
-        .foregroundStyle(theme.text)
-        .accessibilityAddTraits(.isHeader)
-        .accessibilityIdentifier("charleston.tracker")
-
       if helper.isCharlestonDone {
         Text("Everyone has passed. Time to play.")
           .font(Typography.small)
@@ -40,21 +26,33 @@ struct CharlestonHeader: View {
           .buttonStyle(PrimaryButton(.primary, size: .large))
           .accessibilityIdentifier("charleston.toPlaying")
       }
-      AdaptiveStack(horizontalAlignment: .leading, spacing: Spacing.sm) {
-        if helper.canStopAfterFirst {
-          Button("Stop after this Charleston") {
-            withAnimation(.smooth(duration: 0.2)) { helper.stopAfterFirstCharleston() }
+      DisclosureGroup(isExpanded: $detailsExpanded) {
+        Toggle(isOn: eastBinding) {
+          Text("I'm East (dealer) \u{00B7} 14 tiles")
+            .font(Typography.body)
+            .foregroundStyle(theme.text)
+        }
+        .tint(theme.primary)
+        .accessibilityHint("The dealer starts with 14 tiles, everyone else with 13")
+        .accessibilityIdentifier("charleston.east")
+        AdaptiveStack(horizontalAlignment: .leading, spacing: Spacing.sm) {
+          if helper.canStopAfterFirst {
+            Button("Stop after this Charleston") {
+              withAnimation(.smooth(duration: 0.2)) { helper.stopAfterFirstCharleston() }
+            }
+            .buttonStyle(PrimaryButton(.secondary))
+            .accessibilityHint("Skips the second Charleston")
+            .accessibilityIdentifier("charleston.stop")
           }
-          .buttonStyle(PrimaryButton(.secondary))
-          .accessibilityHint("Skips the second Charleston")
-          .accessibilityIdentifier("charleston.stop")
+          Button("Start over") {
+            withAnimation(.smooth(duration: 0.2)) { helper.restartCharleston() }
+          }
+          .buttonStyle(PrimaryButton(.ghost))
+          .accessibilityHint("Goes back to pass 1 and keeps your tiles")
+          .accessibilityIdentifier("charleston.restart")
         }
-        Button("Start over") {
-          withAnimation(.smooth(duration: 0.2)) { helper.restartCharleston() }
-        }
-        .buttonStyle(PrimaryButton(.ghost))
-        .accessibilityHint("Goes back to pass 1 and keeps your tiles")
-        .accessibilityIdentifier("charleston.restart")
+      } label: {
+        Text("Details").accessibilityIdentifier("charleston.details")
       }
     }
   }

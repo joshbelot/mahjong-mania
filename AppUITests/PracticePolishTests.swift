@@ -49,7 +49,7 @@ final class PracticePolishTests: PracticeUITestCase {
     let app = launch(practiceFlags)
     let card = element(app, "daily.card")
     XCTAssertTrue(card.waitForExistence(timeout: 10), "No Today's Deal node")
-    XCTAssertEqual(card.value as? String, "Not played yet. Difficulty 1 of 3.", "2026-11-02 is a Monday")
+    XCTAssertEqual(card.value as? String, "One daily puzzle. Try the lessons first if you're new. Not played yet. Difficulty 1 of 3.", "2026-11-02 is a Monday")
     attach("todays-deal-node")
     card.tap()
     XCTAssertTrue(element(app, "lesson.prompt").waitForExistence(timeout: 10))

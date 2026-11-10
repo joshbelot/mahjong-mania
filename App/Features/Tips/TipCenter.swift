@@ -17,11 +17,12 @@ final class TipCenter {
 
   /// The tip for `screen`: the same one on every call until dismissed, a fresh unseen one on first use,
   /// nil once dismissed or when every tip has been shown.
-  func tip(for screen: String) -> CoachTip? {
+  func tip(for screen: String, eligible: Set<String>? = nil) -> CoachTip? {
     if dismissed.contains(screen) { return nil }
-    if let existing = assigned[screen] { return existing }
+    if let existing = assigned[screen], eligible?.contains(existing.id) ?? true { return existing }
+    assigned[screen] = nil
     let seed = sessionSeed &+ UInt64(shownIDs.count) &* 0x9E37_79B9_7F4A_7C15
-    guard let tip = Tips.next(after: shownIDs, seed: seed) else { return nil }
+    guard let tip = Tips.next(after: shownIDs, seed: seed, eligible: eligible) else { return nil }
     shownIDs.insert(tip.id)
     assigned[screen] = tip
     return tip

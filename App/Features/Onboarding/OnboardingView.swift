@@ -174,7 +174,7 @@ struct OnboardingView: View {
         .font(Typography.small)
         .foregroundStyle(theme.textMuted)
       choiceCard(
-        title: "Off", detail: "Just keep score. No hints and no tips.",
+        title: "Off", detail: "Off hides Hand Helper. Choose Peek or Coach for hand suggestions.",
         example: "Nothing extra appears on screen.",
         selected: settings.settings.assistLevel == .off, id: "assist.off"
       ) { settings.update { $0.assistLevel = .off } }

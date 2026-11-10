@@ -34,7 +34,8 @@ struct PathView: View {
         ForEach(Array(unitNodes.enumerated()), id: \.element.id) { entry in
           NodeButton(
             node: entry.element, offset: offset(entry.offset), popTick: entry.element.id == popNodeID ? popTick : 0,
-            badge: entry.element.spec.kind == .review && reviewDue > 0 ? reviewDue : nil
+            badge: entry.element.spec.kind == .review && reviewDue > 0 ? reviewDue : nil,
+            startHere: entry.element.id == "u1l1" && entry.element.status == .next
           ) { onTap(entry.element) }
             .id("node.\(entry.element.id)")
         }
@@ -101,12 +102,14 @@ struct UnitHeader: View {
 /// One circular node of the path.
 struct NodeButton: View {
   @Environment(\.theme) private var theme
+  @Environment(\.dynamicTypeSize) private var typeSize
   @Environment(\.reduceMotion) private var reduceMotion
   let node: PathNode
   let offset: CGFloat
   var popTick = 0
   /// A number shown on the node (questions waiting in a review node).
   var badge: Int?
+  var startHere = false
   let action: () -> Void
   @State private var pulse = false
 
@@ -116,7 +119,7 @@ struct NodeButton: View {
     Button(action: action) {
       VStack(spacing: Spacing.xs) {
         if isNext {
-          Text("Start")
+          Text(startHere ? "Start here" : "Start")
             .font(Typography.small.weight(.bold))
             .foregroundStyle(theme.primary)
             .padding(.horizontal, Spacing.md)
@@ -153,8 +156,9 @@ struct NodeButton: View {
           .font(Typography.small.weight(.medium))
           .foregroundStyle(node.status == .locked ? theme.textMuted : theme.text)
           .multilineTextAlignment(.center)
-          .lineLimit(2)
-          .frame(maxWidth: 180)
+          .lineLimit(typeSize.isAccessibilitySize ? nil : 2)
+          .fixedSize(horizontal: false, vertical: true)
+          .frame(maxWidth: typeSize.isAccessibilitySize ? .infinity : 180)
       }
       .frame(minWidth: 88, minHeight: 88)
       .contentShape(Rectangle())

@@ -4,6 +4,7 @@ import SwiftUI
 /// The full-screen lesson player (SPEC §18.5): top bar, intro card, question, feedback, completion.
 struct LessonView: View {
   @Environment(\.theme) private var theme
+  @Environment(\.horizontalSizeClass) private var horizontalSizeClass
   @Environment(\.reduceMotion) private var reduceMotion
   @Environment(PracticeStore.self) private var practice
   @State private var session: LessonSession
@@ -56,6 +57,9 @@ struct LessonView: View {
             Text(session.teachingText)
               .font(Typography.body)
               .foregroundStyle(theme.text)
+            Text("Tiles opens the tile guide and does not lower your score. Hint gives a clue and can lower your reward.")
+              .font(Typography.small)
+              .foregroundStyle(theme.textMuted)
             LessonIllustration(nodeID: session.node.id)
           }
           .frame(maxWidth: .infinity, alignment: .leading)
@@ -86,6 +90,7 @@ struct LessonView: View {
     }
     .hapticOnChange(trigger: session.answerCount) { _ in session.lastCorrect ? .success : .warning }
     .onChange(of: session.phase) { _, phase in
+      if phase != .answering { session.dismissHintConfirmation() }
       if phase == .finished, !applied {
         applied = true
         if let applyResult {
@@ -167,16 +172,19 @@ struct LessonView: View {
         .accessibilityIdentifier("lesson.notes")
       }
       if session.cheatSheetAllowed && session.phase != .intro && session.phase != .finished {
-        TilesButton()
+        TilesButton(style: horizontalSizeClass == .regular ? .label : .icon)
       }
       if session.hintsAllowed && session.phase != .intro {
         Button {
-          session.useHint()
+          session.requestHint()
         } label: {
-          Image(systemName: "lightbulb.fill")
+          ViewThatFits(in: .horizontal) {
+            Label("Hint", systemImage: "lightbulb.fill")
+            Image(systemName: "lightbulb.fill")
+          }
             .font(.headline)
             .foregroundStyle(session.hintAvailable ? theme.gold : theme.textFaint)
-            .frame(width: 44, height: 44)
+            .frame(minWidth: 44, minHeight: 44)
         }
         .disabled(!session.hintAvailable)
         .accessibilityLabel("Hint")
@@ -191,6 +199,28 @@ struct LessonView: View {
 
   // MARK: Content
 
+  private var hintConfirmation: some View {
+    VStack(alignment: .leading, spacing: Spacing.sm) {
+      Text("A hint gives you a clue. Hints lower the XP for a correct first answer. To earn three stars, answer every question correctly the first time without hints.")
+        .accessibilityIdentifier("lesson.hint.explanation")
+      Text("Opening Tiles does not lower your score.")
+      AdaptiveStack(horizontalAlignment: .leading, spacing: Spacing.sm) {
+        Button("Not now") { session.dismissHintConfirmation() }
+          .buttonStyle(PrimaryButton(.secondary))
+          .accessibilityIdentifier("lesson.hint.dismiss")
+        Button("Use hint") { session.confirmHint() }
+          .buttonStyle(PrimaryButton(.primary))
+          .accessibilityIdentifier("lesson.hint.confirm")
+      }
+    }
+    .font(Typography.small)
+    .foregroundStyle(theme.text)
+    .padding(Spacing.md)
+    .background(theme.surfaceAlt, in: RoundedRectangle(cornerRadius: Radius.lg))
+    .accessibilityElement(children: .contain)
+    .accessibilityIdentifier("lesson.hint.confirmation")
+  }
+
   @ViewBuilder
   private var content: some View {
     switch session.phase {
@@ -200,13 +230,19 @@ struct LessonView: View {
       if let exercise = session.exercise {
         ScrollViewReader { proxy in
           ScrollView {
-            ExerciseView(session: session, exercise: exercise)
-              .id(exercise.id)
-              .padding(.horizontal, Spacing.lg)
-              .padding(.vertical, Spacing.lg)
-              .padding(.bottom, session.phase == .feedback ? 8 : 0)
+            VStack(alignment: .leading, spacing: Spacing.md) {
+              if session.hintConfirmationPresented { hintConfirmation.id("hint.confirmation") }
+              ExerciseView(session: session, exercise: exercise)
+                .id(exercise.id)
+            }
+            .padding(.horizontal, Spacing.lg)
+            .padding(.vertical, Spacing.lg)
+            .padding(.bottom, session.phase == .feedback ? 8 : 0)
           }
           .onChange(of: session.index) { proxy.scrollTo(exercise.id, anchor: .top) }
+          .onChange(of: session.hintConfirmationPresented) { _, presented in
+            if presented { proxy.scrollTo("hint.confirmation", anchor: .top) }
+          }
         }
         .safeAreaInset(edge: .bottom, spacing: 0) { bottomBar }
       }
@@ -258,6 +294,11 @@ struct LessonView: View {
           .font(Typography.body)
           .foregroundStyle(theme.text)
           .fixedSize(horizontal: false, vertical: true)
+        if session.node.id == "u1l1" {
+          Text("Tap a single answer to submit it. When asked to pass several tiles, select the requested number, then tap Check.")
+            .font(Typography.small)
+            .foregroundStyle(theme.textMuted)
+        }
         HStack(spacing: Spacing.lg) {
           SunnyView(expression: .hello, size: 72)
           UnitArt(unit: session.node.unit)

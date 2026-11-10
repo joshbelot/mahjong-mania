@@ -296,6 +296,28 @@ struct HelperStoreTests {
     #expect(!store.add(.joker))
   }
 
+  @Test func exampleRackIsIdentifiedPersistedAndNeverReplacesEnteredTiles() {
+    let directory = makeTempDirectory()
+    let store = HelperStore(directory: directory, persistDelay: fast)
+    let example: [Tile] = [.number(1, .bams), .flower]
+    #expect(store.setExampleRack(example))
+    #expect(store.isExampleRack)
+    #expect(!store.setExampleRack([.joker]))
+    #expect(store.rack == example)
+    store.flush()
+    let reloaded = HelperStore(directory: directory, persistDelay: fast)
+    #expect(reloaded.isExampleRack && reloaded.rack == example)
+    reloaded.clearRack()
+    #expect(!reloaded.isExampleRack)
+    #expect(reloaded.add(.wind(.east)))
+    #expect(!reloaded.setExampleRack(example) && reloaded.rack == [.wind(.east)])
+    reloaded.clearRack()
+    reloaded.addExposure(Exposure(tiles: [.wind(.east), .wind(.east), .wind(.east)]))
+    #expect(!reloaded.setExampleRack(example))
+    store.reset()
+    #expect(!store.isExampleRack && store.rack.isEmpty)
+  }
+
   @Test func exposuresAndSeenCountTowardsUsage() {
     let store = HelperStore(directory: makeTempDirectory(), persistDelay: fast)
     store.addExposure(Exposure(tiles: [.number(5, .dots), .number(5, .dots), .joker]))

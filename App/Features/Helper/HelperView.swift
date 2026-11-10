@@ -45,10 +45,16 @@ struct HelperView: View {
   var body: some View {
     ScreenContainer {
       VStack(alignment: .leading, spacing: Spacing.lg) {
-        CoachTipBanner(screen: "helper")
+        CoachTipBanner(screen: "helper", eligible: Tips.eligible(for: helper.mode))
         HelperHeader(cardName: analyzer?.card.name ?? "Practice Card") { sheet = .card }
         SegmentedPicker("Mode", selection: modeBinding, options: HelperMode.allCases) { $0.title }
           .accessibilityIdentifier("helper.mode")
+        Text(modeDescription)
+          .font(Typography.small)
+          .foregroundStyle(theme.textMuted)
+        Text("Helper uses the selected card and cannot see physical tiles automatically.")
+          .font(Typography.small)
+          .foregroundStyle(theme.textMuted)
         if let analyzer {
           content(analyzer)
         } else {
@@ -117,6 +123,14 @@ struct HelperView: View {
 
   // MARK: Content
 
+  private var modeDescription: String {
+    switch helper.mode {
+    case .charleston: return "Before play, choose tiles to pass."
+    case .playing: return "During play, compare your rack with your card."
+    case .scout: return "Compare opponents' face-up groups with possible hands."
+    }
+  }
+
   @ViewBuilder
   private func content(_ analyzer: Analyzer) -> some View {
     if helper.mode == .scout {
@@ -135,13 +149,24 @@ struct HelperView: View {
     if isEmpty {
       emptyState
     }
+    if helper.isExampleRack {
+      Text("Example hand. Clear it to enter your own tiles.")
+        .font(Typography.small)
+        .foregroundStyle(theme.textMuted)
+        .fixedSize(horizontal: false, vertical: true)
+        .accessibilityIdentifier("helper.example")
+    }
     TileRackView(
       tiles: settings.settings.tileSort == .suit ? helper.rack.sorted() : helper.rack,
       limit: limit,
       onRemove: remove,
       onClear: { helper.clearRack() })
     if helper.mode == .charleston {
-      CharlestonHeader { helper.setMode(.playing) }
+      Text(helper.trackerText)
+        .font(Typography.h2)
+        .foregroundStyle(theme.text)
+        .accessibilityAddTraits(.isHeader)
+        .accessibilityIdentifier("charleston.tracker")
     }
     if helper.mode == .playing {
       exposuresCard
@@ -152,6 +177,11 @@ struct HelperView: View {
         mode: helper.mode, analyzer: analyzer, view: helper.view, seen: helper.seen,
         danger: playingDanger(analyzer), gate: gate, advisor: advisor,
         revealed: $suggestionRevealed, onCallCheck: { sheet = .call })
+    }
+    if helper.mode == .charleston {
+      CharlestonHeader { helper.setMode(.playing) }
+    }
+    if !isEmpty {
       ResultsSection(
         results: gate.showsClosestHands(revealed: closestRevealed)
           ? helper.results(using: analyzer) : [],
@@ -194,11 +224,11 @@ struct HelperView: View {
 
   private var emptyState: some View {
     VStack(spacing: Spacing.xs) {
-      Text("Add your tiles to see which hands you're closest to.")
+      Text("Add the tiles in your rack, or try an example hand.")
         .font(Typography.body)
         .foregroundStyle(theme.textMuted)
         .multilineTextAlignment(.center)
-      Button("Deal me a random hand", action: dealRandomHand)
+      Button("Try an example hand", action: dealRandomHand)
         .buttonStyle(PrimaryButton(.ghost))
         .accessibilityIdentifier("helper.deal")
     }
@@ -260,7 +290,7 @@ struct HelperView: View {
     let dealt = Wall.deal(
       seed: UInt64.random(in: 1...UInt64.max),
       count: HelperRules.charlestonRackSize(isEast: helper.isEast))
-    withAnimation(.snappy(duration: 0.12)) { helper.setRack(dealt.hand) }
+    withAnimation(.snappy(duration: 0.12)) { _ = helper.setExampleRack(dealt.hand) }
   }
 
   // MARK: Sheets

@@ -79,10 +79,18 @@ enum Tips {
       text: "Agree on house rules before the first hand. It prevents arguments later."),
   ]
 
+  static func eligible(for mode: HelperMode) -> Set<String> {
+    switch mode {
+    case .charleston: return ["keep-options", "pairs-hard", "singles-early", "jokers-gold", "blind-pass", "flowers-count", "soap-zero", "dragon-match", "shift-lines", "quints-jokers"]
+    case .playing: return ["safe-discard", "watch-exposures", "add-called-sets", "count-tiles", "dead-hand", "joker-swap", "concealed-careful", "say-discard"]
+    case .scout: return ["watch-exposures", "count-tiles"]
+    }
+  }
+
   /// Returns a tip not in `shownIDs`, chosen deterministically from `seed`, or nil when every tip
   /// has been shown.
-  static func next(after shownIDs: Set<String>, seed: UInt64) -> CoachTip? {
-    let remaining = all.filter { !shownIDs.contains($0.id) }
+  static func next(after shownIDs: Set<String>, seed: UInt64, eligible: Set<String>? = nil) -> CoachTip? {
+    let remaining = all.filter { !shownIDs.contains($0.id) && (eligible?.contains($0.id) ?? true) }
     guard !remaining.isEmpty else { return nil }
     var rng = SeededRandom(seed: seed)
     let index = Int(rng.next() % UInt64(remaining.count))
