@@ -4,6 +4,7 @@ import SwiftUI
 /// Level badge with an XP bar, the streak flame, and today's goal ring (SPEC §18.2).
 struct HeaderStrip: View {
   @Environment(\.theme) private var theme
+  @Environment(\.horizontalSizeClass) private var horizontalSizeClass
   @Environment(\.dynamicTypeSize) private var typeSize
   @Environment(PracticeStore.self) private var practice
 
@@ -22,7 +23,7 @@ struct HeaderStrip: View {
         NavigationLink(value: PracticeRoute.profile) { streakBlock }
           .buttonStyle(.plain)
         goalBlock
-        TilesButton()
+        TilesButton(style: horizontalSizeClass == .regular ? .label : .icon)
       }
     }
   }
@@ -84,19 +85,18 @@ struct HeaderStrip: View {
     let goal = progress.dailyGoal.lessons
     let met = progress.goalMet(on: practice.today)
     let fraction = met ? 1 : min(1, Double(lessonsToday) / Double(max(1, goal)))
-    return ZStack {
-      Circle().stroke(theme.border, lineWidth: 5)
-      Circle()
-        .trim(from: 0, to: fraction)
-        .stroke(fraction >= 1 ? theme.success : theme.primary, style: StrokeStyle(lineWidth: 5, lineCap: .round))
-        .rotationEffect(.degrees(-90))
-      if fraction >= 1 {
-        Image(systemName: "checkmark").font(.footnote.weight(.bold)).foregroundStyle(theme.success)
-      } else {
+    return VStack(spacing: 2) {
+      ZStack {
+        Circle().stroke(theme.border, lineWidth: 5)
+        Circle()
+          .trim(from: 0, to: fraction)
+          .stroke(fraction >= 1 ? theme.success : theme.primary, style: StrokeStyle(lineWidth: 5, lineCap: .round))
+          .rotationEffect(.degrees(-90))
         Text("\(lessonsToday)/\(goal)").font(Typography.tiny.monospacedDigit()).foregroundStyle(theme.textMuted)
       }
+      .frame(width: 40, height: 40)
+      Text("lessons today").font(Typography.tiny).foregroundStyle(theme.textMuted).fixedSize()
     }
-    .frame(width: 40, height: 40)
     .accessibilityElement(children: .ignore)
     .accessibilityLabel("Today's goal")
     .accessibilityValue(met ? "Done for today" : "\(lessonsToday) of \(goal) lessons")

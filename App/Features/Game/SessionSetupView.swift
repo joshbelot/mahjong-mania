@@ -238,6 +238,9 @@ struct SessionSetupView: View {
 
   private var rulesCard: some View {
     SectionCard("Rules") {
+      Text("Standard rules are selected by default. Open Rules to review or change them.")
+        .font(Typography.small)
+        .foregroundStyle(theme.textMuted)
       NavigationLink {
         HouseRulesView(rules: $rules)
       } label: {

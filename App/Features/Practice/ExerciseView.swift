@@ -65,11 +65,13 @@ struct ExerciseView: View {
         .accessibilityAddTraits(.isHeader)
         .accessibilityIdentifier("lesson.prompt")
       linesView
-      if let hint = session.hint, !hint.text.isEmpty {
+      if let hint = session.hint {
         HStack(alignment: .top, spacing: Spacing.sm) {
           SunnyView(expression: .thinking, size: 34).frame(width: 46, height: 40)
-          Text(hint.text)
-          .font(Typography.small.weight(.medium))
+          VStack(alignment: .leading, spacing: Spacing.xs) {
+            Text("Hint used").font(Typography.small.weight(.semibold))
+            Text(hint.text).font(Typography.small.weight(.medium))
+          }
           .foregroundStyle(theme.text)
         }
           .padding(Spacing.md)
@@ -111,6 +113,7 @@ struct ExerciseView: View {
             .overlay(RoundedRectangle(cornerRadius: Radius.md).strokeBorder(theme.border, lineWidth: 1))
         }
       }
+      .accessibilityElement(children: .contain)
       .accessibilityIdentifier("lesson.lines")
     }
   }

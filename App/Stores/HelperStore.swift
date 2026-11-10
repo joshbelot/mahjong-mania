@@ -13,6 +13,7 @@ struct HelperDocument: VersionedDocument, Equatable {
   var version = HelperDocument.currentVersion
   var mode: HelperMode = .charleston
   var rack: [Tile] = []
+  var isExampleRack = false
   var exposures: [Exposure] = []
   /// Tile code → number seen elsewhere.
   var seen: [String: Int] = [:]
@@ -30,6 +31,7 @@ struct HelperDocument: VersionedDocument, Equatable {
     version = try c.decodeIfPresent(Int.self, forKey: .version) ?? Self.currentVersion
     mode = try c.decodeIfPresent(HelperMode.self, forKey: .mode) ?? .charleston
     rack = try c.decodeIfPresent([Tile].self, forKey: .rack) ?? []
+    isExampleRack = try c.decodeIfPresent(Bool.self, forKey: .isExampleRack) ?? false
     exposures = try c.decodeIfPresent([Exposure].self, forKey: .exposures) ?? []
     seen = try c.decodeIfPresent([String: Int].self, forKey: .seen) ?? [:]
     opponents = try c.decodeIfPresent([OpponentInput].self, forKey: .opponents) ?? Self.defaultOpponents
@@ -46,6 +48,7 @@ struct HelperDocument: VersionedDocument, Equatable {
 final class HelperStore {
   private(set) var mode: HelperMode
   private(set) var rack: [Tile]
+  private(set) var isExampleRack: Bool
   private(set) var exposures: [Exposure]
   private(set) var seen: TileCounts
   private(set) var opponents: [OpponentInput]
@@ -79,6 +82,7 @@ final class HelperStore {
     let doc = file.load() ?? HelperDocument()
     mode = doc.mode
     rack = doc.rack
+    isExampleRack = doc.isExampleRack
     exposures = doc.exposures
     seen = Self.counts(from: doc.seen)
     opponents = doc.opponents
@@ -101,6 +105,7 @@ final class HelperStore {
     var doc = HelperDocument()
     doc.mode = mode
     doc.rack = rack
+    doc.isExampleRack = isExampleRack
     doc.exposures = exposures
     doc.seen = Dictionary(uniqueKeysWithValues: seen.map { ($0.key.code, $0.value) })
     doc.opponents = opponents
@@ -138,19 +143,32 @@ final class HelperStore {
   func removeTile(at index: Int) {
     guard rack.indices.contains(index) else { return }
     let removed = rack.remove(at: index)
+    if rack.isEmpty { isExampleRack = false }
     noteRemoved(removed)
     changed()
   }
 
   /// Replacing the whole rack drops the locked suggestion; the pass number stays.
   func setRack(_ tiles: [Tile]) {
+    isExampleRack = false
     rack = tiles
     charleston.locked = nil
     changed()
   }
 
+  @discardableResult
+  func setExampleRack(_ tiles: [Tile]) -> Bool {
+    guard rack.isEmpty && exposures.isEmpty && !tiles.isEmpty else { return false }
+    rack = tiles
+    isExampleRack = true
+    charleston.locked = nil
+    changed()
+    return true
+  }
+
   func clearRack() {
     rack = []
+    isExampleRack = false
     charleston.locked = nil
     changed()
   }
@@ -326,6 +344,7 @@ final class HelperStore {
     persister.removeFile()
     mode = .charleston
     rack = []
+    isExampleRack = false
     exposures = []
     seen = [:]
     opponents = HelperDocument.defaultOpponents

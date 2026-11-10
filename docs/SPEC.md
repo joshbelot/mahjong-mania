@@ -1871,6 +1871,6 @@ The authoritative requirements, acceptance criteria, and release gates for phase
 
 - [x] Phase 34 — beginner audit, prerequisite coverage and teaching.
 - [x] Phase 35 — explanations that match the shown hand.
-- [ ] Phase 36 — first actions, Helper context and scorekeeping clarity.
+- [x] Phase 36 — first actions, Helper context and scorekeeping clarity.
 - [ ] Phase 37 — own-card setup and guided hand entry.
 - [ ] Phase 38 — integrated QA and automatic TestFlight release.

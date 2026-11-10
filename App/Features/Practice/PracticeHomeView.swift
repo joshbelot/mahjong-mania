@@ -44,6 +44,12 @@ struct PracticeHomeView: View {
         VStack(alignment: .leading, spacing: Spacing.lg) {
           if typeSize.isAccessibilitySize { HeaderStrip() }
           StreakBanners()
+          if progress.placement == .new && progress.nextNode?.id == "u1l1" {
+            Text("New to mahjong? Start with Suits and dragons.")
+              .font(Typography.small)
+              .foregroundStyle(theme.textMuted)
+              .fixedSize(horizontal: false, vertical: true)
+          }
           TodaysDealNode { startDaily() }
           PathView(
             nodes: progress.nodes(), progress: progress, reviewDue: progress.reviewQueue.dueCount(today: practice.today),

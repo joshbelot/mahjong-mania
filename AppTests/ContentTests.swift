@@ -109,6 +109,38 @@ struct ContentTests {
     #expect(Tips.next(after: shown, seed: 1) == nil)
   }
 
+  @Test func tipsAreFilteredBeforeChoosingAnUnshownTip() {
+    let allowed: Set<String> = ["watch-exposures", "count-tiles"]
+    for seed in UInt64(0)..<30 {
+      let tip = Tips.next(after: ["watch-exposures"], seed: seed, eligible: allowed)
+      #expect(tip?.id == "count-tiles")
+      #expect(Tips.next(after: allowed, seed: seed, eligible: allowed) == nil)
+      #expect(Tips.next(after: [], seed: seed, eligible: []) == nil)
+    }
+  }
+
+  @Test func helperTipsFitEachMode() {
+    let charleston = Tips.eligible(for: .charleston)
+    let playing = Tips.eligible(for: .playing)
+    let scout = Tips.eligible(for: .scout)
+    #expect(charleston.contains("blind-pass") && !charleston.contains("add-called-sets"))
+    #expect(playing.contains("add-called-sets") && !playing.contains("blind-pass"))
+    #expect(!scout.contains("add-called-sets") && !scout.contains("blind-pass"))
+    let known = Set(Tips.all.map(\.id))
+    for mode in HelperMode.allCases { #expect(Tips.eligible(for: mode).isSubset(of: known)) }
+  }
+
+  @MainActor @Test func helperTipChangesOnlyWhenItsModeMakesItInapplicable() {
+    let center = TipCenter(seed: 3)
+    let first = center.tip(for: "helper", eligible: ["blind-pass"])
+    #expect(first?.id == "blind-pass")
+    #expect(center.tip(for: "helper", eligible: ["blind-pass"]) == first)
+    #expect(center.tip(for: "helper", eligible: []) == nil)
+    #expect(center.tip(for: "helper", eligible: ["add-called-sets"])?.id == "add-called-sets")
+    center.dismiss(screen: "helper")
+    #expect(center.tip(for: "helper", eligible: ["count-tiles"]) == nil)
+  }
+
   @Test func contentIsCleanAndNonEmpty() {
     for s in allStrings {
       #expect(!s.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)

@@ -20,6 +20,7 @@ final class PracticeQATests: PracticeUITestCase {
     while !element(app, "complete.title").exists {
       if asked == 0, useHint, element(app, "lesson.hint.button").isEnabled {
         tap(app, "lesson.hint.button")
+        tap(app, "lesson.hint.confirm")
         Thread.sleep(forTimeInterval: 0.3)
       }
       let wrong = madeMistakes < mistakes && asked % 3 == 1

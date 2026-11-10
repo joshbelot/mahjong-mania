@@ -12,6 +12,12 @@ final class PracticeLookTests: PracticeUITestCase {
     XCTAssertTrue(element(app, "lesson.prompt").waitForExistence(timeout: 10))
     answer(app, correct: false, shot: "look-\(tag)-3-wrong")
     tap(app, "lesson.hint.button")
+    XCTAssertTrue(element(app, "lesson.hint.dismiss").exists)
+    tap(app, "lesson.hint.dismiss")
+    XCTAssertFalse(element(app, "lesson.hint").exists)
+    tap(app, "lesson.hint.button")
+    tap(app, "lesson.hint.confirm")
+    XCTAssertTrue(element(app, "lesson.hint").waitForExistence(timeout: 5))
     attach("look-\(tag)-2-hint")
     for n in 0..<8 { answer(app, correct: true, shot: n == 0 ? "look-\(tag)-4-right" : nil) }
     // The mistake comes back once.

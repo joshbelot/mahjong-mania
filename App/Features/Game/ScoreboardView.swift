@@ -129,7 +129,7 @@ struct ScoreboardView: View {
       }
       Button("Cancel", role: .cancel) {}
     } message: {
-      Text("No one pays. The deal passes to the next player.")
+      Text("No one won before the tiles ran out. No one pays. The deal passes to the next player.")
     }
     .confirmationDialog("End this game night?", isPresented: $confirmEnd, titleVisibility: .visible) {
       Button("End game night", role: .destructive) {

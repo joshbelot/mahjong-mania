@@ -49,6 +49,8 @@ final class LessonSession {
   private(set) var feedback: Feedback?
   private(set) var grade: Grade?
   private(set) var hint: Hint?
+  private(set) var hintConfirmationPresented = false
+  private(set) var hasConfirmedHint = false
   private(set) var combo = 0
   private(set) var bestCombo = 0
   private(set) var xpEarned = 0
@@ -255,6 +257,20 @@ final class LessonSession {
     decisions.append(keep)
     if let right = exercise.shouldKeep(queueIndex: decisions.count - 1) { decisionMarks.append(right == keep) }
     if decisions.count == exercise.queue.count { check() }
+  }
+
+  func requestHint() {
+    guard hintAvailable else { return }
+    if hasConfirmedHint { useHint() } else { hintConfirmationPresented = true }
+  }
+
+  func dismissHintConfirmation() { hintConfirmationPresented = false }
+
+  func confirmHint() {
+    guard hintConfirmationPresented, hintAvailable else { return }
+    hintConfirmationPresented = false
+    hasConfirmedHint = true
+    useHint()
   }
 
   func useHint() {

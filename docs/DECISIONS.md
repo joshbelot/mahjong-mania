@@ -312,3 +312,9 @@ The planning handoff's reference to a manual walkthrough was interpreted as requ
 ### Existing seeded practice hands can exceed physical tile copies
 
 The 1.3 beginner walkthrough showed a quint with five natural copies of one numbered tile (`/private/tmp/terra14-stepwise/158-question.png`). Phase 35 preserves the existing seeded exercise generation and answer keys as explicitly required, so it does not alter those hands. A future compatible correction needs regression coverage and an explicit decision about existing seeded questions; the observation is not evidence that the physical set contains five copies.
+
+## 2026-11-08, Phase 36: beginner controls and Helper context
+
+- The first hint in each lesson attempt now asks for confirmation; dismissing it does not spend a hint or change the answer. The existing hint scoring remains unchanged. Lesson notes explain the compact toolbar controls, and opening Tiles remains free where allowed.
+- Charleston shows the state-derived pass summary and recommendation before optional Details. The dealer toggle and pass controls remain available there; the sequence and locked recommendations are unchanged. Example racks are labelled and the label persists until cleared or replaced, so they are not mistaken for entered physical tiles. An example cannot replace a nonempty rack or exposures.
+- At the largest text size, path node titles can use the available width and card-summary names stack above points and badges. This fixes observed truncation and mid-word wrapping without changing the lesson or answer data.

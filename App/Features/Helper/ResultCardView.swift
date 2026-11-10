@@ -43,6 +43,10 @@ struct ResultCardView: View {
             .font(Typography.small)
             .foregroundStyle(theme.textMuted)
             .frame(maxWidth: .infinity, alignment: .leading)
+            Text(distanceExplanation)
+              .font(Typography.small)
+              .foregroundStyle(theme.textMuted)
+              .fixedSize(horizontal: false, vertical: true)
           } else {
             HandPatternView(variant: variant, line: result.line, mode: .compact)
             metaRow
@@ -64,7 +68,7 @@ struct ResultCardView: View {
     .buttonStyle(.plain)
     .accessibilityElement(children: .ignore)
     .accessibilityLabel(accessibilityText)
-    .accessibilityValue(isExpanded ? needText : "")
+    .accessibilityValue(isExpanded ? [needText, distanceExplanation].filter { !$0.isEmpty }.joined(separator: ". ") : "")
     .accessibilityHint(isExpanded ? "Double-tap to collapse" : "Double-tap to see the missing tiles")
     .accessibilityIdentifier("result.\(index)")
   }
@@ -108,6 +112,16 @@ struct ResultCardView: View {
       }
     }
     .frame(maxWidth: .infinity, alignment: .leading)
+  }
+
+  private var distanceExplanation: String {
+    if result.best.impossibleReason == .dead {
+      return HelperText.deadHelp(tiles: result.best.deadTiles)
+    }
+    if result.best.possible && result.best.distance > 0 {
+      return HelperText.distanceHelp(distance: result.best.distance)
+    }
+    return ""
   }
 
   private var needText: String {

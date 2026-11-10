@@ -118,6 +118,15 @@ struct HelperTextTests {
     #expect(HelperText.away(distance: 4) == "4 away")
   }
 
+  @Test func distanceAndDeadReasonsExplainTrackedInformation() {
+    #expect(HelperText.distanceHelp(distance: 1).contains("1 more tile to complete"))
+    #expect(HelperText.distanceHelp(distance: 8).contains("8 more tiles to complete"))
+    #expect(HelperText.distanceHelp(distance: 0).isEmpty)
+    let dead = HelperText.deadHelp(tiles: [.number(7, .bams)])
+    #expect(dead.contains("7 Bam") && dead.contains("you tracked") && dead.contains("Review"))
+    #expect(HelperText.deadHelp(tiles: []).contains("needed tiles or Jokers"))
+  }
+
   @Test func exposureDescriptions() {
     let six = Tile.number(6, .dots)
     #expect(exposureDescription(Exposure(tiles: [six, six, six])) == "Pung of 6 Dot")

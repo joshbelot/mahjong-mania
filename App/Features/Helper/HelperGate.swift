@@ -133,6 +133,18 @@ enum HelperText {
     "Expose a \(groupNoun(groupSize)) \u{2014} you'd be \(newDistance) away"
   }
 
+  static func distanceHelp(distance: Int) -> String {
+    guard distance > 0 else { return "" }
+    let noun = distance == 1 ? "tile" : "tiles"
+    return "You need \(distance) more \(noun) to complete this hand. Extra tiles in your rack will be replaced as you play."
+  }
+
+  static func deadHelp(tiles: [Tile]) -> String {
+    let names = tiles.map(\.name).joined(separator: ", ")
+    let shortage = names.isEmpty ? "needed tiles or Jokers" : "copies of \(names)"
+    return "According to the seen and exposed tiles you tracked, not enough \(shortage) remain for this hand. Review those counts if needed."
+  }
+
   /// "3 away" / "Mahjong!" for a result card.
   static func away(distance: Int) -> String {
     distance == 0 ? "Mahjong!" : "\(distance) away"
