@@ -1,0 +1,40 @@
+{
+  "byKind" : {
+    "cut-off" : [
+      2,
+      2
+    ],
+    "heavy-blur" : [
+      2,
+      2
+    ],
+    "large-glare" : [
+      2,
+      2
+    ],
+    "not-a-card" : [
+      2,
+      2
+    ],
+    "very-dark" : [
+      2,
+      2
+    ]
+  },
+  "cleanAccepted" : 8,
+  "cleanRejected" : {
+    "held-06" : [
+      "glare"
+    ],
+    "held-10" : [
+      "glare"
+    ]
+  },
+  "cleanTotal" : 10,
+  "missed" : [
+
+  ],
+  "poorRejected" : 10,
+  "poorTotal" : 10,
+  "split" : "held-out"
+}

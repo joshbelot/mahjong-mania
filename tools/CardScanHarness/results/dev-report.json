@@ -1,0 +1,310 @@
+{
+  "byFormat" : [
+    {
+      "errors" : 0,
+      "format" : "phone-photo",
+      "pages" : 4,
+      "rssMB" : [
+        307.3125,
+        223.359375,
+        216.21875,
+        213.640625
+      ],
+      "seconds" : [
+        0.7452960014343262,
+        0.6633309125900269,
+        0.6139029264450073,
+        0.6490980386734009
+      ],
+      "tally" : {
+        "ambiguousFlagged" : 3,
+        "ambiguousReady" : 0,
+        "ambiguousRejected" : 3,
+        "exactFlagged" : 8,
+        "exactReady" : 7,
+        "needsCorrection" : 1,
+        "omitted" : 2,
+        "readyButWrong" : 0,
+        "spuriousFlagged" : 5,
+        "spuriousReady" : 0
+      }
+    },
+    {
+      "errors" : 0,
+      "format" : "text-pdf",
+      "pages" : 3,
+      "rssMB" : [
+        63.359375,
+        62.921875,
+        63.40625
+      ],
+      "seconds" : [
+        0.06067299842834473,
+        0.05746006965637207,
+        0.05996096134185791
+      ],
+      "tally" : {
+        "ambiguousFlagged" : 1,
+        "ambiguousReady" : 0,
+        "ambiguousRejected" : 3,
+        "exactFlagged" : 9,
+        "exactReady" : 7,
+        "needsCorrection" : 1,
+        "omitted" : 0,
+        "readyButWrong" : 0,
+        "spuriousFlagged" : 3,
+        "spuriousReady" : 0
+      }
+    },
+    {
+      "errors" : 0,
+      "format" : "image-pdf",
+      "pages" : 3,
+      "rssMB" : [
+        248.546875,
+        254.84375,
+        259.71875
+      ],
+      "seconds" : [
+        0.6011929512023926,
+        0.5847500562667847,
+        0.700005054473877
+      ],
+      "tally" : {
+        "ambiguousFlagged" : 3,
+        "ambiguousReady" : 0,
+        "ambiguousRejected" : 2,
+        "exactFlagged" : 8,
+        "exactReady" : 4,
+        "needsCorrection" : 1,
+        "omitted" : 2,
+        "readyButWrong" : 0,
+        "spuriousFlagged" : 2,
+        "spuriousReady" : 0
+      }
+    },
+    {
+      "errors" : 0,
+      "format" : "screenshot",
+      "pages" : 3,
+      "rssMB" : [
+        168.875,
+        165.328125,
+        167.28125
+      ],
+      "seconds" : [
+        0.5511560440063477,
+        0.5257819890975952,
+        0.5671789646148682
+      ],
+      "tally" : {
+        "ambiguousFlagged" : 1,
+        "ambiguousReady" : 0,
+        "ambiguousRejected" : 3,
+        "exactFlagged" : 8,
+        "exactReady" : 4,
+        "needsCorrection" : 0,
+        "omitted" : 2,
+        "readyButWrong" : 0,
+        "spuriousFlagged" : 4,
+        "spuriousReady" : 0
+      }
+    },
+    {
+      "errors" : 0,
+      "format" : "grayscale",
+      "pages" : 3,
+      "rssMB" : [
+        210.59375,
+        210.265625,
+        211.890625
+      ],
+      "seconds" : [
+        0.6305309534072876,
+        0.5477010011672974,
+        0.5901380777359009
+      ],
+      "tally" : {
+        "ambiguousFlagged" : 1,
+        "ambiguousReady" : 0,
+        "ambiguousRejected" : 4,
+        "exactFlagged" : 3,
+        "exactReady" : 0,
+        "needsCorrection" : 6,
+        "omitted" : 4,
+        "readyButWrong" : 0,
+        "spuriousFlagged" : 8,
+        "spuriousReady" : 0
+      }
+    },
+    {
+      "errors" : 0,
+      "format" : "screen-photo",
+      "pages" : 2,
+      "rssMB" : [
+        285.71875,
+        214.578125
+      ],
+      "seconds" : [
+        0.6379818916320801,
+        0.5977770090103149
+      ],
+      "tally" : {
+        "ambiguousFlagged" : 1,
+        "ambiguousReady" : 0,
+        "ambiguousRejected" : 2,
+        "exactFlagged" : 3,
+        "exactReady" : 0,
+        "needsCorrection" : 2,
+        "omitted" : 7,
+        "readyButWrong" : 0,
+        "spuriousFlagged" : 8,
+        "spuriousReady" : 0
+      }
+    },
+    {
+      "errors" : 0,
+      "format" : "retyped",
+      "pages" : 2,
+      "rssMB" : [
+        169.328125,
+        170.765625
+      ],
+      "seconds" : [
+        0.5511080026626587,
+        0.6011450290679932
+      ],
+      "tally" : {
+        "ambiguousFlagged" : 1,
+        "ambiguousReady" : 0,
+        "ambiguousRejected" : 2,
+        "exactFlagged" : 4,
+        "exactReady" : 0,
+        "needsCorrection" : 1,
+        "omitted" : 3,
+        "readyButWrong" : 0,
+        "spuriousFlagged" : 5,
+        "spuriousReady" : 0
+      }
+    }
+  ],
+  "overall" : {
+    "ambiguousFlagged" : 11,
+    "ambiguousReady" : 0,
+    "ambiguousRejected" : 19,
+    "exactFlagged" : 43,
+    "exactReady" : 22,
+    "needsCorrection" : 12,
+    "omitted" : 20,
+    "readyButWrong" : 0,
+    "spuriousFlagged" : 35,
+    "spuriousReady" : 0
+  },
+  "pageQuality" : {
+    "dev-01" : [
+
+    ],
+    "dev-02" : [
+
+    ],
+    "dev-03" : [
+
+    ],
+    "dev-04" : [
+
+    ],
+    "dev-05" : [
+
+    ],
+    "dev-06" : [
+
+    ],
+    "dev-07" : [
+
+    ],
+    "dev-08" : [
+
+    ],
+    "dev-09" : [
+
+    ],
+    "dev-10" : [
+
+    ],
+    "dev-11" : [
+
+    ],
+    "dev-12" : [
+
+    ],
+    "dev-13" : [
+
+    ],
+    "dev-14" : [
+
+    ],
+    "dev-15" : [
+
+    ],
+    "dev-16" : [
+
+    ],
+    "dev-17" : [
+
+    ],
+    "dev-18" : [
+
+    ],
+    "dev-19" : [
+
+    ],
+    "dev-20" : [
+
+    ]
+  },
+  "rssMB" : [
+    307.3125,
+    223.359375,
+    216.21875,
+    213.640625,
+    63.359375,
+    62.921875,
+    63.40625,
+    248.546875,
+    254.84375,
+    259.71875,
+    168.875,
+    165.328125,
+    167.28125,
+    210.59375,
+    210.265625,
+    211.890625,
+    285.71875,
+    214.578125,
+    169.328125,
+    170.765625
+  ],
+  "seconds" : [
+    0.7452960014343262,
+    0.6633309125900269,
+    0.6139029264450073,
+    0.6490980386734009,
+    0.06067299842834473,
+    0.05746006965637207,
+    0.05996096134185791,
+    0.6011929512023926,
+    0.5847500562667847,
+    0.700005054473877,
+    0.5511560440063477,
+    0.5257819890975952,
+    0.5671789646148682,
+    0.6305309534072876,
+    0.5477010011672974,
+    0.5901380777359009,
+    0.6379818916320801,
+    0.5977770090103149,
+    0.5511080026626587,
+    0.6011450290679932
+  ],
+  "split" : "dev"
+}
