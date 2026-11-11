@@ -1874,3 +1874,12 @@ The authoritative requirements, acceptance criteria, and release gates for phase
 - [x] Phase 36 — first actions, Helper context and scorekeeping clarity.
 - [x] Phase 37 — own-card setup and guided hand entry.
 - [ ] Phase 38 — integrated QA and automatic TestFlight release.
+
+## 21. Version 1.5: local card scanning (conditional, beta)
+
+The authoritative requirements, scan flow, resource limits and gates are in [NEXT_WAVES_SPEC.md](NEXT_WAVES_SPEC.md) §4–§6 and §8. Production phases 40–42 proceed only if the Phase 39 experiment meets the gate in §4.1; the measured result and the decision are in [CARD_SCAN_EVALUATION.md](CARD_SCAN_EVALUATION.md). Scanning ships as a Beta, offline, free of any per-scan cost, and never saves a card without row-by-row review. Physical-device checks and Submit for Review remain the owner's steps.
+
+- [x] Phase 39 — local scanner experiment (separate PR; harness in `tools/CardScanHarness`, semantic comparison in `MahjongCore`, result and decision in `docs/CARD_SCAN_EVALUATION.md`). **Gate outcome: not met (held-out exact drafts 32.7% against 60%); phases 40–42 wait for an owner decision.**
+- [ ] Phase 40 — bounded local media acquisition and interpretation (blocked on the Phase 39 decision).
+- [ ] Phase 41 — source comparison, corrections and atomic card creation.
+- [ ] Phase 42 — scanner release QA and automatic 1.5 TestFlight.
