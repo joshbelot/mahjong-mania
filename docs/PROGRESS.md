@@ -18,9 +18,20 @@ Source of truth for where the build is. Updated by the lead on `main`.
 | 11 Learn | merged (11a content PR 10, 11b screens PR 13) | |
 | 12 Settings, polish, release | merged (12a PR 12, 12b PR 15, 12c PR 17); owner steps and QA remain, see backlog below | |
 
-## Version 1.4 (current work)
+## Version 1.5: local card scanning (conditional)
 
-Plan: [NEXT_WAVES_SPEC.md](NEXT_WAVES_SPEC.md), phases 34–38 in order. The 1.5 scanning wave is separate and has not begun.
+Plan: [NEXT_WAVES_SPEC.md](NEXT_WAVES_SPEC.md) §4–§6, phases 39–42 in order; SPEC §21. Production phases proceed only if the Phase 39 gate passes. Results: [CARD_SCAN_EVALUATION.md](CARD_SCAN_EVALUATION.md).
+
+| Phase | Status | PR |
+|---|---|---|
+| 39 Local scanner experiment | experiment complete; decision recorded in the evaluation | this PR (`claude/card-scan-feasibility`; depends on [#56](https://github.com/joshbelot/mahjong-mania/pull/56)) |
+| 40 Media acquisition and interpretation | not started; waits for the Phase 39 decision | |
+| 41 Review, corrections and card creation | not started | |
+| 42 Scanner release QA and TestFlight | not started | |
+
+## Version 1.4 (done; 1.4 (6) on TestFlight)
+
+Plan: [NEXT_WAVES_SPEC.md](NEXT_WAVES_SPEC.md), phases 34–38 in order. All five phases are merged and 1.4 (6) is on TestFlight; the 1.5 scanning wave is a separate, gated plan.
 
 | Phase | Status | PR |
 |---|---|---|
