@@ -24,10 +24,14 @@ Plan: [NEXT_WAVES_SPEC.md](NEXT_WAVES_SPEC.md) §4–§6, phases 39–42 in orde
 
 | Phase | Status | PR |
 |---|---|---|
-| 39 Local scanner experiment | experiment complete; decision recorded in the evaluation | this PR (`claude/card-scan-feasibility`; depends on [#56](https://github.com/joshbelot/mahjong-mania/pull/56)) |
+| 39 Local scanner experiment | complete; local gate passed; **beta accuracy gate not met**, phases 40–42 on hold for an owner decision | this PR (`claude/card-scan-feasibility`; depends on [#56](https://github.com/joshbelot/mahjong-mania/pull/56)) |
 | 40 Media acquisition and interpretation | not started; waits for the Phase 39 decision | |
 | 41 Review, corrections and card creation | not started | |
 | 42 Scanner release QA and TestFlight | not started | |
+
+### Phase 39 local gate (2026-11-10)
+
+`RESULT_BUNDLE=build/p39-gate.xcresult tools/test.sh` on `claude/card-scan-feasibility` (base: the #56 spec branch) passed: `python3 tools/test_upload_arguments.py`, 366 core tests (including 25 new scan tests), XcodeGen, app unit tests (317) and 132 UI tests (0 failures, 6184 s), "No Xcode runtime warnings", no compiler or analyzer warnings (only Xcode's AppIntents metadata notices). The harness has its own `swift test` (11 tests, passed) and builds warning-free with `swift build -c release`. The experiment itself is macOS-only (no app target change). Physical-device checks remain owner steps. Gate outcome of the experiment: **not met**, see [CARD_SCAN_EVALUATION.md](CARD_SCAN_EVALUATION.md).
 
 ## Version 1.4 (done; 1.4 (6) on TestFlight)
 
