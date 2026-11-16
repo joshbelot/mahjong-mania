@@ -330,3 +330,11 @@ The 1.3 beginner walkthrough showed a quint with five natural copies of one numb
 
 - Version 1.4 is set through `project.yml`; build numbers stay under the uploader. Listing copy (`AppStore/metadata.md`), WhatToTest, the checklist and the release handoff were updated for the beginner-clarity changes; no scanning, camera or pricing claims. `tools/check_listing.py` now validates "What's New in 1.4".
 - The §7 recheck is recorded honestly in `docs/BEGINNER_AUDIT.md`: phase-level screenshot reviews plus the full gate, not a fresh by-hand walkthrough of every task.
+
+## 2026-11-10, 1.5 scanning plan revised by the owner
+
+- Scanning ships as a **Beta** feature with a disclaimer on the first scan screen and the save step. The exact-draft gate drops from 90% to 60% of readable held-out rows, because every row is reviewed before saving. Zero wrong-but-ready rows and flagging every ambiguous row stay strict.
+- A whole-photo quality check runs before reading and gives a specific retake message (blur, dark, glare, cut off, too far, screen lines, not a card). A mostly unreadable page says so, with Retake, instead of showing a page of failed rows.
+- "Confirm all ready hands" replaces confirming ready rows one by one. Rows that need a check are still confirmed individually. Saved scanned cards get "Fix a hand".
+- Every common source format is a tested class: phone photos, PDFs with a text layer (read directly, no OCR), image-only PDFs, screenshots, grayscale printouts, photos of screens and retyped tables. The app does not check or restrict where a user's file came from. Store and website copy still say "scan your card".
+- Ground truth is the owner's own transcriptions in `private/card-scans/`; agents do not transcribe real cards from images or download card files.
