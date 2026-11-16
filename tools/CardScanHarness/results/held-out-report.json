@@ -1,0 +1,240 @@
+{
+  "byFormat" : [
+    {
+      "errors" : 0,
+      "format" : "phone-photo",
+      "pages" : 2,
+      "rssMB" : [
+        220.84375,
+        220.421875
+      ],
+      "seconds" : [
+        0.7592090368270874,
+        0.6712669134140015
+      ],
+      "tally" : {
+        "ambiguousFlagged" : 0,
+        "ambiguousReady" : 0,
+        "ambiguousRejected" : 2,
+        "exactFlagged" : 0,
+        "exactReady" : 0,
+        "needsCorrection" : 3,
+        "omitted" : 9,
+        "readyButWrong" : 0,
+        "spuriousFlagged" : 10,
+        "spuriousReady" : 0
+      }
+    },
+    {
+      "errors" : 0,
+      "format" : "text-pdf",
+      "pages" : 1,
+      "rssMB" : [
+        62.90625
+      ],
+      "seconds" : [
+        0.055293917655944824
+      ],
+      "tally" : {
+        "ambiguousFlagged" : 1,
+        "ambiguousReady" : 0,
+        "ambiguousRejected" : 0,
+        "exactFlagged" : 2,
+        "exactReady" : 4,
+        "needsCorrection" : 0,
+        "omitted" : 1,
+        "readyButWrong" : 0,
+        "spuriousFlagged" : 1,
+        "spuriousReady" : 0
+      }
+    },
+    {
+      "errors" : 0,
+      "format" : "image-pdf",
+      "pages" : 1,
+      "rssMB" : [
+        241.859375
+      ],
+      "seconds" : [
+        0.6841609477996826
+      ],
+      "tally" : {
+        "ambiguousFlagged" : 0,
+        "ambiguousReady" : 0,
+        "ambiguousRejected" : 1,
+        "exactFlagged" : 2,
+        "exactReady" : 0,
+        "needsCorrection" : 0,
+        "omitted" : 2,
+        "readyButWrong" : 0,
+        "spuriousFlagged" : 3,
+        "spuriousReady" : 0
+      }
+    },
+    {
+      "errors" : 0,
+      "format" : "screenshot",
+      "pages" : 2,
+      "rssMB" : [
+        169.609375,
+        165.984375
+      ],
+      "seconds" : [
+        0.5674630403518677,
+        0.5412240028381348
+      ],
+      "tally" : {
+        "ambiguousFlagged" : 1,
+        "ambiguousReady" : 0,
+        "ambiguousRejected" : 1,
+        "exactFlagged" : 6,
+        "exactReady" : 0,
+        "needsCorrection" : 1,
+        "omitted" : 3,
+        "readyButWrong" : 0,
+        "spuriousFlagged" : 4,
+        "spuriousReady" : 0
+      }
+    },
+    {
+      "errors" : 0,
+      "format" : "grayscale",
+      "pages" : 1,
+      "rssMB" : [
+        212.890625
+      ],
+      "seconds" : [
+        0.6347459554672241
+      ],
+      "tally" : {
+        "ambiguousFlagged" : 1,
+        "ambiguousReady" : 0,
+        "ambiguousRejected" : 0,
+        "exactFlagged" : 1,
+        "exactReady" : 0,
+        "needsCorrection" : 3,
+        "omitted" : 2,
+        "readyButWrong" : 0,
+        "spuriousFlagged" : 2,
+        "spuriousReady" : 0
+      }
+    },
+    {
+      "errors" : 0,
+      "format" : "screen-photo",
+      "pages" : 1,
+      "rssMB" : [
+        220.078125
+      ],
+      "seconds" : [
+        0.668834924697876
+      ],
+      "tally" : {
+        "ambiguousFlagged" : 0,
+        "ambiguousReady" : 0,
+        "ambiguousRejected" : 1,
+        "exactFlagged" : 1,
+        "exactReady" : 0,
+        "needsCorrection" : 0,
+        "omitted" : 3,
+        "readyButWrong" : 0,
+        "spuriousFlagged" : 4,
+        "spuriousReady" : 0
+      }
+    },
+    {
+      "errors" : 0,
+      "format" : "retyped",
+      "pages" : 2,
+      "rssMB" : [
+        162.140625,
+        167.578125
+      ],
+      "seconds" : [
+        0.5787290334701538,
+        0.5902520418167114
+      ],
+      "tally" : {
+        "ambiguousFlagged" : 0,
+        "ambiguousReady" : 0,
+        "ambiguousRejected" : 2,
+        "exactFlagged" : 2,
+        "exactReady" : 0,
+        "needsCorrection" : 1,
+        "omitted" : 9,
+        "readyButWrong" : 0,
+        "spuriousFlagged" : 11,
+        "spuriousReady" : 0
+      }
+    }
+  ],
+  "overall" : {
+    "ambiguousFlagged" : 3,
+    "ambiguousReady" : 0,
+    "ambiguousRejected" : 7,
+    "exactFlagged" : 14,
+    "exactReady" : 4,
+    "needsCorrection" : 8,
+    "omitted" : 29,
+    "readyButWrong" : 0,
+    "spuriousFlagged" : 35,
+    "spuriousReady" : 0
+  },
+  "pageQuality" : {
+    "held-01" : [
+
+    ],
+    "held-02" : [
+
+    ],
+    "held-03" : [
+
+    ],
+    "held-04" : [
+
+    ],
+    "held-05" : [
+
+    ],
+    "held-06" : [
+      "glare"
+    ],
+    "held-07" : [
+
+    ],
+    "held-08" : [
+
+    ],
+    "held-09" : [
+
+    ],
+    "held-10" : [
+      "glare"
+    ]
+  },
+  "rssMB" : [
+    220.84375,
+    220.421875,
+    62.90625,
+    241.859375,
+    169.609375,
+    165.984375,
+    212.890625,
+    220.078125,
+    162.140625,
+    167.578125
+  ],
+  "seconds" : [
+    0.7592090368270874,
+    0.6712669134140015,
+    0.055293917655944824,
+    0.6841609477996826,
+    0.5674630403518677,
+    0.5412240028381348,
+    0.6347459554672241,
+    0.668834924697876,
+    0.5787290334701538,
+    0.5902520418167114
+  ],
+  "split" : "held-out"
+}

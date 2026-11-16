@@ -1,0 +1,1418 @@
+{
+  "pages" : [
+    {
+      "file" : "dev\/dev-01-phone-photo-L1.jpg",
+      "format" : "phone-photo",
+      "id" : "dev-01",
+      "layout" : "L1",
+      "rows" : [
+        {
+          "ambiguity" : "missingPoints",
+          "id" : "dev-01-r1",
+          "kind" : "ambiguous",
+          "line" : "FF 2222\/x 88\/x 33\/x 8888\/x ; 35 ; X"
+        },
+        {
+          "id" : "dev-01-r2",
+          "kind" : "readable",
+          "line" : "FF 999\/y 77777\/x 2222\/x ; 25 ; C"
+        },
+        {
+          "id" : "dev-01-r3",
+          "kind" : "readable",
+          "line" : "FF 22\/y 22222\/x 55555\/y ; 30 ; X"
+        },
+        {
+          "id" : "dev-01-r4",
+          "kind" : "readable",
+          "line" : "NN EE WW SS 55\/x 55\/y 55\/z ; 75 ; X ;  ; shift"
+        },
+        {
+          "id" : "dev-01-r5",
+          "kind" : "readable",
+          "line" : "FF NNN EE SSS GG DD\/z ; 30 ; X"
+        },
+        {
+          "id" : "dev-01-r6",
+          "kind" : "readable",
+          "line" : "FFF 8888\/x 9999\/x 777\/x ; 25 ; X"
+        },
+        {
+          "id" : "dev-01-r7",
+          "kind" : "readable",
+          "line" : "FF 7074\/z 7777\/y 4444\/y ; 25 ; X"
+        }
+      ],
+      "split" : "dev"
+    },
+    {
+      "file" : "dev\/dev-02-phone-photo-L2.jpg",
+      "format" : "phone-photo",
+      "id" : "dev-02",
+      "layout" : "L2",
+      "rows" : [
+        {
+          "ambiguity" : "zeroLetter",
+          "id" : "dev-02-r1",
+          "kind" : "ambiguous",
+          "line" : "FF NEWS 3038\/x 8083\/y ; 30 ; X"
+        },
+        {
+          "id" : "dev-02-r2",
+          "kind" : "readable",
+          "line" : "FF NEWS 5051\/z 1015\/y ; 35 ; X"
+        },
+        {
+          "id" : "dev-02-r3",
+          "kind" : "readable",
+          "line" : "FF 2222\/y 44\/x 66\/x 8888\/y ; 50 ; C ;  ; shift2"
+        },
+        {
+          "ambiguity" : "missingExposure",
+          "id" : "dev-02-r4",
+          "kind" : "ambiguous",
+          "line" : "3333\/x 000 444\/y 3333\/z ; 50 ; X"
+        },
+        {
+          "id" : "dev-02-r5",
+          "kind" : "readable",
+          "line" : "FF 22\/z 66\/y 777\/y 222\/y 11\/z ; 50 ; X"
+        }
+      ],
+      "split" : "dev"
+    },
+    {
+      "file" : "dev\/dev-03-phone-photo-L3.jpg",
+      "format" : "phone-photo",
+      "id" : "dev-03",
+      "layout" : "L3",
+      "rows" : [
+        {
+          "id" : "dev-03-r1",
+          "kind" : "readable",
+          "line" : "FF 77777\/x 999\/x 9999\/x ; 25 ; X"
+        },
+        {
+          "id" : "dev-03-r2",
+          "kind" : "readable",
+          "line" : "EE NNN WWW DD\/z DDDD\/y ; 40 ; X"
+        },
+        {
+          "id" : "dev-03-r3",
+          "kind" : "readable",
+          "line" : "FF 33\/x 444\/x 5555\/x 666\/x ; 40 ; X ;  ; shift"
+        },
+        {
+          "id" : "dev-03-r4",
+          "kind" : "readable",
+          "line" : "FFF 2222\/x 3333\/z 444\/y ; 45 ; C ;  ; shift"
+        },
+        {
+          "id" : "dev-03-r5",
+          "kind" : "readable",
+          "line" : "FF 88\/x 999\/y 666\/x 7777\/y ; 35 ; X"
+        },
+        {
+          "ambiguity" : "missingExposure",
+          "id" : "dev-03-r6",
+          "kind" : "ambiguous",
+          "line" : "FFFF 11\/y 444\/z 88\/z 888\/y ; 75 ; C"
+        },
+        {
+          "id" : "dev-03-r7",
+          "kind" : "readable",
+          "line" : "FF 1111\/x + 4444\/y = 5555\/z ; 30 ; C"
+        }
+      ],
+      "split" : "dev"
+    },
+    {
+      "file" : "dev\/dev-04-phone-photo-L4.jpg",
+      "format" : "phone-photo",
+      "id" : "dev-04",
+      "layout" : "L4",
+      "rows" : [
+        {
+          "ambiguity" : "faint",
+          "id" : "dev-04-r1",
+          "kind" : "ambiguous",
+          "line" : "FF 88888\/x 777\/x 9999\/x ; 75 ; X"
+        },
+        {
+          "ambiguity" : "missingPoints",
+          "id" : "dev-04-r2",
+          "kind" : "ambiguous",
+          "line" : "66\/x 66666\/x 66\/x 99\/x 777\/x ; 35 ; X"
+        },
+        {
+          "id" : "dev-04-r3",
+          "kind" : "readable",
+          "line" : "555\/y 6666\/x 333\/x 44\/x 99\/x ; 25 ; C"
+        },
+        {
+          "id" : "dev-04-r4",
+          "kind" : "readable",
+          "line" : "222\/z 3333\/z 444\/x 5555\/x ; 50 ; X ;  ; shift"
+        },
+        {
+          "id" : "dev-04-r5",
+          "kind" : "readable",
+          "line" : "FFFFF 222\/x + 555\/y = 777\/z ; 30 ; X"
+        }
+      ],
+      "split" : "dev"
+    },
+    {
+      "file" : "dev\/dev-05-text-pdf-L1.pdf",
+      "format" : "text-pdf",
+      "id" : "dev-05",
+      "layout" : "L1",
+      "rows" : [
+        {
+          "id" : "dev-05-r1",
+          "kind" : "readable",
+          "line" : "FFFF 888\/y 33\/x 111\/y 22\/y ; 50 ; C"
+        },
+        {
+          "id" : "dev-05-r2",
+          "kind" : "readable",
+          "line" : "FF 333\/x 33333\/x 3333\/x ; 40 ; X"
+        },
+        {
+          "id" : "dev-05-r3",
+          "kind" : "readable",
+          "line" : "FF 2222\/z 44\/y 66\/y 8888\/z ; 35 ; X ;  ; shift2"
+        },
+        {
+          "id" : "dev-05-r4",
+          "kind" : "readable",
+          "line" : "FFFF 11\/z 666\/y 444\/x 77\/z ; 25 ; X"
+        },
+        {
+          "ambiguity" : "missingPoints",
+          "id" : "dev-05-r5",
+          "kind" : "ambiguous",
+          "line" : "FFFF 444\/x 333\/y DDDD\/x ; 25 ; X"
+        },
+        {
+          "id" : "dev-05-r6",
+          "kind" : "readable",
+          "line" : "FFFF 2222\/x 99\/x 55\/x DD\/x ; 75 ; C"
+        },
+        {
+          "id" : "dev-05-r7",
+          "kind" : "readable",
+          "line" : "FF 88888\/x DDDDD\/x 33\/y ; 30 ; X"
+        },
+        {
+          "id" : "dev-05-r8",
+          "kind" : "readable",
+          "line" : "FFFFF 333\/z + 555\/x = 888\/y ; 40 ; X"
+        }
+      ],
+      "split" : "dev"
+    },
+    {
+      "file" : "dev\/dev-06-text-pdf-L2.pdf",
+      "format" : "text-pdf",
+      "id" : "dev-06",
+      "layout" : "L2",
+      "rows" : [
+        {
+          "ambiguity" : "zeroLetter",
+          "id" : "dev-06-r1",
+          "kind" : "ambiguous",
+          "line" : "FF 33\/y 555\/x 66\/y 444\/x 11\/x ; 45 ; X"
+        },
+        {
+          "ambiguity" : "missingExposure",
+          "id" : "dev-06-r2",
+          "kind" : "ambiguous",
+          "line" : "FFF 77\/x 666\/y 77\/y 66\/z 44\/y ; 30 ; X"
+        },
+        {
+          "id" : "dev-06-r3",
+          "kind" : "readable",
+          "line" : "FFF 4444\/y 5555\/x 666\/z ; 25 ; C ;  ; shift"
+        },
+        {
+          "id" : "dev-06-r4",
+          "kind" : "readable",
+          "line" : "FFF 4444\/x 5555\/z 666\/y ; 50 ; C ;  ; shift"
+        },
+        {
+          "id" : "dev-06-r5",
+          "kind" : "readable",
+          "line" : "FF DD\/x 33\/x 222\/z 555\/z 33\/x ; 45 ; C"
+        }
+      ],
+      "split" : "dev"
+    },
+    {
+      "file" : "dev\/dev-07-text-pdf-L3.pdf",
+      "format" : "text-pdf",
+      "id" : "dev-07",
+      "layout" : "L3",
+      "rows" : [
+        {
+          "id" : "dev-07-r1",
+          "kind" : "readable",
+          "line" : "7777\/x 000 333\/y 7777\/z ; 25 ; X"
+        },
+        {
+          "ambiguity" : "missingExposure",
+          "id" : "dev-07-r2",
+          "kind" : "ambiguous",
+          "line" : "FFF 6666\/x 999\/x 44\/x 99\/x ; 30 ; X"
+        },
+        {
+          "id" : "dev-07-r3",
+          "kind" : "readable",
+          "line" : "FF EEEE WW GG 00 DD\/y ; 25 ; X"
+        },
+        {
+          "id" : "dev-07-r4",
+          "kind" : "readable",
+          "line" : "FFF 4444\/y 5555\/x 666\/z ; 40 ; X ;  ; shift"
+        },
+        {
+          "id" : "dev-07-r5",
+          "kind" : "readable",
+          "line" : "FF EEE NN 00 GGG DD\/x ; 25 ; X"
+        },
+        {
+          "id" : "dev-07-r6",
+          "kind" : "readable",
+          "line" : "WW NNNN 000 GGG DD\/z ; 45 ; X"
+        },
+        {
+          "id" : "dev-07-r7",
+          "kind" : "readable",
+          "line" : "FF NEWS 6068\/z 8086\/y ; 75 ; X"
+        },
+        {
+          "id" : "dev-07-r8",
+          "kind" : "readable",
+          "line" : "2222\/y 000 333\/x 2222\/z ; 25 ; X"
+        }
+      ],
+      "split" : "dev"
+    },
+    {
+      "file" : "dev\/dev-08-image-pdf-L1.pdf",
+      "format" : "image-pdf",
+      "id" : "dev-08",
+      "layout" : "L1",
+      "rows" : [
+        {
+          "ambiguity" : "faint",
+          "id" : "dev-08-r1",
+          "kind" : "ambiguous",
+          "line" : "33\/y 11111\/x 88888\/y 88\/y ; 50 ; X"
+        },
+        {
+          "ambiguity" : "missingPoints",
+          "id" : "dev-08-r2",
+          "kind" : "ambiguous",
+          "line" : "7777\/y 000 888\/z 7777\/x ; 75 ; X"
+        },
+        {
+          "id" : "dev-08-r3",
+          "kind" : "readable",
+          "line" : "FF 1111\/y 33\/z 55\/z 7777\/y ; 40 ; C ;  ; shift2"
+        },
+        {
+          "id" : "dev-08-r4",
+          "kind" : "readable",
+          "line" : "FF 55\/x 7777\/x 222\/x 333\/x ; 35 ; X"
+        },
+        {
+          "id" : "dev-08-r5",
+          "kind" : "readable",
+          "line" : "FF RRR 000 GGG EEE | FF RRR 000 GGG WWW ; 25 ; C"
+        },
+        {
+          "id" : "dev-08-r6",
+          "kind" : "readable",
+          "line" : "FFF 44\/x 55\/x 4444\/z 444\/z ; 30 ; X"
+        },
+        {
+          "id" : "dev-08-r7",
+          "kind" : "readable",
+          "line" : "FFF 44\/y 77\/x 999\/x 66\/y 33\/x ; 30 ; C"
+        }
+      ],
+      "split" : "dev"
+    },
+    {
+      "file" : "dev\/dev-09-image-pdf-L3.pdf",
+      "format" : "image-pdf",
+      "id" : "dev-09",
+      "layout" : "L3",
+      "rows" : [
+        {
+          "ambiguity" : "missingPoints",
+          "id" : "dev-09-r1",
+          "kind" : "ambiguous",
+          "line" : "FFFFF 222\/z + 111\/y = 333\/x ; 30 ; X"
+        },
+        {
+          "id" : "dev-09-r2",
+          "kind" : "readable",
+          "line" : "FF NEWS 4049\/y 9094\/x ; 30 ; C"
+        },
+        {
+          "id" : "dev-09-r3",
+          "kind" : "readable",
+          "line" : "FF 44\/x 555\/x 6666\/x 777\/x ; 35 ; X ;  ; shift"
+        },
+        {
+          "id" : "dev-09-r4",
+          "kind" : "readable",
+          "line" : "NN EE WW SS 66\/y 66\/z 66\/x ; 30 ; X ;  ; shift"
+        },
+        {
+          "id" : "dev-09-r5",
+          "kind" : "readable",
+          "line" : "FF RRR 000 GGG NNN | FF RRR 000 GGG WWW ; 25 ; X"
+        },
+        {
+          "id" : "dev-09-r6",
+          "kind" : "readable",
+          "line" : "FFFF 22\/x 11\/z 555\/y 666\/z ; 35 ; X"
+        },
+        {
+          "id" : "dev-09-r7",
+          "kind" : "readable",
+          "line" : "FF 666\/x 4444\/z 44\/x 666\/x ; 25 ; C"
+        },
+        {
+          "id" : "dev-09-r8",
+          "kind" : "readable",
+          "line" : "FF 777\/z 88\/y 33333\/y 11\/x ; 45 ; C"
+        }
+      ],
+      "split" : "dev"
+    },
+    {
+      "file" : "dev\/dev-10-image-pdf-L4.pdf",
+      "format" : "image-pdf",
+      "id" : "dev-10",
+      "layout" : "L4",
+      "rows" : [
+        {
+          "ambiguity" : "zeroLetter",
+          "id" : "dev-10-r1",
+          "kind" : "ambiguous",
+          "line" : "FF 8087\/y 8888\/z 7777\/z ; 45 ; C"
+        },
+        {
+          "ambiguity" : "missingExposure",
+          "id" : "dev-10-r2",
+          "kind" : "ambiguous",
+          "line" : "FF NEWS 3034\/x 4043\/y ; 75 ; X"
+        },
+        {
+          "id" : "dev-10-r3",
+          "kind" : "readable",
+          "line" : "DDD\/x 999\/x 5555\/y 4444\/y ; 25 ; X"
+        },
+        {
+          "id" : "dev-10-r4",
+          "kind" : "readable",
+          "line" : "FF 55\/x 55\/z 55\/y DD\/x DD\/z DD\/y ; 30 ; X ;  ; shift"
+        },
+        {
+          "id" : "dev-10-r5",
+          "kind" : "readable",
+          "line" : "222\/y 1111\/x 333\/x 1111\/y ; 40 ; X"
+        }
+      ],
+      "split" : "dev"
+    },
+    {
+      "file" : "dev\/dev-11-screenshot-L2.png",
+      "format" : "screenshot",
+      "id" : "dev-11",
+      "layout" : "L2",
+      "rows" : [
+        {
+          "ambiguity" : "missingExposure",
+          "id" : "dev-11-r1",
+          "kind" : "ambiguous",
+          "line" : "FF 44\/x DD\/y 555\/x 888\/y 66\/y ; 25 ; C"
+        },
+        {
+          "id" : "dev-11-r2",
+          "kind" : "readable",
+          "line" : "FF NEWS 7079\/y 9097\/x ; 25 ; C"
+        },
+        {
+          "id" : "dev-11-r3",
+          "kind" : "readable",
+          "line" : "FF 1111\/y 33\/x 55\/x 7777\/y ; 50 ; X ;  ; shift2"
+        },
+        {
+          "id" : "dev-11-r4",
+          "kind" : "readable",
+          "line" : "FFF DD\/x 555\/y 77\/y 11\/x 33\/x ; 25 ; X"
+        },
+        {
+          "id" : "dev-11-r5",
+          "kind" : "readable",
+          "line" : "FFF 4444\/x 6666\/x 222\/y ; 25 ; C"
+        }
+      ],
+      "split" : "dev"
+    },
+    {
+      "file" : "dev\/dev-12-screenshot-L3.png",
+      "format" : "screenshot",
+      "id" : "dev-12",
+      "layout" : "L3",
+      "rows" : [
+        {
+          "ambiguity" : "missingPoints",
+          "id" : "dev-12-r1",
+          "kind" : "ambiguous",
+          "line" : "FF NEWS 5055\/x 5055\/y ; 30 ; X"
+        },
+        {
+          "id" : "dev-12-r2",
+          "kind" : "readable",
+          "line" : "FFFF 6666\/x 2222\/x 11\/x ; 40 ; X"
+        },
+        {
+          "id" : "dev-12-r3",
+          "kind" : "readable",
+          "line" : "FF 9999\/x 99\/z 9999\/y DD\/x ; 40 ; X ;  ; shift"
+        },
+        {
+          "id" : "dev-12-r4",
+          "kind" : "readable",
+          "line" : "FF 44\/x 555\/x 6666\/x 777\/x ; 25 ; C ;  ; shift"
+        },
+        {
+          "id" : "dev-12-r5",
+          "kind" : "readable",
+          "line" : "FF NEWS 8086\/y 6068\/x ; 50 ; X"
+        },
+        {
+          "id" : "dev-12-r6",
+          "kind" : "readable",
+          "line" : "NN EEE SSS DDDD\/y DD\/x ; 35 ; X"
+        },
+        {
+          "ambiguity" : "faint",
+          "id" : "dev-12-r7",
+          "kind" : "ambiguous",
+          "line" : "FF 2222\/y 33333\/x 111\/y ; 75 ; X"
+        }
+      ],
+      "split" : "dev"
+    },
+    {
+      "file" : "dev\/dev-13-screenshot-L4.png",
+      "format" : "screenshot",
+      "id" : "dev-13",
+      "layout" : "L4",
+      "rows" : [
+        {
+          "ambiguity" : "missingPoints",
+          "id" : "dev-13-r1",
+          "kind" : "ambiguous",
+          "line" : "FFFFF 444\/z + 333\/x = 777\/y ; 75 ; X"
+        },
+        {
+          "id" : "dev-13-r2",
+          "kind" : "readable",
+          "line" : "FFF 44\/x 44\/x 66\/x 99\/x 444\/x ; 35 ; X"
+        },
+        {
+          "id" : "dev-13-r3",
+          "kind" : "readable",
+          "line" : "EEEE NN DDDD\/x DD\/z DD\/y ; 45 ; X"
+        },
+        {
+          "id" : "dev-13-r4",
+          "kind" : "readable",
+          "line" : "1111\/x 1111\/z 111\/y FFF ; 40 ; X ;  ; shift"
+        },
+        {
+          "id" : "dev-13-r5",
+          "kind" : "readable",
+          "line" : "FFFFF 111\/y + 333\/x = 444\/z ; 25 ; X"
+        },
+        {
+          "id" : "dev-13-r6",
+          "kind" : "readable",
+          "line" : "99\/x 44444\/x 3333\/x 555\/x ; 30 ; X"
+        }
+      ],
+      "split" : "dev"
+    },
+    {
+      "file" : "dev\/dev-14-grayscale-L1.png",
+      "format" : "grayscale",
+      "id" : "dev-14",
+      "layout" : "L1",
+      "rows" : [
+        {
+          "ambiguity" : "zeroLetter",
+          "id" : "dev-14-r1",
+          "kind" : "ambiguous",
+          "line" : "FF RRR GGG 000 EEE | FF RRR GGG 000 NNN | FF RRR GGG 000 SSS ; 25 ; C"
+        },
+        {
+          "id" : "dev-14-r2",
+          "kind" : "readable",
+          "line" : "FF 2222\/x + 1111\/z = 3333\/y ; 25 ; X"
+        },
+        {
+          "id" : "dev-14-r3",
+          "kind" : "readable",
+          "line" : "111\/z 3333\/z 555\/z 7777\/z ; 50 ; X ;  ; shift2"
+        },
+        {
+          "id" : "dev-14-r4",
+          "kind" : "readable",
+          "line" : "1111\/z 000 444\/y 1111\/x ; 35 ; X"
+        },
+        {
+          "ambiguity" : "missingExposure",
+          "id" : "dev-14-r5",
+          "kind" : "ambiguous",
+          "line" : "SSSS WW DDDD\/y DDDD\/x ; 30 ; C"
+        },
+        {
+          "id" : "dev-14-r6",
+          "kind" : "readable",
+          "line" : "FF RRR 000 GGG SSS | FF RRR 000 GGG EEE | FF RRR 000 GGG NNN ; 50 ; X"
+        },
+        {
+          "id" : "dev-14-r7",
+          "kind" : "readable",
+          "line" : "5555\/z 000 666\/y 5555\/x ; 45 ; X"
+        },
+        {
+          "id" : "dev-14-r8",
+          "kind" : "readable",
+          "line" : "FF RRR GGG 000 EEE | FF RRR GGG 000 WWW | FF RRR GGG 000 SSS ; 40 ; X"
+        }
+      ],
+      "split" : "dev"
+    },
+    {
+      "file" : "dev\/dev-15-grayscale-L2.png",
+      "format" : "grayscale",
+      "id" : "dev-15",
+      "layout" : "L2",
+      "rows" : [
+        {
+          "ambiguity" : "missingExposure",
+          "id" : "dev-15-r1",
+          "kind" : "ambiguous",
+          "line" : "NNN SSS EE 00 DD\/y DD\/z ; 30 ; X"
+        },
+        {
+          "id" : "dev-15-r2",
+          "kind" : "readable",
+          "line" : "FF 111\/y 44\/x 55\/x 77\/y 888\/x ; 45 ; C"
+        },
+        {
+          "id" : "dev-15-r3",
+          "kind" : "readable",
+          "line" : "FF 11\/x 222\/x 3333\/x 444\/x ; 25 ; X ;  ; shift"
+        },
+        {
+          "id" : "dev-15-r4",
+          "kind" : "readable",
+          "line" : "FF 7777\/z 77\/x 7777\/y DD\/z ; 30 ; C ;  ; shift"
+        },
+        {
+          "id" : "dev-15-r5",
+          "kind" : "readable",
+          "line" : "FFFFF 333\/y + 333\/x = 666\/z ; 30 ; X"
+        }
+      ],
+      "split" : "dev"
+    },
+    {
+      "file" : "dev\/dev-16-grayscale-L4.png",
+      "format" : "grayscale",
+      "id" : "dev-16",
+      "layout" : "L4",
+      "rows" : [
+        {
+          "ambiguity" : "faint",
+          "id" : "dev-16-r1",
+          "kind" : "ambiguous",
+          "line" : "FFFF 444\/x 555\/x DD\/x 22\/x ; 40 ; X"
+        },
+        {
+          "ambiguity" : "missingPoints",
+          "id" : "dev-16-r2",
+          "kind" : "ambiguous",
+          "line" : "FF RRR GGG 000 EEE | FF RRR GGG 000 SSS ; 30 ; C"
+        },
+        {
+          "id" : "dev-16-r3",
+          "kind" : "readable",
+          "line" : "888\/x 666\/x 111\/x 222\/x DD\/x ; 40 ; C"
+        },
+        {
+          "id" : "dev-16-r4",
+          "kind" : "readable",
+          "line" : "FFF 3333\/y 4444\/x 555\/z ; 50 ; C ;  ; shift"
+        },
+        {
+          "id" : "dev-16-r5",
+          "kind" : "readable",
+          "line" : "FFFF 88\/y 111\/x 333\/x 22\/y ; 35 ; X"
+        }
+      ],
+      "split" : "dev"
+    },
+    {
+      "file" : "dev\/dev-17-screen-photo-L1.jpg",
+      "format" : "screen-photo",
+      "id" : "dev-17",
+      "layout" : "L1",
+      "rows" : [
+        {
+          "ambiguity" : "missingPoints",
+          "id" : "dev-17-r1",
+          "kind" : "ambiguous",
+          "line" : "4444\/z 000 666\/x 4444\/y ; 25 ; X"
+        },
+        {
+          "id" : "dev-17-r2",
+          "kind" : "readable",
+          "line" : "FF 3333\/y + 5555\/z = 8888\/x ; 45 ; X"
+        },
+        {
+          "id" : "dev-17-r3",
+          "kind" : "readable",
+          "line" : "222\/x 4444\/x 666\/x 8888\/x ; 30 ; X ;  ; shift2"
+        },
+        {
+          "id" : "dev-17-r4",
+          "kind" : "readable",
+          "line" : "FF 1111\/y + 1111\/x = 2222\/z ; 25 ; X"
+        },
+        {
+          "id" : "dev-17-r5",
+          "kind" : "readable",
+          "line" : "FF RRR GGG 000 EEE | FF RRR GGG 000 SSS ; 50 ; C"
+        },
+        {
+          "id" : "dev-17-r6",
+          "kind" : "readable",
+          "line" : "WW NNN EEE GG DDDD\/z ; 75 ; X"
+        },
+        {
+          "id" : "dev-17-r7",
+          "kind" : "readable",
+          "line" : "WW SSSS 00 DD\/z DD\/y DD\/x ; 25 ; X"
+        },
+        {
+          "id" : "dev-17-r8",
+          "kind" : "readable",
+          "line" : "FF 2222\/z 99\/x 666\/x 777\/x ; 30 ; X"
+        }
+      ],
+      "split" : "dev"
+    },
+    {
+      "file" : "dev\/dev-18-screen-photo-L3.jpg",
+      "format" : "screen-photo",
+      "id" : "dev-18",
+      "layout" : "L3",
+      "rows" : [
+        {
+          "ambiguity" : "missingExposure",
+          "id" : "dev-18-r1",
+          "kind" : "ambiguous",
+          "line" : "FFFF 77\/x 22\/x 44\/x 33\/x 22\/x ; 30 ; X"
+        },
+        {
+          "ambiguity" : "zeroLetter",
+          "id" : "dev-18-r2",
+          "kind" : "ambiguous",
+          "line" : "FFFFF 111\/x + 555\/z = 666\/y ; 75 ; X"
+        },
+        {
+          "id" : "dev-18-r3",
+          "kind" : "readable",
+          "line" : "FF 22\/x 333\/x 4444\/x 555\/x ; 50 ; C ;  ; shift"
+        },
+        {
+          "id" : "dev-18-r4",
+          "kind" : "readable",
+          "line" : "FFF 3333\/y 4444\/x 555\/z ; 40 ; C ;  ; shift"
+        },
+        {
+          "id" : "dev-18-r5",
+          "kind" : "readable",
+          "line" : "FF WWWW SSS RRR 00 ; 35 ; X"
+        },
+        {
+          "id" : "dev-18-r6",
+          "kind" : "readable",
+          "line" : "FFFF 88\/z 55\/y 77\/y 11\/z 33\/y ; 30 ; C"
+        },
+        {
+          "id" : "dev-18-r7",
+          "kind" : "readable",
+          "line" : "6666\/z 000 888\/x 6666\/y ; 35 ; C"
+        }
+      ],
+      "split" : "dev"
+    },
+    {
+      "file" : "dev\/dev-19-retyped-L2.png",
+      "format" : "retyped",
+      "id" : "dev-19",
+      "layout" : "L2",
+      "rows" : [
+        {
+          "ambiguity" : "missingExposure",
+          "id" : "dev-19-r1",
+          "kind" : "ambiguous",
+          "line" : "FFF 88\/x 888\/y 55\/y DD\/x 77\/x ; 25 ; C"
+        },
+        {
+          "id" : "dev-19-r2",
+          "kind" : "readable",
+          "line" : "FF 4444\/x + 4444\/y = 8888\/z ; 25 ; C"
+        },
+        {
+          "id" : "dev-19-r3",
+          "kind" : "readable",
+          "line" : "FF RRR 000 GGG EEE | FF RRR 000 GGG NNN | FF RRR 000 GGG SSS ; 30 ; X"
+        },
+        {
+          "id" : "dev-19-r4",
+          "kind" : "readable",
+          "line" : "FFF 1111\/z 2222\/x 333\/y ; 25 ; C ;  ; shift"
+        },
+        {
+          "id" : "dev-19-r5",
+          "kind" : "readable",
+          "line" : "FF 66\/y 88\/x 444\/y 77\/y 888\/y ; 25 ; C"
+        }
+      ],
+      "split" : "dev"
+    },
+    {
+      "file" : "dev\/dev-20-retyped-L4.png",
+      "format" : "retyped",
+      "id" : "dev-20",
+      "layout" : "L4",
+      "rows" : [
+        {
+          "id" : "dev-20-r1",
+          "kind" : "readable",
+          "line" : "WWWW SS DD\/x DDDD\/y DD\/z ; 25 ; X"
+        },
+        {
+          "ambiguity" : "missingPoints",
+          "id" : "dev-20-r2",
+          "kind" : "ambiguous",
+          "line" : "FFF 55\/z 66\/x DDD\/x 44\/x 44\/z ; 25 ; C"
+        },
+        {
+          "id" : "dev-20-r3",
+          "kind" : "readable",
+          "line" : "222\/x 4444\/x 666\/x 8888\/x ; 25 ; X ;  ; shift2"
+        },
+        {
+          "ambiguity" : "faint",
+          "id" : "dev-20-r4",
+          "kind" : "ambiguous",
+          "line" : "FFF 55\/z 33\/y 33\/z 88\/z 999\/y ; 50 ; C"
+        },
+        {
+          "id" : "dev-20-r5",
+          "kind" : "readable",
+          "line" : "FFFF 99\/x 44\/z 33\/x DD\/y 22\/x ; 45 ; X"
+        },
+        {
+          "id" : "dev-20-r6",
+          "kind" : "readable",
+          "line" : "FFFF 55\/x 2222\/x 44\/x 44\/x ; 30 ; X"
+        }
+      ],
+      "split" : "dev"
+    },
+    {
+      "file" : "held-out\/held-01-phone-photo-L5.jpg",
+      "format" : "phone-photo",
+      "id" : "held-01",
+      "layout" : "L5",
+      "rows" : [
+        {
+          "id" : "held-01-r1",
+          "kind" : "readable",
+          "line" : "FF RRR 000 GGG NNN | FF RRR 000 GGG SSS | FF RRR 000 GGG WWW ; 25 ; X"
+        },
+        {
+          "id" : "held-01-r2",
+          "kind" : "readable",
+          "line" : "FF NN WWWW DD\/x DD\/y DD\/z ; 50 ; X"
+        },
+        {
+          "ambiguity" : "missingPoints",
+          "id" : "held-01-r3",
+          "kind" : "ambiguous",
+          "line" : "7777\/x DDDDD\/x 66666\/x ; 30 ; C"
+        },
+        {
+          "id" : "held-01-r4",
+          "kind" : "readable",
+          "line" : "FFF 4444\/x 5555\/z 666\/y ; 25 ; X ;  ; shift"
+        },
+        {
+          "id" : "held-01-r5",
+          "kind" : "readable",
+          "line" : "FFFFF 333\/z + 444\/x = 777\/y ; 35 ; X"
+        },
+        {
+          "id" : "held-01-r6",
+          "kind" : "readable",
+          "line" : "FF 11111\/z DD\/y 55555\/x ; 45 ; X"
+        },
+        {
+          "id" : "held-01-r7",
+          "kind" : "readable",
+          "line" : "FFFFF 111\/z + 555\/y = 666\/x ; 30 ; C"
+        },
+        {
+          "id" : "held-01-r8",
+          "kind" : "readable",
+          "line" : "FFFF 222\/x 666\/z 99\/x 11\/x ; 25 ; X"
+        }
+      ],
+      "split" : "held-out"
+    },
+    {
+      "file" : "held-out\/held-02-phone-photo-L6.jpg",
+      "format" : "phone-photo",
+      "id" : "held-02",
+      "layout" : "L6",
+      "rows" : [
+        {
+          "ambiguity" : "zeroLetter",
+          "id" : "held-02-r1",
+          "kind" : "ambiguous",
+          "line" : "FF 22\/x 111\/x 77\/x 777\/x 11\/x ; 75 ; X"
+        },
+        {
+          "id" : "held-02-r2",
+          "kind" : "readable",
+          "line" : "FF 2222\/x + 1111\/y = 3333\/z ; 75 ; X"
+        },
+        {
+          "id" : "held-02-r3",
+          "kind" : "readable",
+          "line" : "FFFF 222\/z 444\/y 6666\/x ; 40 ; X ;  ; shift2"
+        },
+        {
+          "id" : "held-02-r4",
+          "kind" : "readable",
+          "line" : "FFFF 99\/x 88\/y 11\/y 33\/y 88\/y ; 45 ; X"
+        },
+        {
+          "id" : "held-02-r5",
+          "kind" : "readable",
+          "line" : "FF 3333\/y 333\/x 11111\/y ; 45 ; X"
+        },
+        {
+          "id" : "held-02-r6",
+          "kind" : "readable",
+          "line" : "FF NEWS 6065\/x 5056\/z ; 40 ; C"
+        }
+      ],
+      "split" : "held-out"
+    },
+    {
+      "file" : "held-out\/held-03-text-pdf-L5.pdf",
+      "format" : "text-pdf",
+      "id" : "held-03",
+      "layout" : "L5",
+      "rows" : [
+        {
+          "id" : "held-03-r1",
+          "kind" : "readable",
+          "line" : "FFFFF 111\/y + 444\/x = 555\/z ; 35 ; C"
+        },
+        {
+          "id" : "held-03-r2",
+          "kind" : "readable",
+          "line" : "1111\/y 99999\/y 44444\/x ; 35 ; X"
+        },
+        {
+          "id" : "held-03-r3",
+          "kind" : "readable",
+          "line" : "FF 66\/x 66\/y 66\/z DD\/x DD\/y DD\/z ; 35 ; X ;  ; shift"
+        },
+        {
+          "id" : "held-03-r4",
+          "kind" : "readable",
+          "line" : "FF 66\/z 66\/y 66\/x DD\/z DD\/y DD\/x ; 25 ; X ;  ; shift"
+        },
+        {
+          "id" : "held-03-r5",
+          "kind" : "readable",
+          "line" : "6666\/z 000 666\/y 6666\/x ; 25 ; X"
+        },
+        {
+          "id" : "held-03-r6",
+          "kind" : "readable",
+          "line" : "FF 2222\/y + 2222\/z = 4444\/x ; 50 ; C"
+        },
+        {
+          "id" : "held-03-r7",
+          "kind" : "readable",
+          "line" : "FF RRR GGG 000 SSS | FF RRR GGG 000 NNN | FF RRR GGG 000 WWW ; 50 ; X"
+        },
+        {
+          "ambiguity" : "missingPoints",
+          "id" : "held-03-r8",
+          "kind" : "ambiguous",
+          "line" : "FF 88\/x DDDD\/z 333\/x 999\/z ; 25 ; X"
+        }
+      ],
+      "split" : "held-out"
+    },
+    {
+      "file" : "held-out\/held-04-image-pdf-L6.pdf",
+      "format" : "image-pdf",
+      "id" : "held-04",
+      "layout" : "L6",
+      "rows" : [
+        {
+          "ambiguity" : "missingExposure",
+          "id" : "held-04-r1",
+          "kind" : "ambiguous",
+          "line" : "FFFFF 444\/y + 444\/z = 888\/x ; 50 ; X"
+        },
+        {
+          "id" : "held-04-r2",
+          "kind" : "readable",
+          "line" : "FF 1111\/y + 1111\/x = 2222\/z ; 30 ; C"
+        },
+        {
+          "id" : "held-04-r3",
+          "kind" : "readable",
+          "line" : "9999\/z 000 777\/y 9999\/x ; 35 ; X"
+        },
+        {
+          "id" : "held-04-r4",
+          "kind" : "readable",
+          "line" : "FF 8888\/z 88\/y 8888\/x DD\/z ; 30 ; X ;  ; shift"
+        },
+        {
+          "id" : "held-04-r5",
+          "kind" : "readable",
+          "line" : "FFFFF 444\/x + 333\/z = 777\/y ; 30 ; X"
+        }
+      ],
+      "split" : "held-out"
+    },
+    {
+      "file" : "held-out\/held-05-screenshot-L5.png",
+      "format" : "screenshot",
+      "id" : "held-05",
+      "layout" : "L5",
+      "rows" : [
+        {
+          "id" : "held-05-r1",
+          "kind" : "readable",
+          "line" : "FF NEWS 3036\/y 6063\/x ; 25 ; X"
+        },
+        {
+          "ambiguity" : "faint",
+          "id" : "held-05-r2",
+          "kind" : "ambiguous",
+          "line" : "FF EEE NNN RR DD\/x DD\/z ; 25 ; X"
+        },
+        {
+          "id" : "held-05-r3",
+          "kind" : "readable",
+          "line" : "FFFF 222\/y 444\/z 6666\/x ; 50 ; C ;  ; shift2"
+        },
+        {
+          "id" : "held-05-r4",
+          "kind" : "readable",
+          "line" : "NNN WWWW EE 000 DD\/y ; 75 ; X"
+        },
+        {
+          "id" : "held-05-r5",
+          "kind" : "readable",
+          "line" : "6666\/x 000 999\/z 6666\/y ; 75 ; X"
+        },
+        {
+          "id" : "held-05-r6",
+          "kind" : "readable",
+          "line" : "FF 2022\/z 2222\/x 2222\/x ; 25 ; X"
+        },
+        {
+          "id" : "held-05-r7",
+          "kind" : "readable",
+          "line" : "FFFF 111\/x 33\/y 444\/x DD\/z ; 25 ; X"
+        }
+      ],
+      "split" : "held-out"
+    },
+    {
+      "file" : "held-out\/held-06-screenshot-L6.png",
+      "format" : "screenshot",
+      "id" : "held-06",
+      "layout" : "L6",
+      "rows" : [
+        {
+          "ambiguity" : "zeroLetter",
+          "id" : "held-06-r1",
+          "kind" : "ambiguous",
+          "line" : "FF DDDD\/x 555\/x 99\/x 111\/x ; 25 ; X"
+        },
+        {
+          "id" : "held-06-r2",
+          "kind" : "readable",
+          "line" : "FF 555\/x 88\/x 111\/y 33\/y DD\/y ; 35 ; X"
+        },
+        {
+          "id" : "held-06-r3",
+          "kind" : "readable",
+          "line" : "111\/x 2222\/x 333\/y 4444\/y ; 35 ; C ;  ; shift"
+        },
+        {
+          "id" : "held-06-r4",
+          "kind" : "readable",
+          "line" : "FF 44\/x 555\/x 6666\/x 777\/x ; 45 ; X ;  ; shift"
+        },
+        {
+          "id" : "held-06-r5",
+          "kind" : "readable",
+          "line" : "888\/y 44\/y 888\/y 999\/y 444\/x ; 40 ; X"
+        }
+      ],
+      "split" : "held-out"
+    },
+    {
+      "file" : "held-out\/held-07-grayscale-L5.png",
+      "format" : "grayscale",
+      "id" : "held-07",
+      "layout" : "L5",
+      "rows" : [
+        {
+          "ambiguity" : "missingPoints",
+          "id" : "held-07-r1",
+          "kind" : "ambiguous",
+          "line" : "FF 11\/x 4444\/x 777\/x 444\/x ; 35 ; X"
+        },
+        {
+          "id" : "held-07-r2",
+          "kind" : "readable",
+          "line" : "FFFF 44\/x 33\/x 999\/x 999\/x ; 75 ; C"
+        },
+        {
+          "id" : "held-07-r3",
+          "kind" : "readable",
+          "line" : "5555\/y 22222\/z 555\/x 33\/y ; 30 ; X"
+        },
+        {
+          "id" : "held-07-r4",
+          "kind" : "readable",
+          "line" : "NN EE WW SS 44\/x 44\/y 44\/z ; 30 ; X ;  ; shift"
+        },
+        {
+          "id" : "held-07-r5",
+          "kind" : "readable",
+          "line" : "FF RRR 000 GGG EEE | FF RRR 000 GGG WWW | FF RRR 000 GGG NNN ; 35 ; X"
+        },
+        {
+          "id" : "held-07-r6",
+          "kind" : "readable",
+          "line" : "FF 2222\/z 77777\/x 444\/y ; 40 ; C"
+        },
+        {
+          "id" : "held-07-r7",
+          "kind" : "readable",
+          "line" : "FFFFF 111\/y + 444\/x = 555\/z ; 40 ; X"
+        }
+      ],
+      "split" : "held-out"
+    },
+    {
+      "file" : "held-out\/held-08-screen-photo-L6.jpg",
+      "format" : "screen-photo",
+      "id" : "held-08",
+      "layout" : "L6",
+      "rows" : [
+        {
+          "id" : "held-08-r1",
+          "kind" : "readable",
+          "line" : "FF 55\/x 77\/x 5555\/x 22\/x 66\/x ; 25 ; C"
+        },
+        {
+          "ambiguity" : "zeroLetter",
+          "id" : "held-08-r2",
+          "kind" : "ambiguous",
+          "line" : "FFFF 111\/y 77\/y 88\/x 999\/x ; 40 ; X"
+        },
+        {
+          "id" : "held-08-r3",
+          "kind" : "readable",
+          "line" : "FF 1111\/z 33\/y 55\/y 7777\/z ; 40 ; X ;  ; shift2"
+        },
+        {
+          "id" : "held-08-r4",
+          "kind" : "readable",
+          "line" : "FFFFF 222\/y + 111\/z = 333\/x ; 25 ; X"
+        },
+        {
+          "id" : "held-08-r5",
+          "kind" : "readable",
+          "line" : "DDDD\/z 55555\/x 44444\/y ; 50 ; X"
+        }
+      ],
+      "split" : "held-out"
+    },
+    {
+      "file" : "held-out\/held-09-retyped-L5.png",
+      "format" : "retyped",
+      "id" : "held-09",
+      "layout" : "L5",
+      "rows" : [
+        {
+          "ambiguity" : "blot",
+          "id" : "held-09-r1",
+          "kind" : "ambiguous",
+          "line" : "SS WW NN RRR GG DDD\/y ; 75 ; C"
+        },
+        {
+          "id" : "held-09-r2",
+          "kind" : "readable",
+          "line" : "555\/x 55\/x 7777\/x 99999\/x ; 25 ; C"
+        },
+        {
+          "id" : "held-09-r3",
+          "kind" : "readable",
+          "line" : "FF 44\/x 555\/x 6666\/x 777\/x ; 50 ; X ;  ; shift"
+        },
+        {
+          "id" : "held-09-r4",
+          "kind" : "readable",
+          "line" : "444\/y 5555\/y 666\/x 7777\/x ; 75 ; X ;  ; shift"
+        },
+        {
+          "id" : "held-09-r5",
+          "kind" : "readable",
+          "line" : "3333\/z 000 333\/x 3333\/y ; 25 ; X"
+        },
+        {
+          "id" : "held-09-r6",
+          "kind" : "readable",
+          "line" : "FFFF 77\/x 44\/x 66\/x 99\/x 66\/x ; 30 ; X"
+        },
+        {
+          "id" : "held-09-r7",
+          "kind" : "readable",
+          "line" : "FF 44\/y 22\/z 999\/y 999\/z 55\/y ; 35 ; C"
+        },
+        {
+          "id" : "held-09-r8",
+          "kind" : "readable",
+          "line" : "11\/x 222\/y 999\/x 333\/y 333\/x ; 25 ; X"
+        }
+      ],
+      "split" : "held-out"
+    },
+    {
+      "file" : "held-out\/held-10-retyped-L6.png",
+      "format" : "retyped",
+      "id" : "held-10",
+      "layout" : "L6",
+      "rows" : [
+        {
+          "ambiguity" : "missingExposure",
+          "id" : "held-10-r1",
+          "kind" : "ambiguous",
+          "line" : "FF NEWS 9095\/z 5059\/x ; 25 ; X"
+        },
+        {
+          "id" : "held-10-r2",
+          "kind" : "readable",
+          "line" : "FFF 3333\/x 7777\/y 333\/y ; 35 ; X"
+        },
+        {
+          "id" : "held-10-r3",
+          "kind" : "readable",
+          "line" : "FFF 888\/x 22\/z 5555\/z 77\/z ; 30 ; C"
+        },
+        {
+          "id" : "held-10-r4",
+          "kind" : "readable",
+          "line" : "2222\/y 2222\/z 222\/x FFF ; 30 ; X ;  ; shift"
+        },
+        {
+          "id" : "held-10-r5",
+          "kind" : "readable",
+          "line" : "9999\/x 000 222\/y 9999\/z ; 40 ; X"
+        },
+        {
+          "id" : "held-10-r6",
+          "kind" : "readable",
+          "line" : "FF SSSS NN RRR DDD\/x ; 25 ; X"
+        }
+      ],
+      "split" : "held-out"
+    }
+  ],
+  "poorSources" : [
+    {
+      "derivedFrom" : "dev-01",
+      "file" : "poor\/dev\/dev-poor-heavy-blur-1.jpg",
+      "id" : "dev-heavy-blur-1",
+      "kind" : "heavy-blur",
+      "split" : "dev"
+    },
+    {
+      "derivedFrom" : "dev-08",
+      "file" : "poor\/dev\/dev-poor-heavy-blur-2.jpg",
+      "id" : "dev-heavy-blur-2",
+      "kind" : "heavy-blur",
+      "split" : "dev"
+    },
+    {
+      "derivedFrom" : "dev-10",
+      "file" : "poor\/dev\/dev-poor-very-dark-1.jpg",
+      "id" : "dev-very-dark-1",
+      "kind" : "very-dark",
+      "split" : "dev"
+    },
+    {
+      "derivedFrom" : "dev-17",
+      "file" : "poor\/dev\/dev-poor-very-dark-2.jpg",
+      "id" : "dev-very-dark-2",
+      "kind" : "very-dark",
+      "split" : "dev"
+    },
+    {
+      "derivedFrom" : "dev-19",
+      "file" : "poor\/dev\/dev-poor-large-glare-1.jpg",
+      "id" : "dev-large-glare-1",
+      "kind" : "large-glare",
+      "split" : "dev"
+    },
+    {
+      "derivedFrom" : "dev-03",
+      "file" : "poor\/dev\/dev-poor-large-glare-2.jpg",
+      "id" : "dev-large-glare-2",
+      "kind" : "large-glare",
+      "split" : "dev"
+    },
+    {
+      "derivedFrom" : "dev-08",
+      "file" : "poor\/dev\/dev-poor-cut-off-1.jpg",
+      "id" : "dev-cut-off-1",
+      "kind" : "cut-off",
+      "split" : "dev"
+    },
+    {
+      "derivedFrom" : "dev-12",
+      "file" : "poor\/dev\/dev-poor-cut-off-2.jpg",
+      "id" : "dev-cut-off-2",
+      "kind" : "cut-off",
+      "split" : "dev"
+    },
+    {
+      "derivedFrom" : "dev-17",
+      "file" : "poor\/dev\/dev-poor-not-a-card-1.jpg",
+      "id" : "dev-not-a-card-1",
+      "kind" : "not-a-card",
+      "split" : "dev"
+    },
+    {
+      "derivedFrom" : "dev-01",
+      "file" : "poor\/dev\/dev-poor-not-a-card-2.jpg",
+      "id" : "dev-not-a-card-2",
+      "kind" : "not-a-card",
+      "split" : "dev"
+    },
+    {
+      "derivedFrom" : "held-01",
+      "file" : "poor\/held-out\/held-out-poor-heavy-blur-1.jpg",
+      "id" : "held-out-heavy-blur-1",
+      "kind" : "heavy-blur",
+      "split" : "held-out"
+    },
+    {
+      "derivedFrom" : "held-06",
+      "file" : "poor\/held-out\/held-out-poor-heavy-blur-2.jpg",
+      "id" : "held-out-heavy-blur-2",
+      "kind" : "heavy-blur",
+      "split" : "held-out"
+    },
+    {
+      "derivedFrom" : "held-09",
+      "file" : "poor\/held-out\/held-out-poor-very-dark-1.jpg",
+      "id" : "held-out-very-dark-1",
+      "kind" : "very-dark",
+      "split" : "held-out"
+    },
+    {
+      "derivedFrom" : "held-04",
+      "file" : "poor\/held-out\/held-out-poor-very-dark-2.jpg",
+      "id" : "held-out-very-dark-2",
+      "kind" : "very-dark",
+      "split" : "held-out"
+    },
+    {
+      "derivedFrom" : "held-06",
+      "file" : "poor\/held-out\/held-out-poor-large-glare-1.jpg",
+      "id" : "held-out-large-glare-1",
+      "kind" : "large-glare",
+      "split" : "held-out"
+    },
+    {
+      "derivedFrom" : "held-01",
+      "file" : "poor\/held-out\/held-out-poor-large-glare-2.jpg",
+      "id" : "held-out-large-glare-2",
+      "kind" : "large-glare",
+      "split" : "held-out"
+    },
+    {
+      "derivedFrom" : "held-04",
+      "file" : "poor\/held-out\/held-out-poor-cut-off-1.jpg",
+      "id" : "held-out-cut-off-1",
+      "kind" : "cut-off",
+      "split" : "held-out"
+    },
+    {
+      "derivedFrom" : "held-09",
+      "file" : "poor\/held-out\/held-out-poor-cut-off-2.jpg",
+      "id" : "held-out-cut-off-2",
+      "kind" : "cut-off",
+      "split" : "held-out"
+    },
+    {
+      "derivedFrom" : "held-01",
+      "file" : "poor\/held-out\/held-out-poor-not-a-card-1.jpg",
+      "id" : "held-out-not-a-card-1",
+      "kind" : "not-a-card",
+      "split" : "held-out"
+    },
+    {
+      "derivedFrom" : "held-06",
+      "file" : "poor\/held-out\/held-out-poor-not-a-card-2.jpg",
+      "id" : "held-out-not-a-card-2",
+      "kind" : "not-a-card",
+      "split" : "held-out"
+    }
+  ],
+  "seed" : 20261110,
+  "version" : 1
+}

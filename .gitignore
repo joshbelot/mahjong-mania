@@ -27,3 +27,11 @@ App/Info.plist
 
 # Owner-only files (personal cards etc.): never commit
 private/
+
+# Card-scan experiment harness (docs/CARD_SCAN_EVALUATION.md): rendered media is regenerated from the
+# committed manifest and seed with `cardscan generate`; only manifest.json, freeze.json and results are kept.
+tools/CardScanHarness/.build/
+tools/CardScanHarness/build/
+tools/CardScanHarness/corpus/dev/
+tools/CardScanHarness/corpus/held-out/
+tools/CardScanHarness/corpus/poor/
