@@ -208,7 +208,7 @@ struct SettingsView: View {
     Section {
       LabeledContent("Version", value: version)
       Text(
-        "Mahjong Mania is an independent app. Not affiliated with the National Mah Jongg League. Practice Card hands are original."
+        "Mahj Buddy is an independent app. Not affiliated with the National Mah Jongg League. Practice Card hands are original."
       )
       .font(Typography.small)
       .foregroundStyle(theme.textMuted)

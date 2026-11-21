@@ -115,7 +115,7 @@ struct ImportView: View {
           .frame(minHeight: 44)
       }
       .tint(theme.primary)
-      .accessibilityHint("Pick a screenshot or photo of a Mahjong Mania card QR code")
+      .accessibilityHint("Pick a screenshot or photo of a Mahj Buddy card QR code")
       .accessibilityIdentifier("import.photo")
       if let photoMessage {
         Text(photoMessage)
@@ -240,7 +240,7 @@ struct ImportView: View {
 
   // MARK: Actions
 
-  /// Looks for a Mahjong Mania card QR code in the chosen picture and, if there is one, fills in and
+  /// Looks for a Mahj Buddy card QR code in the chosen picture and, if there is one, fills in and
   /// checks the card. Nothing leaves the phone; the picker needs no permission.
   private func readPicture(_ item: PhotosPickerItem) async {
     defer { photoItem = nil }

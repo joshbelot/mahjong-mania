@@ -407,7 +407,7 @@ struct SummaryModel {
       lines.append(contentsOf: settle)
     }
     lines.append("")
-    lines.append("Kept with Mahjong Mania")
+    lines.append("Kept with Mahj Buddy")
     return lines.joined(separator: "\n")
   }
 

@@ -5,7 +5,7 @@ enum LearnNotation {
   static let topic = LearnTopic(
     id: "notation",
     title: "Notation guide",
-    summary: "The short text format Mahjong Mania uses to describe a hand, one line per hand.",
+    summary: "The short text format Mahj Buddy uses to describe a hand, one line per hand.",
     symbol: "textformat.abc",
     sections: [
       LearnSection(

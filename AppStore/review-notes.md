@@ -3,7 +3,7 @@
 Paste into App Store Connect, App Review Information, Notes. No sign-in is needed (leave "Sign-in required" off).
 
 ```
-Thank you for reviewing Mahjong Mania: Companion.
+Thank you for reviewing Mahj Buddy: American Mahjong.
 
 No account or sign-in is needed. The app works fully offline and makes no network requests.
 

@@ -128,7 +128,7 @@ struct SummaryModelTests {
       "Dee pays Alex $1.80",
       "Dee pays Bea $0.15",
       "",
-      "Kept with Mahjong Mania",
+      "Kept with Mahj Buddy",
     ].joined(separator: "\n")
     #expect(text == expected)
   }
@@ -139,7 +139,7 @@ struct SummaryModelTests {
     #expect(!text.contains("Settle up"))
     #expect(!text.contains("$"))
     #expect(text.contains("1. Bea +260 pts"))
-    #expect(text.hasSuffix("Kept with Mahjong Mania"))
+    #expect(text.hasSuffix("Kept with Mahj Buddy"))
   }
 
   @Test func signedFormatting() {

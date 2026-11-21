@@ -82,7 +82,7 @@ struct CardQRCodeTests {
     let newer = good.replacingOccurrences(of: "v=1", with: "v=2")
     #expect(throws: CardQRCode.DecodeError.newerVersion) { try CardQRCode.cardText(from: newer) }
     #expect(CardQRCode.DecodeError.newerVersion.message.contains("Update the app"))
-    #expect(CardQRCode.DecodeError.notACard.message == "This QR code isn't a Mahjong Mania card, or it's damaged.")
+    #expect(CardQRCode.DecodeError.notACard.message == "This QR code isn't a Mahj Buddy card, or it's damaged.")
   }
 
   @Test func theCodeIsBlackOnWhiteAndScansBack() throws {

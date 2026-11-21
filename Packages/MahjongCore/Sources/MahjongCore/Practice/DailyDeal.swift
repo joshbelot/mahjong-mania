@@ -139,7 +139,7 @@ public enum DailyDeal {
       case .red: return "🟥"
       }
     }.joined()
-    var lines = ["Mahjong Mania Daily #\(number) 🀄", "Pick: \(pick)", "Pass: \(pass)"]
+    var lines = ["Mahj Buddy Daily #\(number) 🀄", "Pick: \(pick)", "Pass: \(pass)"]
     if streak > 0 { lines.append("🔥 \(streak)-day streak") }
     return lines.joined(separator: "\n")
   }

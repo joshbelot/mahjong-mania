@@ -63,7 +63,7 @@ final class CardQRTests: XCTestCase {
     let app = launch(url: "mahjongmania://card?v=1&d=!!!")
     let alert = app.alerts["Can't open this QR code"]
     XCTAssertTrue(alert.waitForExistence(timeout: 15), "Expected an alert")
-    XCTAssertTrue(alert.staticTexts["This QR code isn't a Mahjong Mania card, or it's damaged."].exists)
+    XCTAssertTrue(alert.staticTexts["This QR code isn't a Mahj Buddy card, or it's damaged."].exists)
     attach("qr-bad-link-light")
     alert.buttons["OK"].tap()
     XCTAssertTrue(alert.waitForNonExistence(timeout: 5))
@@ -75,7 +75,7 @@ final class CardQRTests: XCTestCase {
     XCTAssertTrue(alert.waitForExistence(timeout: 15), "Expected an alert")
     XCTAssertTrue(
       alert.staticTexts[
-        "This card was shared from a newer version of Mahjong Mania. Update the app to import it."
+        "This card was shared from a newer version of Mahj Buddy. Update the app to import it."
       ].exists)
   }
 }
