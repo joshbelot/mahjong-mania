@@ -54,12 +54,12 @@ struct LearnHomeView: View {
             .accessibilityIdentifier("learn.glossary")
           }
         }
-        SectionCard("Practise") {
+        SectionCard("Practice") {
           Button {
             tabSwitcher.select(.practice)
           } label: {
             LearnRow(
-              symbol: "flame.fill", title: "Practise this in the Practice tab",
+              symbol: "flame.fill", title: "Practice this in the Practice tab",
               subtitle: "Short lessons, a daily deal and the Pick-a-Hand and Charleston drills.")
           }
           .buttonStyle(.plain)

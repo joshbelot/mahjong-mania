@@ -148,9 +148,9 @@ struct CardReadingTests {
     #expect(asked > 10)
   }
 
-  @Test func coloursFocusUsesLinesWithTwoSuits() {
+  @Test func colorsFocusUsesLinesWithTwoSuits() {
     for seed in seeds {
-      let e = make(.matchesLine, seed, 1, focus: ExerciseFocus.colours)
+      let e = make(.matchesLine, seed, 1, focus: ExerciseFocus.colors)
       let groups = e.line!.variants[0].groups
       #expect(Instantiate.variables(in: groups).count >= 2)
     }

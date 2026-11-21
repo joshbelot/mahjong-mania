@@ -42,7 +42,7 @@ enum LearnRules {
             "The card lists every hand you are allowed to win with. Lines are grouped into families, such as a run of numbers or a set of winds and dragons."
           ),
           .bullets([
-            "Colours are suits: the same colour means the same suit, and different colours mean different suits. You choose which real suit goes with which colour.",
+            "Colors are suits: the same color means the same suit, and different colors mean different suits. You choose which real suit goes with which color.",
             "X means an Exposed hand: you may call discards to build groups. C means a Concealed hand: you may only call the very last tile.",
             "The number beside each line is its points.",
           ]),

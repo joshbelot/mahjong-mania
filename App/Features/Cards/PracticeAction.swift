@@ -5,7 +5,7 @@ enum AppTab: Hashable, Sendable {
   case game, helper, practice, cards, learn
 }
 
-/// Lets a deep screen switch the selected tab, e.g. "Practise this hand" opening the Helper.
+/// Lets a deep screen switch the selected tab, e.g. "Practice this hand" opening the Helper.
 /// `RootView` provides the real one; the default does nothing.
 struct TabSwitcher {
   let select: @MainActor (AppTab) -> Void

@@ -31,7 +31,7 @@ struct TileStyleTests {
     #expect(reloaded.settings.tileStyle == .largePrint)
   }
 
-  @Test func onlyModernChangesTheFaceColour() {
+  @Test func onlyModernChangesTheFaceColor() {
     let theme = Theme.standard
     for style in [TileStyle.classic, .traditional, .largePrint] {
       for tile in Tile.allWithBlank {

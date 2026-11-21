@@ -33,7 +33,7 @@ final class PlayersStore {
     return activePlayers.first { $0.id != id && $0.name.lowercased() == key }
   }
 
-  /// Adds a player with the first palette colour not used by an active player.
+  /// Adds a player with the first palette color not used by an active player.
   @discardableResult
   func add(name: String, id: String = UUID().uuidString, at date: Date = Date()) -> Player {
     let used = Set(activePlayers.map(\.colorIndex))

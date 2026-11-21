@@ -33,7 +33,7 @@ final class ComplianceUITests: PracticeUITestCase {
   private func captureSettings(dark: Bool = false, textSize: String? = nil, suffix: String) {
     let app = launch(["-UITestResetData", "-UITestTab", "game"], dark: dark, textSize: textSize)
     app.buttons["settings.open"].firstMatch.tap()
-    let subtitle = app.staticTexts["The app only does the maths. No money is handled here."].firstMatch
+    let subtitle = app.staticTexts["The app only does the math. No money is handled here."].firstMatch
     var swipes = 0
     while !(subtitle.exists && subtitle.isHittable) && swipes < 10 {
       app.swipeUp()

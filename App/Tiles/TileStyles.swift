@@ -2,7 +2,7 @@ import MahjongCore
 import SwiftUI
 
 extension TileStyle {
-  /// The colour of a tile's face. Only Modern changes it: number tiles take their suit's colour and
+  /// The color of a tile's face. Only Modern changes it: number tiles take their suit's color and
   /// honours sit on a neutral face.
   func faceColor(for tile: Tile, theme: Theme) -> Color {
     guard self == .modern else { return theme.tileFace }
@@ -204,7 +204,7 @@ private struct Blossom: View {
 
 // MARK: - Large print
 
-/// High contrast for low vision: a big numeral or letter, the suit spelled out in the suit colour,
+/// High contrast for low vision: a big numeral or letter, the suit spelled out in the suit color,
 /// no fine detail.
 private struct LargePrintTileFace: View {
   @Environment(\.theme) private var theme
@@ -269,7 +269,7 @@ private struct LargePrintTileFace: View {
 
 // MARK: - Modern
 
-/// Flat, colour-blocked: each suit has a tinted face, a white numeral and a simple shape. Honours use
+/// Flat, color-blocked: each suit has a tinted face, a white numeral and a simple shape. Honours use
 /// the Classic art on a neutral face.
 private struct ModernTileFace: View {
   @Environment(\.theme) private var theme

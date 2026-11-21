@@ -1,7 +1,7 @@
 import XCTest
 
 /// Runs key screens at the largest accessibility text size and checks that custom layouts stack
-/// instead of truncating or breaking words. Screenshots are attached for both colour schemes.
+/// instead of truncating or breaking words. Screenshots are attached for both color schemes.
 @MainActor
 final class LargeTextTests: XCTestCase {
   private func launch(dark: Bool) -> XCUIApplication {

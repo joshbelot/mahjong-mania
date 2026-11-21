@@ -1,7 +1,7 @@
 import SwiftUI
 import UIKit
 
-/// Design tokens from SPEC §11.2. This is the only file allowed to contain literal colour values.
+/// Design tokens from SPEC §11.2. This is the only file allowed to contain literal color values.
 extension UIColor {
   convenience init(hex: UInt32, alpha: CGFloat = 1) {
     self.init(
@@ -13,7 +13,7 @@ extension UIColor {
 }
 
 extension Color {
-  /// A colour that resolves to `light` or `dark` depending on the current interface style.
+  /// A color that resolves to `light` or `dark` depending on the current interface style.
   static func dynamic(
     light: UInt32, dark: UInt32, lightAlpha: CGFloat = 1, darkAlpha: CGFloat = 1
   ) -> Color {
@@ -25,7 +25,7 @@ extension Color {
       })
   }
 
-  /// A fixed (non-adaptive) colour.
+  /// A fixed (non-adaptive) color.
   static func fixed(_ hex: UInt32, alpha: CGFloat = 1) -> Color {
     Color(UIColor(hex: hex, alpha: alpha))
   }
@@ -47,7 +47,7 @@ enum Radius {
   static let pill: CGFloat = 999
 }
 
-/// The 8-colour player palette (SPEC §11.4), indexed by `Player.colorIndex`.
+/// The 8-color player palette (SPEC §11.4), indexed by `Player.colorIndex`.
 enum PlayerPalette {
   static let hexes: [UInt32] = [
     0x1F6B52, 0xC8423B, 0x2F5D9E, 0xB8862A, 0x8A4FA3, 0x2E8A8A, 0xD9673A, 0x5E665F,
@@ -84,14 +84,14 @@ struct Theme: Sendable {
   let suitC = Color.fixed(0xC8423B)
   let suitB = Color.fixed(0x2E7D4F)
   let suitD = Color.fixed(0x2F5D9E)
-  // Card-style colours for suit variables x / y / z (shown to users as A / B / C).
+  // Card-style colors for suit variables x / y / z (shown to users as A / B / C).
   let varA = Color.dynamic(light: 0x2F5D9E, dark: 0x7FA6E0)
   let varB = Color.dynamic(light: 0xC8423B, dark: 0xE2675F)
   let varC = Color.dynamic(light: 0x2E7D4F, dark: 0x5BBF86)
   // Ink for winds and other dark glyphs on the ivory tile face (does not adapt, like the face itself).
   let tileInk = Color.fixed(0x1E2420)
   let flower = Color.fixed(0x8A4FA3)
-  // Modern tile style: honours sit on a neutral face, numbers on a suit-coloured one.
+  // Modern tile style: honours sit on a neutral face, numbers on a suit-colored one.
   let modernNeutral = Color.fixed(0xE8E4D9)
   let modernOnColor = Color.fixed(0xFFFFFF)
   let joker = Color.fixed(0xB8862A)

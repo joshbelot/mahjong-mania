@@ -1,6 +1,6 @@
 import MahjongCore
 
-/// Which colour family a glyph is drawn in. The view maps these to `Theme` tokens.
+/// Which color family a glyph is drawn in. The view maps these to `Theme` tokens.
 enum PatternInk: Hashable, Sendable {
   case variable(SuitVar)
   case suit(Suit)
@@ -41,7 +41,7 @@ struct PatternSlot: Hashable, Sendable {
   let kind: Kind
 }
 
-/// Pure grouping and colouring logic behind `HandPatternView`.
+/// Pure grouping and coloring logic behind `HandPatternView`.
 ///
 /// Tokens of one body (`2026/x`, `NEWS`, `112233/x`) have adjacent `range`s in the variant source; tokens
 /// of different bodies are separated by at least one space or by an operator.

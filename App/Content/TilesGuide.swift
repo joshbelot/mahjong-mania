@@ -15,8 +15,8 @@ enum LearnTiles {
             "Each suit has the numbers 1 to 9 and four copies of every number, so 36 tiles per suit."
           ),
           .table(
-            header: ["Suit", "Also called", "Colour", "Copies"],
-            rows: TileCheatSheet.suits.map { [$0.name, $0.alsoCalled, $0.colour, "36"] }),
+            header: ["Suit", "Also called", "Color", "Copies"],
+            rows: TileCheatSheet.suits.map { [$0.name, $0.alsoCalled, $0.color, "36"] }),
           .note("The 1 Bam is traditionally drawn as a bird, so it is easy to spot."),
         ]),
       LearnSection(
@@ -34,7 +34,7 @@ enum LearnTiles {
             header: ["Dragon", "Nickname", "Goes with"],
             rows: TileCheatSheet.dragons.map { [$0.tile == .dragon(.white) ? "White Dragon" : $0.tile.name, $0.nickname, $0.goesWith] }),
           .paragraph(
-            "A Dragon symbol in the same printed colour as a numbered group means the Dragon that matches whichever suit you choose for that group."
+            "A Dragon symbol in the same printed color as a numbered group means the Dragon that matches whichever suit you choose for that group."
           ),
           .paragraph(
             "Soap does double duty. In year hands it is the zero (so a 2026 hand uses one Soap), and it also serves as the ordinary White Dragon."

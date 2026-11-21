@@ -64,7 +64,7 @@ enum Tips {
     CoachTip(
       id: "dragon-match",
       text:
-        "A Dragon in the same printed colour as a group matches that group's chosen suit: Red with Cracks, Green with Bams, Soap with Dots."
+        "A Dragon in the same printed color as a group matches that group's chosen suit: Red with Cracks, Green with Bams, Soap with Dots."
     ),
     CoachTip(
       id: "shift-lines",

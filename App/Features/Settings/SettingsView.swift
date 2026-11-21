@@ -163,7 +163,7 @@ struct SettingsView: View {
     } header: {
       Text("Money").foregroundStyle(theme.textMuted)
     } footer: {
-      Text("The app only does the maths. No money is handled here.").foregroundStyle(theme.textMuted)
+      Text("The app only does the math. No money is handled here.").foregroundStyle(theme.textMuted)
     }
     .listRowBackground(theme.surface)
   }

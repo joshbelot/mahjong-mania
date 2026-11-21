@@ -164,7 +164,7 @@ public enum Tile: Hashable, Comparable, Sendable, CaseIterable, Codable {
     }
   }
 
-  /// The dragon written in a suit's colour: Cracks ↔ Red, Bams ↔ Green, Dots ↔ Soap.
+  /// The dragon written in a suit's color: Cracks ↔ Red, Bams ↔ Green, Dots ↔ Soap.
   public static func matchingDragon(_ suit: Suit) -> Tile {
     switch suit {
     case .cracks: return .dragon(.red)

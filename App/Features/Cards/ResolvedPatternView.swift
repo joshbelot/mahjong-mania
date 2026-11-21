@@ -2,7 +2,7 @@ import MahjongCore
 import SwiftUI
 
 /// A pattern variant drawn as tiles with the suits of one concrete `Target` (tile mode without an
-/// evaluation). With no target, suits fall back to the example colours A = Cracks, B = Bams, C = Dots.
+/// evaluation). With no target, suits fall back to the example colors A = Cracks, B = Bams, C = Dots.
 struct ResolvedPatternView: View {
   @Environment(\.theme) private var theme
   let variant: PatternVariant

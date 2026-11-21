@@ -2,7 +2,7 @@ import MahjongCore
 import SwiftUI
 
 enum PatternMode: Sendable {
-  /// Coloured glyph text for lists, e.g. `FF 2026 2222 6666`.
+  /// Colored glyph text for lists, e.g. `FF 2026 2222 6666`.
   case compact
   /// Small tiles for the resolved best target, with a summary row below.
   case tiles

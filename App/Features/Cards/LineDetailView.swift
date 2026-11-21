@@ -2,7 +2,7 @@ import MahjongCore
 import SwiftUI
 
 /// One hand in detail: big tile pattern, suit and shift controls, plain-English description, variants, your
-/// record and the "Practise this hand" action (SPEC §11.7).
+/// record and the "Practice this hand" action (SPEC §11.7).
 struct LineDetailView: View {
   let cardID: String
   let lineID: String
@@ -47,7 +47,7 @@ private struct LineDetailContent: View {
       VStack(alignment: .leading, spacing: Spacing.lg) {
         header
         patternCard
-        practiseButton
+        practiceButton
         descriptionCard
         if line.variants.count > 1 { variantsCard }
         recordCard
@@ -169,12 +169,12 @@ private struct LineDetailContent: View {
     }
   }
 
-  private var practiseButton: some View {
-    Button(action: practise) {
-      Label("Practise this hand", systemImage: "lightbulb")
+  private var practiceButton: some View {
+    Button(action: practice) {
+      Label("Practice this hand", systemImage: "lightbulb")
     }
     .buttonStyle(PrimaryButton(.primary, size: .large))
-    .accessibilityIdentifier("line.practise")
+    .accessibilityIdentifier("line.practice")
   }
 
   // MARK: Helpers
@@ -199,7 +199,7 @@ private struct LineDetailContent: View {
   }
 
   /// Pins the hand for the Helper, makes its card the active one, and opens the Helper tab.
-  private func practise() {
+  private func practice() {
     settings.update { $0.activeCardID = card.id }
     helper.pin(lineID: line.id)
     tabSwitcher.select(.helper)

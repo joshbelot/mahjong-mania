@@ -132,9 +132,9 @@ struct ProfileView: View {
       }
       .accessibilityElement(children: .ignore)
       .accessibilityLabel("Calendar of the last 12 weeks")
-      .accessibilityValue("You practised on \(played) days")
+      .accessibilityValue("You practiced on \(played) days")
       .accessibilityIdentifier("profile.calendar")
-      Text("Practised on \(played) of the last \(Self.weeks * 7) days.")
+      Text("Practiced on \(played) of the last \(Self.weeks * 7) days.")
         .font(Typography.small)
         .foregroundStyle(theme.textMuted)
     }
@@ -169,7 +169,7 @@ struct ProfileView: View {
           }
           .accessibilityElement(children: .ignore)
           .accessibilityLabel(skill.title)
-          .accessibilityValue(accuracy.map { "\(Int(($0 * 100).rounded())) percent right first time" } ?? "Not practised yet")
+          .accessibilityValue(accuracy.map { "\(Int(($0 * 100).rounded())) percent right first time" } ?? "Not practiced yet")
           .accessibilityIdentifier("profile.skill.\(skill.rawValue)")
         }
       }
