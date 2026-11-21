@@ -340,3 +340,8 @@ The 1.3 beginner walkthrough showed a quint with five natural copies of one numb
 ## 2026-11-21: American spelling
 
 - At the owner's request, the text people read uses American spelling: practice (verb as well as noun), practiced, color, favorite, math. Identifiers that carried those words were renamed with them (`ExerciseFocus.colors`, the `line.practice` accessibility identifier); none is stored on the device, so saved data is unaffected. Spellings that appear only in code comments (centre, behaviour, labelled) were left alone. Same gate exception as the rename: no simulator runtime, so MahjongCore tests (340 pass), a zero-warning `build-for-testing` of the app and both test targets, and `tools/check_listing.py` were run instead of `tools/test.sh`.
+
+## 2026-11-21: iPhone only, for real
+
+- Every build through 1.4 (8) listed `UIDeviceFamily` [1, 2]: XcodeGen gives an iOS application target `TARGETED_DEVICE_FAMILY = "1,2"` at target level, which overrode the project-level `"1"`. App Store Connect therefore asked for 13" iPad screenshots. The app target now sets `"1"` itself, and `ComplianceTests.theAppIsIPhoneOnly` checks the built Info.plist. The app was never released on iPad, so dropping iPad is allowed. iPhone apps still run on iPad in compatibility mode.
+- Same gate exception as the rename (no simulator runtime): verified by building before and after (`UIDeviceFamily` [1, 2] → [1]) and a zero-warning Debug `build-for-testing`; the new test compiles but was not run.

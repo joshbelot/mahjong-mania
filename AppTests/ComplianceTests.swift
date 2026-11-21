@@ -5,6 +5,11 @@ import Testing
 
 /// SPEC §19.5 and §19.6: what the App Store review looks at.
 struct ComplianceTests {
+  @Test func theAppIsIPhoneOnly() {
+    // App Store Connect asks for iPad screenshots when an app lists device family 2 (iPad).
+    #expect(Bundle.main.object(forInfoDictionaryKey: "UIDeviceFamily") as? [Int] == [1])
+  }
+
   @Test func theInAppLinksPointAtThePublicPages() {
     #expect(AppLinks.privacy.absoluteString == "https://joshbelot.github.io/mahjong-mania/privacy.html")
     #expect(AppLinks.support.absoluteString == "https://joshbelot.github.io/mahjong-mania/support.html")
