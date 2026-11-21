@@ -186,7 +186,7 @@ final class CardsTests: XCTestCase {
       trySuits.tap()
       attach("cards-line-detail-suits-\(scheme)")
     }
-    reveal(app, "line.practise")
+    reveal(app, "line.practice")
     attach("cards-line-detail-bottom-\(scheme)")
 
     waitFor(app, "line.edit").tap()
@@ -271,14 +271,14 @@ final class CardsTests: XCTestCase {
     attach("cards-edited-detail-light")
   }
 
-  func testPractiseThisHandOpensTheHelper() {
+  func testPracticeThisHandOpensTheHelper() {
     let app = launch(dark: false)
     openCards(app)
     waitFor(app, "cards.row.practice-v1").tap()
     waitFor(app, "line.row.1").tap()
     waitFor(app, "line.pattern")
     attach("cards-line-detail-builtin-light")
-    reveal(app, "line.practise").tap()
+    reveal(app, "line.practice").tap()
     XCTAssertTrue(app.navigationBars["Helper"].waitForExistence(timeout: 10), "Helper tab did not open")
   }
 }

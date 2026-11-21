@@ -5,7 +5,7 @@ enum LearnReading {
   static let topic = LearnTopic(
     id: "reading",
     title: "Reading a card",
-    summary: "Families, colours, X and C, points, and why some hands have to be chosen early.",
+    summary: "Families, colors, X and C, points, and why some hands have to be chosen early.",
     symbol: "list.bullet.rectangle",
     sections: [
       LearnSection(
@@ -19,18 +19,18 @@ enum LearnReading {
           ),
         ]),
       LearnSection(
-        id: "colours", heading: "Colours mean suits",
+        id: "colors", heading: "Colors mean suits",
         blocks: [
           .paragraph(
-            "Lines are printed in several colours. A colour does not tell you which real suit to use. It only tells you which groups share a suit."
+            "Lines are printed in several colors. A color does not tell you which real suit to use. It only tells you which groups share a suit."
           ),
           .bullets([
-            "Same colour: same suit.",
-            "Different colours: different suits.",
-            "Which actual suit gets which colour is up to you.",
+            "Same color: same suit.",
+            "Different colors: different suits.",
+            "Which actual suit gets which color is up to you.",
           ]),
           .paragraph(
-            "A, B and C can label the suit relationships without relying on colour. For one original like-number line, A = Bams, B = Dots and C = Cracks is as valid as A = Dots, B = Bams and C = Cracks. A matching Dragon follows its assigned suit; Red and Green name the actual Dragon tiles."
+            "A, B and C can label the suit relationships without relying on color. For one original like-number line, A = Bams, B = Dots and C = Cracks is as valid as A = Dots, B = Bams and C = Cracks. A matching Dragon follows its assigned suit; Red and Green name the actual Dragon tiles."
           ),
           .example(
             notation: "FF 1111/x 11/y 1111/z DD/x ; 25 ; X ; Like Sandwich ; shift",

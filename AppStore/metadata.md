@@ -12,7 +12,7 @@ Mahj Buddy: American Mahjong
 ## Subtitle (max 30)
 
 ```
-Score, practise & get hints
+Score, practice & get hints
 ```
 
 ## Promotional text (max 170)
@@ -33,7 +33,7 @@ HELPER: HAND AND CHARLESTON HELP
 Enter the tiles in your rack and see which hands on your card are closest, which tiles you still need, and which to pass in the Charleston or discard. Track what you have seen and what other players have shown. A Tiles cheat sheet is always one tap away.
 
 GAME NIGHT: SCORING FOR YOUR TABLE
-Add your players, record each hand (who won, from whom, jokerless, self-pick, wall game) and watch the scoreboard update. Set your own house rules, from what the discarder pays to a second Charleston or playing with blanks. A settle-up summary shows who owes whom. The app only does the maths: no money is ever handled.
+Add your players, record each hand (who won, from whom, jokerless, self-pick, wall game) and watch the scoreboard update. Set your own house rules, from what the discarder pays to a second Charleston or playing with blanks. A settle-up summary shows who owes whom. The app only does the math: no money is ever handled.
 
 CARDS: YOUR HAND LIST
 Use the built-in Practice Card, or build your own card's hands step by step with a guided editor (or type them with a simple notation). Share a card with a friend by showing a QR code. Your cards are yours to keep.

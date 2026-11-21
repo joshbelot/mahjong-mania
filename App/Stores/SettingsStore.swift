@@ -57,7 +57,7 @@ enum TileStyle: String, Codable, CaseIterable, Sendable {
     case .classic: return "Clear numbers on ivory tiles. The way the app has always looked."
     case .traditional: return "Like a real set: Chinese numerals, pips and sticks, wind and dragon characters."
     case .largePrint: return "Big, bold numbers and letters with the suit spelled out. Easiest to read."
-    case .modern: return "Flat colour: red, green and blue faces for the suits, with a simple shape for each."
+    case .modern: return "Flat color: red, green and blue faces for the suits, with a simple shape for each."
     }
   }
 }

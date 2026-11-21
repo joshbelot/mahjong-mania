@@ -1,7 +1,7 @@
 import MahjongCore
 import SwiftUI
 
-/// Money from integer cents, formatted by `Scoring.formatMoney`; coloured by sign when `signed`.
+/// Money from integer cents, formatted by `Scoring.formatMoney`; colored by sign when `signed`.
 struct MoneyText: View {
   @Environment(\.theme) private var theme
   let cents: Int

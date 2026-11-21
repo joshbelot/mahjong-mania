@@ -54,7 +54,7 @@ public enum ExerciseFocus {
   public static let suitsAndDragons = 1
   public static let flowersJokersSoap = 2
   /// `matchesLine`
-  public static let colours = 1
+  public static let colors = 1
   public static let exposedConcealed = 2
 }
 

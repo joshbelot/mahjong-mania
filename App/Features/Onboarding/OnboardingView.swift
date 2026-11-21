@@ -117,7 +117,7 @@ struct OnboardingView: View {
       VStack(alignment: .leading, spacing: Spacing.md) {
         featureRow("dice", "Keep score at game night, with payouts worked out for you.")
         featureRow("lightbulb", "Get hints on your hand, only when you want them.")
-        featureRow("flame.fill", "Practise with short lessons, a daily deal and streaks.")
+        featureRow("flame.fill", "Practice with short lessons, a daily deal and streaks.")
         featureRow("graduationcap", "Learn the tiles, the card and the Charleston.")
       }
     }

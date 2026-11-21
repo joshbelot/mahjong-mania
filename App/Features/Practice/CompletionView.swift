@@ -129,7 +129,7 @@ struct CompletionView: View {
         return "\(right) of \(asked) right. You've finished the path."
       }
       let needed = session.testOut ? Curriculum.testOutPassMark : Curriculum.checkpointPassMark
-      return "\(right) of \(asked) right; you need \(needed). Try again whenever you like, or practise a lesson first."
+      return "\(right) of \(asked) right; you need \(needed). Try again whenever you like, or practice a lesson first."
     case .review:
       return "Good practice. Questions you got right come back later; the others tomorrow."
     case .lesson:

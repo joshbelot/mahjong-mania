@@ -47,7 +47,7 @@ enum CardReadingExercises {
       groups[i] = groups[i].map { $0 == .joker ? $0 : .number(value, target) }
       return (
         groups,
-        "Different colours on the pattern mean different suits. Here the \(suit.plainName) have been swapped for \(target.plainName), so two colours share a suit."
+        "Different colors on the pattern mean different suits. Here the \(suit.plainName) have been swapped for \(target.plainName), so two colors share a suit."
       )
     case .jokerInPair:
       let candidates = groups.indices.filter { groups[$0].count <= 2 && !groups[$0].contains(.joker) }
@@ -73,7 +73,7 @@ enum CardReadingExercises {
   }
 
   private static func order(for difficulty: Int, focus: Int) -> [Mutation] {
-    if focus == ExerciseFocus.colours { return [.swapSuits, .wrongNumber, .oneTile] }
+    if focus == ExerciseFocus.colors { return [.swapSuits, .wrongNumber, .oneTile] }
     switch difficulty {
     case 1: return [.wrongNumber, .oneTile, .swapSuits, .jokerInPair, .wrongDragon]
     case 2: return [.swapSuits, .wrongNumber, .oneTile, .jokerInPair, .wrongDragon]
@@ -86,9 +86,9 @@ enum CardReadingExercises {
   static func matchesLine(_ id: ExerciseID, analyzer: Analyzer, rng: inout SeededRandom) -> Built {
     let usable = analyzer.usableLineIndexes
     var candidates = usable
-    if id.focus == ExerciseFocus.colours {
-      let coloured = usable.filter { suitVariableCount(analyzer.card.lines[$0]) >= 2 }
-      if !coloured.isEmpty { candidates = coloured }
+    if id.focus == ExerciseFocus.colors {
+      let colored = usable.filter { suitVariableCount(analyzer.card.lines[$0]) >= 2 }
+      if !colored.isEmpty { candidates = colored }
     }
     guard let lineIndex = rng.element(of: candidates) else {
       return Built(exercise: Exercise(id: id, prompt: "Does this hand match the line?", key: .none), ok: false)

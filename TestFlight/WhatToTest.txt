@@ -1,7 +1,7 @@
 Thanks for testing Mahj Buddy 1.4! Please tell me where Practice, the Helper, card setup or Game Night feels unclear, and whether anything looks wrong at your preferred text size.
 
 What's new
-- Practice teaches the goal, tile facts and card colours before scored questions, and lesson notes can be reopened. Explanations use the actual tiles shown, and hints tell you their cost first.
+- Practice teaches the goal, tile facts and card colors before scored questions, and lesson notes can be reopened. Explanations use the actual tiles shown, and hints tell you their cost first.
 - Helper and Game explain modes, distance, dead hands and wall games in plain words. The Charleston tracker is compact, and tips match the screen you're on.
 - Choosing "I'll enter my own card" now leads to a guided editor that builds hands without notation. Notation is still there as Advanced.
 

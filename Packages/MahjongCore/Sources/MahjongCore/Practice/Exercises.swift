@@ -160,8 +160,8 @@ public enum Exercises {
         hint.text = "Count the tiles: there are \(exercise.tiles.count)."
       case .matchesLine:
         hint.text =
-          exercise.id.focus == ExerciseFocus.colours
-          ? "Groups printed in the same colour use the same suit; different printed colours use different suits."
+          exercise.id.focus == ExerciseFocus.colors
+          ? "Groups printed in the same color use the same suit; different printed colors use different suits."
           : "Go group by group and compare each with the pattern."
       case .whichHand:
         hint.text = "Look for the hand whose pattern has the same groups as these tiles."

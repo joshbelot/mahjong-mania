@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// A selectable pill used for players and quick point values.
-/// With a `tint` (e.g. a player colour) the selected state uses a tinted ring instead of a solid fill.
+/// With a `tint` (e.g. a player color) the selected state uses a tinted ring instead of a solid fill.
 struct ChipView: View {
   @Environment(\.theme) private var theme
   private let title: String

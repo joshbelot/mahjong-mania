@@ -63,7 +63,7 @@ struct LessonIllustration: View {
         Text("Example 2: A = Dots, B = Bams, C = Cracks")
           .fontWeight(.semibold)
         Text("2 Flowers · 4 seven Dots · 2 seven Bams · 4 seven Cracks · 2 Soap (White Dragons)")
-        Text("Both use 7 throughout. The pattern's colour does not choose the physical suit; a Dragon's name is its actual tile.")
+        Text("Both use 7 throughout. The pattern's color does not choose the physical suit; a Dragon's name is its actual tile.")
       }
       .font(Typography.small)
       .foregroundStyle(theme.text)

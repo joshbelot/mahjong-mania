@@ -54,13 +54,13 @@ struct PatternLayoutTests {
     #expect(layout.parts.map(\.groupIndex) == Array(0..<pattern.groups.count))
   }
 
-  @Test func variablesAreColouredByVariable() throws {
+  @Test func variablesAreColoredByVariable() throws {
     let layout = PatternLayout(variant: try variant("FF 2222/x 4444/y 6666/z ; 25 ; X"))
     #expect(
       layout.parts.map(\.ink) == [.flower, .variable(.x), .variable(.y), .variable(.z)])
   }
 
-  @Test func fixedSuitsAreColouredBySuit() throws {
+  @Test func fixedSuitsAreColoredBySuit() throws {
     let layout = PatternLayout(variant: try variant("FF 2222/c 3333/b 5555/d ; 25 ; X"))
     #expect(layout.parts.map(\.ink) == [.flower, .suit(.cracks), .suit(.bams), .suit(.dots)])
   }

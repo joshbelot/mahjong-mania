@@ -27,15 +27,15 @@ enum TileCheatSheet {
   struct SuitFact {
     let name: String
     let alsoCalled: String
-    let colour: String
+    let color: String
     let example: [Tile]
     let extra: String
   }
 
   static let suits: [SuitFact] = [
-    SuitFact(name: "Cracks", alsoCalled: "Characters", colour: "Red", example: [.number(1, .cracks), .number(5, .cracks), .number(9, .cracks)], extra: ""),
-    SuitFact(name: "Bams", alsoCalled: "Bamboo", colour: "Green", example: [.number(1, .bams), .number(5, .bams), .number(9, .bams)], extra: " The 1 Bam is a bird."),
-    SuitFact(name: "Dots", alsoCalled: "Circles", colour: "Blue", example: [.number(1, .dots), .number(5, .dots), .number(9, .dots)], extra: ""),
+    SuitFact(name: "Cracks", alsoCalled: "Characters", color: "Red", example: [.number(1, .cracks), .number(5, .cracks), .number(9, .cracks)], extra: ""),
+    SuitFact(name: "Bams", alsoCalled: "Bamboo", color: "Green", example: [.number(1, .bams), .number(5, .bams), .number(9, .bams)], extra: " The 1 Bam is a bird."),
+    SuitFact(name: "Dots", alsoCalled: "Circles", color: "Blue", example: [.number(1, .dots), .number(5, .dots), .number(9, .dots)], extra: ""),
   ]
 
   struct DragonFact {
@@ -62,7 +62,7 @@ enum TileCheatSheet {
         rows: suits.map {
           CheatRow(
             id: $0.name, name: $0.name, tiles: $0.example,
-            detail: "Also called \($0.alsoCalled). \($0.colour). Numbers 1 to 9.\($0.extra)", copies: "4 of each number, 36 in a suit")
+            detail: "Also called \($0.alsoCalled). \($0.color). Numbers 1 to 9.\($0.extra)", copies: "4 of each number, 36 in a suit")
         }))
     result.append(
       CheatGroup(

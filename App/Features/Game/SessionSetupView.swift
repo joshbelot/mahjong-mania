@@ -111,7 +111,7 @@ struct SessionSetupView: View {
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .accessibilityLabel("Colour \(index + 1)")
+            .accessibilityLabel("Color \(index + 1)")
             .accessibilityAddTraits(index == effectiveNewColor ? .isSelected : [])
           }
         }
@@ -260,7 +260,7 @@ struct SessionSetupView: View {
     SectionCard("Money") {
       VStack(spacing: 0) {
         GameToggleRow(
-          title: "Show amounts in money", subtitle: "The app only does the maths. No money is handled here.",
+          title: "Show amounts in money", subtitle: "The app only does the math. No money is handled here.",
           isOn: $rules.money.enabled, identifier: "setup.money")
         if rules.money.enabled {
           Divider().overlay(theme.border)
@@ -304,7 +304,7 @@ struct SessionSetupView: View {
     return selected.first
   }
 
-  /// The colour the next new player gets when none is chosen (same rule as `PlayersStore.add`).
+  /// The color the next new player gets when none is chosen (same rule as `PlayersStore.add`).
   private var effectiveNewColor: Int {
     if let newColor { return newColor }
     let used = Set(players.activePlayers.map(\.colorIndex))

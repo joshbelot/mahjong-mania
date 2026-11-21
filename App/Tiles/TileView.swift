@@ -4,7 +4,7 @@ import SwiftUI
 enum TileSize: Sendable, CaseIterable {
   case small, medium, large
 
-  /// Thickness of the coloured bottom edge (the tile's back).
+  /// Thickness of the colored bottom edge (the tile's back).
   static let edge: CGFloat = 3
 
   var width: CGFloat {

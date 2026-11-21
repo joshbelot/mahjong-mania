@@ -113,7 +113,7 @@ struct PlayersView: View {
   }
 }
 
-/// A player's career stats, favourite hands, and rename / colour / archive.
+/// A player's career stats, favorite hands, and rename / color / archive.
 struct PlayerStatsView: View {
   @Environment(\.theme) private var theme
   @Environment(PlayersStore.self) private var players
@@ -202,9 +202,9 @@ struct PlayerStatsView: View {
   }
 
   private func favoritesCard(_ stats: PlayerStats) -> some View {
-    SectionCard("Favourite hands") {
+    SectionCard("Favorite hands") {
       if stats.favoriteLines.isEmpty {
-        Text("Pick hands from a card when you record a win and your favourites show up here.")
+        Text("Pick hands from a card when you record a win and your favorites show up here.")
           .font(Typography.small)
           .foregroundStyle(theme.textMuted)
       } else {
@@ -225,7 +225,7 @@ struct PlayerStatsView: View {
   private func manageCard(_ player: Player) -> some View {
     SectionCard("Manage") {
       VStack(alignment: .leading, spacing: Spacing.md) {
-        Text("Colour")
+        Text("Color")
           .font(Typography.small.weight(.semibold))
           .foregroundStyle(theme.textMuted)
         FlowLayout(spacing: 0, lineSpacing: 0) {
@@ -243,7 +243,7 @@ struct PlayerStatsView: View {
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .accessibilityLabel("Colour \(index + 1)")
+            .accessibilityLabel("Color \(index + 1)")
             .accessibilityAddTraits(index == player.colorIndex ? .isSelected : [])
           }
         }

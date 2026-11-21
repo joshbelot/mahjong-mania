@@ -72,7 +72,7 @@ struct SettingsStoreTests {
 
 @MainActor
 struct PlayersStoreTests {
-  @Test func addsPlayersWithDistinctColoursAndPersists() {
+  @Test func addsPlayersWithDistinctColorsAndPersists() {
     let directory = makeTempDirectory()
     let store = PlayersStore(directory: directory, persistDelay: fast)
     let a = store.add(name: "  Alex ", id: "a", at: Date(timeIntervalSince1970: 1))
@@ -103,7 +103,7 @@ struct PlayersStoreTests {
     #expect(store.activePlayer(named: "Alex") == nil)
   }
 
-  @Test func archivedPlayersFreeTheirColour() {
+  @Test func archivedPlayersFreeTheirColor() {
     let store = PlayersStore(directory: makeTempDirectory(), persistDelay: fast)
     let a = store.add(name: "A")
     _ = store.add(name: "B")

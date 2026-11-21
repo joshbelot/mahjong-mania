@@ -93,7 +93,7 @@ extension AppStores {
     rules.money = MoneySettings(enabled: true, centsPerPoint: 100, currencySymbol: "$")
     let lines = PracticeCard.card.lines
     // A card with a very long name and no valid hands, used by an earlier night and then deleted.
-    let longName = "The Wednesday Night Mahjong Club Autumn Edition with Everyone's Favourite Hands (draft number 7)"
+    let longName = "The Wednesday Night Mahjong Club Autumn Edition with Everyone's Favorite Hands (draft number 7)"
     let gone = cards.createCard(name: longName, text: "this is not a hand\nneither is this")
     let earlier = sessions.start(seatIDs: ids, cardID: gone.id, rules: rules, id: "edge-earlier", at: Date(timeIntervalSince1970: 1_700_000_000))
     sessions.addHand(.wall(note: nil), to: earlier.id)

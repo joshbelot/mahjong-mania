@@ -173,7 +173,7 @@ enum TileFacts {
         prompt: "Which suit does the \(tile.name) go with?", correct: text(suit.plainName),
         wrong: others + [text("Winds")], answer: suit.plainName,
         explanation: "The \(tile.name) goes with the \(suit.plainName). Red goes with Cracks, Green with Bams and Soap with Dots.",
-        hint: "Think of the dragon's colour: red for Cracks, green for Bams, white (Soap) for Dots.")
+        hint: "Think of the dragon's color: red for Cracks, green for Bams, white (Soap) for Dots.")
     case .countSuited(let suit):
       let value = rng.element(of: [1, 2, 3, 5, 6, 7, 8, 9]) ?? 5
       return count(of: "\(value) \(suit.plainName.dropLast())", copies: 4)

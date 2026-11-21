@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// A player's initials on their palette colour.
+/// A player's initials on their palette color.
 struct AvatarView: View {
   let name: String
   let colorIndex: Int

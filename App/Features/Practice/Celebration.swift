@@ -113,7 +113,7 @@ struct ConfettiView: View {
   private func draw(_ piece: Piece, in context: inout GraphicsContext, color: Color) {
     let s = piece.size
     switch piece.kind {
-    case 0:  // a tile: ivory face with a coloured back edge
+    case 0:  // a tile: ivory face with a colored back edge
       let tile = CGRect(x: -s * 0.35, y: -s * 0.5, width: s * 0.7, height: s)
       context.fill(Path(roundedRect: tile.offsetBy(dx: 0, dy: 2), cornerRadius: 3), with: .color(color))
       context.fill(Path(roundedRect: tile, cornerRadius: 3), with: .color(theme.tileFace))
@@ -166,7 +166,7 @@ struct CelebrationView: View {
     case .streakBroken(let days):
       return ("sun.max.fill", theme.gold, "Welcome back", StreakLogic.brokenMessage(daysPlayed: days), "Every lesson counts. Start a new streak today.")
     case .chooseGoal:
-      return ("target", theme.primary, "Today's goal is done!", "How much will you practise a day?", "A streak grows each day you reach your goal. You can change it any time in Settings.")
+      return ("target", theme.primary, "Today's goal is done!", "How much will you practice a day?", "A streak grows each day you reach your goal. You can change it any time in Settings.")
     }
   }
 

@@ -15,7 +15,7 @@ extension Curriculum {
       review: review
         ? LessonSpec(
           id: "u\(id)r", unit: id, kind: .review, title: "Review",
-          intro: "A mix of things you've practised, and any you missed lately.", count: reviewCount, parts: [])
+          intro: "A mix of things you've practiced, and any you missed lately.", count: reviewCount, parts: [])
         : nil,
       checkpoint: LessonSpec(
         id: "u\(id)c", unit: id, kind: .checkpoint, title: "Checkpoint",
@@ -29,7 +29,7 @@ extension Curriculum {
       lessons: [
         lesson(
           1, 1, "Suits and dragons", count: 8,
-          intro: "Your goal is to make a hand of 14 tiles that matches one line on a card. A line is a recipe for the tiles you need. Start by learning the tiles; then practise reading those recipes.\n\nYour rack holds your tiles. In a real game, you play with tiles at the table; these lessons give you short puzzles to practise.\n\nThere are three numbered suits: Cracks (Characters), Bams (Bamboo), and Dots (Circles). Each suit has tiles numbered 1 to 9.\n\nThe full tile set has four copies of each numbered tile, four of each Wind, and four of each Dragon.\n\nSome card patterns ask for a suit’s matching Dragon: Red with Cracks, Green with Bams, and White — also called Soap — with Dots.",
+          intro: "Your goal is to make a hand of 14 tiles that matches one line on a card. A line is a recipe for the tiles you need. Start by learning the tiles; then practice reading those recipes.\n\nYour rack holds your tiles. In a real game, you play with tiles at the table; these lessons give you short puzzles to practice.\n\nThere are three numbered suits: Cracks (Characters), Bams (Bamboo), and Dots (Circles). Each suit has tiles numbered 1 to 9.\n\nThe full tile set has four copies of each numbered tile, four of each Wind, and four of each Dragon.\n\nSome card patterns ask for a suit’s matching Dragon: Red with Cracks, Green with Bams, and White — also called Soap — with Dots.",
           [LessonPart([.tileFact], 1, focus: ExerciseFocus.suitsAndDragons)]),
         lesson(
           1, 2, "Flowers, jokers and Soap", count: 8,
@@ -41,18 +41,18 @@ extension Curriculum {
           [LessonPart([.tileFact], 2)]),
       ]),
     unit(
-      2, "Read the card", "Sets, colours and the two kinds of hand.", count: 8, review: false,
+      2, "Read the card", "Sets, colors and the two kinds of hand.", count: 8, review: false,
       lessons: [
         lesson(
           2, 1, "Sets", count: 8,
           intro: "Hands are made of groups. Two the same is a Pair, three a Pung, four a Kong, five a Quint, and six a Sextet. A joker counts as the tile it stands in for, so count it too.",
           [LessonPart([.groupName], 2)]),
         lesson(
-          2, 2, "Colours mean suits", count: 8,
-          intro: "A card line is a recipe: match every group and its number of tiles. F means Flower; D means a matching Dragon. X means exposed and C means concealed. In a year, 0 is Soap (the White Dragon).\n\nPrinted colours show suit relationships, not the colours painted on the tiles. Groups printed in the same colour use the same suit; different colours use different suits. You choose which physical suit each colour represents.\n\nSome lines allow the numbers to change together. For example, a like-number line printed with 1s may use 7s instead when every numbered group uses 7 and the suit relationships still match. In a consecutive line, the numbers shift together while keeping the same gaps; a printed 1, 2, 3 can become 4, 5, 6.",
+          2, 2, "Colors mean suits", count: 8,
+          intro: "A card line is a recipe: match every group and its number of tiles. F means Flower; D means a matching Dragon. X means exposed and C means concealed. In a year, 0 is Soap (the White Dragon).\n\nPrinted colors show suit relationships, not the colors painted on the tiles. Groups printed in the same color use the same suit; different colors use different suits. You choose which physical suit each color represents.\n\nSome lines allow the numbers to change together. For example, a like-number line printed with 1s may use 7s instead when every numbered group uses 7 and the suit relationships still match. In a consecutive line, the numbers shift together while keeping the same gaps; a printed 1, 2, 3 can become 4, 5, 6.",
           [
-            LessonPart([.matchesLine], 1, focus: ExerciseFocus.colours),
-            LessonPart([.matchesLine], 2, focus: ExerciseFocus.colours),
+            LessonPart([.matchesLine], 1, focus: ExerciseFocus.colors),
+            LessonPart([.matchesLine], 2, focus: ExerciseFocus.colors),
           ]),
         lesson(
           2, 3, "Exposed vs concealed", count: 8,
