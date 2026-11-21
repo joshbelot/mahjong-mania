@@ -28,9 +28,9 @@ enum CardQRCode {
 
     var message: String {
       switch self {
-      case .notACard: return "This QR code isn't a Mahjong Mania card, or it's damaged."
+      case .notACard: return "This QR code isn't a Mahj Buddy card, or it's damaged."
       case .newerVersion:
-        return "This card was shared from a newer version of Mahjong Mania. Update the app to import it."
+        return "This card was shared from a newer version of Mahj Buddy. Update the app to import it."
       }
     }
   }

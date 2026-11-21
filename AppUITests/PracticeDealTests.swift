@@ -56,7 +56,7 @@ final class PracticeDealTests: PracticeUITestCase {
     XCTAssertTrue(title.waitForExistence(timeout: 10), "No result screen")
     XCTAssertEqual(title.label, "Daily Deal #305", "2026-11-02 is deal 305")
     let text = element(app, "deal.share.text").label
-    XCTAssertTrue(text.hasPrefix("Mahjong Mania Daily #305 🀄\nPick: "), text)
+    XCTAssertTrue(text.hasPrefix("Mahj Buddy Daily #305 🀄\nPick: "), text)
     XCTAssertTrue(text.contains("\nPass: "), text)
     XCTAssertTrue(text.contains("🔥 1-day streak"), text)
     XCTAssertFalse(element(app, "deal.practice").exists, "The first play is the scored one")

@@ -1,4 +1,4 @@
-Thanks for testing Mahjong Mania 1.4! Please tell me where Practice, the Helper, card setup or Game Night feels unclear, and whether anything looks wrong at your preferred text size.
+Thanks for testing Mahj Buddy 1.4! Please tell me where Practice, the Helper, card setup or Game Night feels unclear, and whether anything looks wrong at your preferred text size.
 
 What's new
 - Practice teaches the goal, tile facts and card colours before scored questions, and lesson notes can be reopened. Explanations use the actual tiles shown, and hints tell you their cost first.

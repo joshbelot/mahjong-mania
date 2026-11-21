@@ -106,7 +106,7 @@ struct OnboardingView: View {
       }
       .accessibilityHidden(true)
       .padding(.top, Spacing.lg)
-      Text("Welcome to Mahjong Mania")
+      Text("Welcome to Mahj Buddy")
         .titleStyle()
         .foregroundStyle(theme.text)
         .accessibilityAddTraits(.isHeader)

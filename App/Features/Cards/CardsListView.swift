@@ -240,10 +240,10 @@ private struct CardMethodChooser: View {
             "Build hands", "Choose the tiles for each hand from your own card, step by step.", "square.grid.2x2",
             "method.build", build)
           method(
-            "Import card text", "Paste or open a card file in Mahjong Mania's text format.",
+            "Import card text", "Paste or open a card file in Mahj Buddy's text format.",
             "square.and.arrow.down", "method.import", importText)
           method(
-            "Read a shared QR code", "Use a QR code made by Mahjong Mania on another device. It does not read printed cards.",
+            "Read a shared QR code", "Use a QR code made by Mahj Buddy on another device. It does not read printed cards.",
             "qrcode.viewfinder", "method.qr", scanQR)
           if settings.settings.pendingCardSetup {
             Button("Use the Practice Card for now") {

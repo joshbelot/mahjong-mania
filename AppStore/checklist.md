@@ -7,7 +7,7 @@ Everything an agent could prepare is in this folder. These steps are yours, in A
 - [ ] On a real iPhone, install build **1.4** from TestFlight and play through it once: a Practice lesson, Today's Deal, the Helper, a Game Night with four players, a card's QR code, and Settings, About (open Privacy Policy and Support). Haptics, sound and VoiceOver are the things only a real phone can check.
 - [ ] Open `https://joshbelot.github.io/mahjong-mania/privacy.html` and `/support.html` in Safari and read them. You decide whether you are happy for the GitHub Issues link to be the only contact.
 
-## The app record (My Apps, Mahjong Mania: Companion)
+## The app record (My Apps, Mahj Buddy: American Mahjong)
 - [ ] **Pricing and Availability:** Price **Free**. Choose your countries.
 - [ ] Untick **Make this app available on Mac (Apple silicon)** unless you have tested it on a Mac.
 - [ ] **App Privacy:** answer as in `app-privacy.md` (Data Not Collected). Add the Privacy Policy URL.

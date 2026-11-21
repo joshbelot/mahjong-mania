@@ -6,7 +6,7 @@ Phase 32 PR; run it again after any edit.
 ## Name (max 30)
 
 ```
-Mahjong Mania: Companion
+Mahj Buddy: American Mahjong
 ```
 
 ## Subtitle (max 30)
@@ -24,7 +24,7 @@ Learn American mahjong with short lessons and a daily deal, get hand and Charles
 ## Description (max 4000)
 
 ```
-Mahjong Mania is a friendly companion for American mahjong. Learn the game at your own pace, get help choosing a hand while you play, and keep score for your table. Everything works offline and stays on your iPhone.
+Mahj Buddy is a friendly companion for American mahjong. Learn the game at your own pace, get help choosing a hand while you play, and keep score for your table. Everything works offline and stays on your iPhone.
 
 PRACTICE: LEARN BY PLAYING
 Short lessons take you from "what is a Bam?" to choosing hands and passing tiles like you would at the table. Earn stars and XP, build a daily streak, collect badges, try Today's Deal (the same puzzle for everyone each day) and race the clock in the Speed Round. Already know the game? Test out of the basics and jump ahead. Sunny, the tile mascot, cheers you on.
@@ -47,7 +47,7 @@ No accounts, no ads, no tracking and no network access. Your players, scores, ca
 DESIGNED FOR EVERYONE
 Large text, VoiceOver, Reduce Motion, light and dark modes, and four tile styles, including a large-print one.
 
-Mahjong Mania is an independent app and is not affiliated with the National Mah Jongg League. The Practice Card hands in the app are original.
+Mahj Buddy is an independent app and is not affiliated with the National Mah Jongg League. The Practice Card hands in the app are original.
 ```
 
 ## Keywords (max 100, comma-separated)

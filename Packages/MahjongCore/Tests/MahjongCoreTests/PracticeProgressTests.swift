@@ -434,9 +434,9 @@ struct DailyDealTests {
 
     let text = DailyDeal.shareText(
       number: 289, result: .init(pick: .best, pickDistance: 3, pass: [.green, .green, .yellow]), streak: 12)
-    #expect(text == "Mahjong Mania Daily #289 🀄\nPick: ✅ (best hand, 3 away)\nPass: 🟩🟩🟨\n🔥 12-day streak")
+    #expect(text == "Mahj Buddy Daily #289 🀄\nPick: ✅ (best hand, 3 away)\nPass: 🟩🟩🟨\n🔥 12-day streak")
     let noStreak = DailyDeal.shareText(number: 5, result: .init(pick: .miss, pickDistance: 7, pass: [.red]), streak: 0)
-    #expect(noStreak == "Mahjong Mania Daily #5 🀄\nPick: ❌ (7 away)\nPass: 🟥")
+    #expect(noStreak == "Mahj Buddy Daily #5 🀄\nPick: ❌ (7 away)\nPass: 🟥")
   }
 }
 
